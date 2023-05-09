@@ -33,5 +33,9 @@
         android:layout_height="wrap_content"
         android:text="Registration"
         android:onClick="registration"/>
+    <TextView
+        android:id="@+id/kuku"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

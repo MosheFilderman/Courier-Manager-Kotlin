@@ -4,6 +4,8 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -11,15 +13,55 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStreamReader
+import java.net.HttpURLConnection
+import java.net.URL
+import java.net.URLEncoder
 
 class Login : AppCompatActivity() {
+
+    lateinit var password :EditText
+    lateinit var email:EditText
+    lateinit var kuku: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
+
+        password = findViewById(R.id.password)
+        email = findViewById(R.id.email)
+        kuku = findViewById(R.id.kuku)
     }
 
-    fun login(view: View) {}
+    fun login(view: View) {
 
+        val url: String =  "http:/172.16.3.243/courier_project/check.php"
+        val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
+            Response.Listener { response ->
+                //errorMassage.text = response
+                if(response.toString().trim().equals("success")) {
+                    //intent
+                    Toast.makeText(this@Login,"success",Toast.LENGTH_SHORT).show()
+                } else {
+                    Toast.makeText(this@Login,response.toString(),Toast.LENGTH_SHORT).show()
+                }
+
+            },
+            Response.ErrorListener { error->
+               // errorMassage.text = error.toString()
+                Toast.makeText(this@Login,error.toString(),Toast.LENGTH_SHORT).show()
+            }){
+            override fun getParams(): Map<String,String>{
+                val params:MutableMap<String,String> = HashMap()
+                params["email"] = email.text.toString().trim()
+                params["password"] = password.text.toString().trim()
+                return params
+            }
+        }
+        val requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(stringRequest)
+
+    }
 
     fun getUsers() {
         val url: String = "http://10.0.0.7/courier_project/get.php"

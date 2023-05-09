@@ -15,6 +15,7 @@
         android:text="WELLCOME"/>
 
     <EditText
+
         android:id="@+id/firstName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,6 +55,11 @@
         android:layout_height="wrap_content"
         android:hint="Confirm Password"
         android:inputType="textPassword"/>
+
+    <TextView
+        android:id="@+id/errorMassage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <Button
         android:layout_width="wrap_content"

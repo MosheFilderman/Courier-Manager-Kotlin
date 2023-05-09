@@ -2,8 +2,10 @@ package com.example.couriermanagerkotlin
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Request
 import com.android.volley.Response
@@ -17,6 +19,7 @@ class Registration : AppCompatActivity() {
     lateinit var phone :EditText
     lateinit var password :EditText
     lateinit var confirmPassword :EditText
+    lateinit var errorMassage: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_registration)
@@ -26,24 +29,27 @@ class Registration : AppCompatActivity() {
         phone = findViewById(R.id.phone)
         password = findViewById(R.id.password)
         confirmPassword = findViewById(R.id.confirmPassword)
+        errorMassage = findViewById(R.id.errorMassage)
     }
 
     fun register(view: View) {
-        registerUser()
+        if(checkAllFields()){
+            Toast.makeText(this,"good job",Toast.LENGTH_LONG).show()
+            registerUser()
+        }
+        else
+            Toast.makeText(this,"Something went wrong",Toast.LENGTH_SHORT).show()
     }
 
     private fun registerUser() {
         val url: String =  "http://10.100.102.234/courier_project/insert.php"
-
-         // val emailInput: String = emailEditText.text.toString().trim()
-        // val passwordInput: String = passwordEditText.text.toString().trim()
-
         val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
             Response.Listener { response ->
-            Toast.makeText(this,response,Toast.LENGTH_LONG).show()
+            errorMassage.text = response
+
         },
         Response.ErrorListener { error->
-            Toast.makeText(this,error.toString(),Toast.LENGTH_LONG).show()
+            errorMassage.text = error.toString()
         }){
             override fun getParams(): Map<String,String>{
                 val params:MutableMap<String,String> = HashMap()
@@ -58,4 +64,37 @@ class Registration : AppCompatActivity() {
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
     }
+
+    // function which checks all the text fields
+    // are filled or not by the user.
+    // when user clicks on the PROCEED button
+    // this function is triggered.
+    private fun checkAllFields(): Boolean {
+        if (firstName!!.length() == 0) {
+            firstName!!.error = "This field is required"
+            return false
+        }
+        if (lastName!!.length() == 0) {
+            lastName!!.error = "This field is required"
+            return false
+        }
+        if (email!!.length() == 0) {
+            email!!.error = "Email is required"
+            return false
+        }
+        if (password!!.length() == 0 && confirmPassword!!.length() == 0) {
+            password!!.error = "Password is required"
+            return false
+        } else if (password!!.length() < 8 && confirmPassword!!.length() < 8) {
+            password!!.error = "Password must be minimum 8 characters"
+            return false
+        } else if (password.text.toString() != confirmPassword.text.toString()) {
+            password!!.error = "Both password's must be the same"
+            return false
+        }
+        // after all validation return true.
+        return true
+    }
 }
+
+
