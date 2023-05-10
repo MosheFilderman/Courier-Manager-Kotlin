@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/newOrder"
+        android:icon="@drawable/add_plus_icon"
+        android:title="new order" />
+    <item
+        android:id="@+id/orderList"
+        android:icon="@drawable/list_icon"
+        android:title="order's list"/>
+    <item
+        android:id="@+id/logout"
+        android:icon="@drawable/logout_icon"
+        android:title="log out"/>
+</menu>
