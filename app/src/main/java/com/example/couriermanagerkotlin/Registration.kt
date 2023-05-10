@@ -27,8 +27,6 @@ class Registration : AppCompatActivity() {
         lastName = findViewById(R.id.lastName)
         email = findViewById(R.id.email)
         phone = findViewById(R.id.phone)
-        password = findViewById(R.id.password)
-        confirmPassword = findViewById(R.id.confirmPassword)
         errorMassage = findViewById(R.id.errorMassage)
     }
 
@@ -42,7 +40,7 @@ class Registration : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val url: String =  "http://10.100.102.234/courier_project/insert.php"
+        val url: String =  "http://10.100.102.234/courier_project/registration.php"
         val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
             Response.Listener { response ->
             errorMassage.text = response
@@ -56,8 +54,7 @@ class Registration : AppCompatActivity() {
                 params["firstName"]=firstName.text.toString().trim()
                 params["lastName"]=lastName.text.toString().trim()
                 params["email"] = email.text.toString().trim()
-                params["phone"] = phone.text.toString().trim()
-                params["password"] = password.text.toString().trim()
+                params["phone"] = "+972" + phone.text.toString().trim().substring(1)
                 return params
             }
         }
@@ -80,6 +77,10 @@ class Registration : AppCompatActivity() {
         }
         if (email!!.length() == 0) {
             email!!.error = "Email is required"
+            return false
+        }
+        if (phone!!.length() != 10) {
+            phone!!.error = "phone should be 10 digits"
             return false
         }
         if (password!!.length() == 0 && confirmPassword!!.length() == 0) {
