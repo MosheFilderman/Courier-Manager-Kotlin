@@ -22,10 +22,10 @@
         android:layout_marginBottom="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contactName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="contact's full name"
-            android:textAlignment="center" />
+            android:hint="contact's full name"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -34,10 +34,10 @@
         android:layout_marginBottom="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contactPhone"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="contact's phone"
-            android:textAlignment="center" />
+            android:hint="contact's phone"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -46,10 +46,10 @@
         android:layout_marginBottom="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/contactEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="contact's eMail"
-            android:textAlignment="center" />
+            android:hint="contact's eMail"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -58,10 +58,10 @@
         android:layout_marginBottom="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/pickupAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="pickup address"
-            android:textAlignment="center" />
+            android:hint="pickup address"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
@@ -70,14 +70,15 @@
         android:layout_marginBottom="10dp">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/deliveryAddress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="delivery address"
-            android:textAlignment="center" />
+            android:hint="delivery address"/>
     </com.google.android.material.textfield.TextInputLayout>
 
     <Button
         android:id="@+id/submit"
+        android:onClick="newOrderField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="submit order" />

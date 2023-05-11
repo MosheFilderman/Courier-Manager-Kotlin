@@ -12,23 +12,23 @@ class Courier : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_courier)
-        supportFragmentManager.beginTransaction().replace(R.id.listmapview,MapFragment()).commit()
+        supportFragmentManager.beginTransaction().replace(R.id.listmapview,CourierMapFragment()).commit()
 
         navigationView = findViewById(R.id.nav) as BottomNavigationView
         navigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.listView->{
-                    selected= OrdersFragment()
+                    selected= CourierOrderListFragment()
                     true
                 }
                 R.id.mapView->{
-                    selected = MapFragment()
+                    selected = CourierMapFragment()
                     true
                 }
 
                 else -> false
             }
-            supportFragmentManager.beginTransaction().replace(R.id.listmapview,MapFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.listmapview,CourierMapFragment()).commit()
             true
         }
     }

@@ -16,11 +16,6 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.BufferedReader
-import java.io.InputStreamReader
-import java.net.HttpURLConnection
-import java.net.URL
-import java.net.URLEncoder
 
 class Login : AppCompatActivity() {
 
@@ -35,7 +30,6 @@ class Login : AppCompatActivity() {
     }
 
     fun login(view: View) {
-
         val url: String = "http:/172.16.3.243/courier_project/check.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
@@ -43,7 +37,7 @@ class Login : AppCompatActivity() {
                 if (response.toString().trim().equals("success")) {
                     val tmeporarycode= (1000..9999).random().toString()
                     //intent
-                    sendSMS()
+                    //sendSMS()
                 } else {
                     Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
                 }
@@ -61,7 +55,6 @@ class Login : AppCompatActivity() {
         }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
     }
 
     fun getUsers() {
@@ -128,11 +121,9 @@ class Login : AppCompatActivity() {
         }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-
-
     }
 
-    fun sendSMS(value: String,phone:String) {
+    fun sendSMS(value: String) {
         // on the below line we are creating a try and catch block
         try {
 
@@ -165,7 +156,6 @@ class Login : AppCompatActivity() {
         }
     }
 
-
     fun verifySMS(code: String) {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
@@ -182,7 +172,4 @@ class Login : AppCompatActivity() {
 
 
     }
-
-
 }
-

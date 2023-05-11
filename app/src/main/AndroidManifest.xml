@@ -20,31 +20,28 @@
         android:theme="@style/Theme.CourierManagerKotlin"
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
-
-        <activity
-            android:name=".Manager"
-            android:exported="false" />
-        <activity
-            android:name=".Courier"
-            android:exported="false" />
-        <activity
-            android:name=".Customer"
-            android:exported="false" />
-        <activity
-            android:name=".Registration"
-            android:exported="false" />
         <activity
             android:name=".Login"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true"></activity>
+        <activity
+            android:name=".Registration"
+            android:exported="true" />
+        <activity
+            android:name=".Customer"
+            android:exported="true" />
+        <activity
+            android:name=".Manager"
+            android:exported="true" />
+        <activity
+            android:name=".Courier"
+            android:exported="true" />
     </application>
-
 </manifest>

@@ -44,7 +44,6 @@ class Registration : AppCompatActivity() {
         val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
             Response.Listener { response ->
             errorMassage.text = response
-
         },
         Response.ErrorListener { error->
             errorMassage.text = error.toString()
@@ -55,6 +54,7 @@ class Registration : AppCompatActivity() {
                 params["lastName"]=lastName.text.toString().trim()
                 params["email"] = email.text.toString().trim()
                 params["phone"] = "+972" + phone.text.toString().trim().substring(1)
+                params["eRole"] = "0"
                 return params
             }
         }

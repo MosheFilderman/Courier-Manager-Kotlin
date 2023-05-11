@@ -3,13 +3,21 @@ package com.example.couriermanagerkotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.EditText
 import androidx.fragment.app.Fragment
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Customer : AppCompatActivity() {
-
+    /* main activity variables */
     lateinit var navigationBar: BottomNavigationView
     lateinit var selected: Fragment
+    /* add order variables */
+    lateinit var contactName: EditText
+    lateinit var contactPhone: EditText
+    lateinit var contactEmail: EditText
+    lateinit var pickupAddress: EditText
+    lateinit var deliveryAddress: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer)
@@ -20,7 +28,7 @@ class Customer : AppCompatActivity() {
         navigationBar.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.newOrder -> {
-                    selected = NewOrderFragment()
+                    selected = CustomerNewOrderFragment()
                     true
                 }
                 R.id.orderList -> {
@@ -33,8 +41,40 @@ class Customer : AppCompatActivity() {
                     true
                 } else -> false
             }
+            supportFragmentManager.beginTransaction().replace(R.id.frameContainer, selected).commit()
+            true
         }
-        supportFragmentManager.beginTransaction().replace(R.id.frameContainer, selected).commit()
-        true
+    }
+
+    fun newOrderField() {
+        /* Catch the new order fragment fields */
+        contactName = findViewById(R.id.contactName)
+        contactPhone = findViewById(R.id.contactPhone)
+        contactEmail = findViewById(R.id.contactEmail)
+        pickupAddress = findViewById(R.id.pickupAddress)
+        deliveryAddress = findViewById(R.id.deliveryAddress)
+
+        /* Confirm that all the fields are filled */
+        if (contactName!!.length() == 0) {
+            contactName!!.error = "Full name is required"
+        }
+        if (contactPhone!!.length() == 0) {
+            contactPhone!!.error = "Phone is required"
+        }
+        if (contactEmail!!.length() == 0) {
+            contactEmail!!.error = "Email is required"
+        }
+        if (pickupAddress!!.length() != 10) {
+            pickupAddress!!.error = "Pickup address is required"
+        }
+        if (deliveryAddress!!.length() == 0) {
+            deliveryAddress!!.error = "Delivery address is required"
+        }
+        /* only if all the fields are filled, new order will be added to the DB */
+        createOrder()
+    }
+
+    private fun createOrder() {
+
     }
 }
