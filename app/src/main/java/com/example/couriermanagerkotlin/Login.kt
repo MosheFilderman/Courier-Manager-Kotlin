@@ -20,28 +20,32 @@ import org.json.JSONObject
 class Login : AppCompatActivity() {
 
     lateinit var email: EditText
+    lateinit var phone: EditText
     lateinit var kuku: TextView
+    lateinit var userInputCode: EditText
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         email = findViewById(R.id.email)
+        phone = findViewById(R.id.phone)
         kuku = findViewById(R.id.kuku)
+
     }
 
     fun login(view: View) {
-        val url: String = "http:/172.16.3.243/courier_project/check.php"
+        val url: String = "http://10.100.102.234/courier_project/login.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
                 //errorMassage.text = response
                 if (response.toString().trim().equals("success")) {
-                    val tmeporarycode= (1000..9999).random().toString()
-                    //intent
-                    //sendSMS()
+                    val temporaryCode = (1000..9999).random().toString()
+                    Toast.makeText(this@Login, phone.text.toString(), Toast.LENGTH_SHORT).show()
+                    sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
+                    verifySMS(temporaryCode)
                 } else {
                     Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
                 }
-
             },
             Response.ErrorListener { error ->
                 // errorMassage.text = error.toString()
@@ -50,6 +54,7 @@ class Login : AppCompatActivity() {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
                 params["email"] = email.text.toString().trim()
+                params["phone"] = phone.text.toString().trim()
                 return params
             }
         }
@@ -57,36 +62,36 @@ class Login : AppCompatActivity() {
         requestQueue.add(stringRequest)
     }
 
-    fun getUsers() {
-        val url: String = "http://10.0.0.7/courier_project/get.php"
-        val stringReq =
-            StringRequest(Request.Method.GET, url, Response.Listener<String> { response ->
-                var strResp = response.toString()
-                val jsonArray = JSONArray(strResp)
-                val jsonResponse = jsonArray.getJSONObject(0)
-                val jsonArray_users = jsonResponse.getJSONArray("users")
-
-                var str_user: String = ""
-                for (i in 0 until jsonArray_users.length()) {
-                    var jsonInner: JSONObject = jsonArray_users.getJSONObject(i)
-                    str_user = str_user + "\n" + jsonInner.get("firstName")
-                    str_user = str_user + "\n" + jsonInner.get("lastName")
-                    str_user = str_user + "\n" + jsonInner.get("email")
-                    str_user = str_user + "\n" + jsonInner.get("phone")
-                    str_user = str_user + "\n" + jsonInner.get("password")
-                    str_user = str_user + "\n" + jsonInner.get("eStatus")
-                    str_user = str_user + "\n" + jsonInner.get("eRole")
-                }
-
-                Toast.makeText(this, str_user, Toast.LENGTH_SHORT).show()
-            },
-                Response.ErrorListener { error ->
-                    Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
-                }
-            )
-        val queue = Volley.newRequestQueue(this)
-        queue.add(stringReq)
-    }
+//    fun getUsers() {
+//        val url: String = "http://10.0.0.7/courier_project/get.php"
+//        val stringReq =
+//            StringRequest(Request.Method.GET, url, Response.Listener<String> { response ->
+//                var strResp = response.toString()
+//                val jsonArray = JSONArray(strResp)
+//                val jsonResponse = jsonArray.getJSONObject(0)
+//                val jsonArray_users = jsonResponse.getJSONArray("users")
+//
+//                var str_user: String = ""
+//                for (i in 0 until jsonArray_users.length()) {
+//                    var jsonInner: JSONObject = jsonArray_users.getJSONObject(i)
+//                    str_user = str_user + "\n" + jsonInner.get("firstName")
+//                    str_user = str_user + "\n" + jsonInner.get("lastName")
+//                    str_user = str_user + "\n" + jsonInner.get("email")
+//                    str_user = str_user + "\n" + jsonInner.get("phone")
+//                    str_user = str_user + "\n" + jsonInner.get("password")
+//                    str_user = str_user + "\n" + jsonInner.get("eStatus")
+//                    str_user = str_user + "\n" + jsonInner.get("eRole")
+//                }
+//
+//                Toast.makeText(this, str_user, Toast.LENGTH_SHORT).show()
+//            },
+//                Response.ErrorListener { error ->
+//                    Toast.makeText(this, error.toString(), Toast.LENGTH_SHORT).show()
+//                }
+//            )
+//        val queue = Volley.newRequestQueue(this)
+//        queue.add(stringReq)
+//    }
 
     fun registration(view: View) {
         startActivity(Intent(this, Registration::class.java))
@@ -94,36 +99,36 @@ class Login : AppCompatActivity() {
 
     }
 
-    fun forgotPassword(view: View) {
-        val url: String = "http://172.26.96.1/courier_project/forgotPassword.php"
-        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
-            Response.Listener { response ->
-                //errorMassage.text = response
-                if (response.toString().trim().equals("success")) {
-                    var code = (100000..999999).random()
-                    sendSMS(code.toString(),)
-                    verifySMS(code.toString())
+//    fun forgotPassword(view: View) {
+//        val url: String = "http://172.16.0.50/courier_project/forgotPassword.php"
+//        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
+//            Response.Listener { response ->
+//                //errorMassage.text = response
+//                if (response.toString().trim().equals("success")) {
+//                    var code = (100000..999999).random()
+//                    sendSMS(code.toString())
+//                    verifySMS(code.toString())
+//
+//                } else {
+//                    Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT)
+//                        .show()
+//                }
+//            },
+//            Response.ErrorListener { error ->
+//                // errorMassage.text = error.toString()
+//                Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
+//            }) {
+//            override fun getParams(): Map<String, String> {
+//                val params: MutableMap<String, String> = HashMap()
+//                params["email"] = email.text.toString().trim()
+//                return params
+//            }
+//        }
+//        val requestQueue = Volley.newRequestQueue(this)
+//        requestQueue.add(stringRequest)
+//    }
 
-                } else {
-                    Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT)
-                        .show()
-                }
-            },
-            Response.ErrorListener { error ->
-                // errorMassage.text = error.toString()
-                Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
-            }) {
-            override fun getParams(): Map<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["email"] = email.text.toString().trim()
-                return params
-            }
-        }
-        val requestQueue = Volley.newRequestQueue(this)
-        requestQueue.add(stringRequest)
-    }
-
-    fun sendSMS(value: String) {
+    fun sendSMS(phone: String, code: String) {
         // on the below line we are creating a try and catch block
         try {
 
@@ -143,10 +148,10 @@ class Login : AppCompatActivity() {
             }
 
             // on below line we are sending text message.
-            smsManager.sendTextMessage("+972"+"phone", null, value, null, null)
+            smsManager.sendTextMessage(phone, null, code, null, null)
 
             // on below line we are displaying a toast message for message send,
-            Toast.makeText(applicationContext, "Message Sent", Toast.LENGTH_LONG).show()
+            Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
 
         } catch (e: Exception) {
 
@@ -160,16 +165,17 @@ class Login : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
-        val userInputCode: EditText = findViewById(R.id.userInputCode)
+        userInputCode = dialogLayout.findViewById(R.id.userInputCode)
         builder.setView(dialogLayout)
-
         builder.setPositiveButton("Verify") { dialogInterface, i ->
-            if(userInputCode.text.toString().equals(code)){
-
+            if (userInputCode.text.toString().equals(code)) {
+                startActivity(Intent(this@Login, Customer::class.java))
+                finish()
             }
-
+            dialogInterface.dismiss()
         }
-
+        builder.show()
 
     }
+
 }

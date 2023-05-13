@@ -1,5 +1,6 @@
 package com.example.couriermanagerkotlin
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -47,6 +48,8 @@ class Registration : AppCompatActivity() {
         },
         Response.ErrorListener { error->
             errorMassage.text = error.toString()
+            startActivity(Intent(this@Registration, Login::class.java))
+            finish()
         }){
             override fun getParams(): Map<String,String>{
                 val params:MutableMap<String,String> = HashMap()
