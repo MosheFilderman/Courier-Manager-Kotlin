@@ -13,76 +13,200 @@
         android:layout_marginBottom="10dp"
         android:text="open new order"
         android:textAlignment="center"
-        android:textSize="20sp"
+        android:textSize="25sp"
         android:textStyle="bold" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:text="Contact's Full Name"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:gravity="center"
+        android:padding="5dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/contactName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="contact's full name"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
-
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/contactPhone"
-            android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <EditText
+            android:id="@+id/contFirstName"
+            android:hint="Contact's First Name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="contact's phone"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/contLastName"
+            android:hint="Contact's Last Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:text="Contact's Phone"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:gravity="center"
+        android:padding="5dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/contactEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="contact's eMail"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Spinner
+            android:id="@+id/spinnerAreaCode"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/contPhoneNumber"
+            android:hint="Contact's Last Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/pickupAddress"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="pickup address"/>
-    </com.google.android.material.textfield.TextInputLayout>
-
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:text="Contact's Email"
+        android:textStyle="bold"
+        android:textSize="18sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="10dp">
+        android:gravity="center"
+        android:padding="5dp"/>
 
-        <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/deliveryAddress"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <EditText
+            android:id="@+id/contEmail"
+            android:hint="Contact's email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="delivery address"/>
-    </com.google.android.material.textfield.TextInputLayout>
+            android:inputType="textEmailAddress"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="Delivery Address"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Spinner
+            android:id="@+id/deliveryCity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/deliveryStreet"
+            android:hint="Street"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/deliveryBuild"
+            android:hint="building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="Pickup Address"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <Spinner
+            android:id="@+id/pickupCity"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/pickupStreet"
+            android:hint="Street"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/pickupBuild"
+            android:hint="building"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </LinearLayout>
+
+    <TextView
+        android:text="Package Measure's"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+        <EditText
+            android:id="@+id/packageHeight"
+            android:hint="Height"
+            android:inputType="number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/packageWidth"
+            android:hint="Width"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/packageLength"
+            android:hint="Length"
+            android:inputType="number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"/>
+        <EditText
+            android:id="@+id/packageVolume"
+            android:hint="Volume"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/errorMassage"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <Button
-        android:id="@+id/submit"
         android:onClick="newOrderField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

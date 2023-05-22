@@ -3,25 +3,42 @@ package com.example.couriermanagerkotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import android.widget.EditText
+import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.io.Serializable
 
 class Customer : AppCompatActivity() {
     /* main activity variables */
     lateinit var navigationBar: BottomNavigationView
     lateinit var selected: Fragment
     /* add order variables */
-    lateinit var contactName: EditText
-    lateinit var contactPhone: EditText
-    lateinit var contactEmail: EditText
-    lateinit var pickupAddress: EditText
-    lateinit var deliveryAddress: EditText
+    lateinit var contFirstName: EditText
+    lateinit var contLastName: EditText
+    lateinit var areaCode: EditText
+    lateinit var contPhoneNumber: EditText
+    lateinit var contEmail: EditText
+    lateinit var deliveryCity: Spinner
+    lateinit var deliveryStreet: EditText
+    lateinit var deliveryBuild: EditText
+    lateinit var pickupCity: Spinner
+    lateinit var pickupStreet: EditText
+    lateinit var pickupBuild: EditText
+    lateinit var packageHeight: EditText
+    lateinit var packageWidth: EditText
+    lateinit var packageLength: EditText
+    lateinit var packageVolume: EditText
     lateinit var errorMassage: TextView
+//    data class Measure(var height: Int, val width: Int, val length: Int, val weight: Int) :
+//        Serializable {
+//        var volume: Int = height * width * length
+//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,32 +66,50 @@ class Customer : AppCompatActivity() {
             supportFragmentManager.beginTransaction().replace(R.id.frameContainer, selected).commit()
             true
         }
+
+
     }
 
     fun newOrderField() {
         /* Catch the new order fragment fields */
-        contactName = findViewById(R.id.contactName)
-        contactPhone = findViewById(R.id.contactPhone)
-        contactEmail = findViewById(R.id.contactEmail)
-        pickupAddress = findViewById(R.id.pickupAddress)
-        deliveryAddress = findViewById(R.id.deliveryAddress)
+
+        /* Contact full name */
+        contFirstName = findViewById(R.id.contFirstName)
+        contLastName = findViewById(R.id.contLastName)
+        /* Contact phone number */
+        areaCode = findViewById(R.id.spinnerAreaCode)
+        contPhoneNumber = findViewById(R.id.contPhoneNumber)
+        /* Contact email */
+        contEmail = findViewById(R.id.contEmail)
+        /* Delivery address */
+        deliveryCity = findViewById(R.id.deliveryCity)
+        deliveryStreet = findViewById(R.id.deliveryStreet)
+        deliveryBuild = findViewById(R.id.deliveryBuild)
+        /* Pickup address */
+        pickupCity = findViewById(R.id.pickupCity)
+        pickupStreet = findViewById(R.id.pickupStreet)
+        pickupBuild = findViewById(R.id.pickupBuild)
+        /* Package measure's */
+        packageHeight = findViewById(R.id.packageHeight)
+        packageWidth = findViewById(R.id.packageWidth)
+        packageLength = findViewById(R.id.packageLength)
+        packageVolume = findViewById(R.id.packageVolume)
 
         /* Confirm that all the fields are filled */
-        if (contactName!!.length() == 0) {
-            contactName!!.error = "Full name is required"
+
+        /* Contact's full name fields filled */
+        if (contFirstName!!.length() == 0) {
+            contFirstName!!.error = "Contact's first name is required"
         }
-        if (contactPhone!!.length() == 0) {
-            contactPhone!!.error = "Phone is required"
+        if (contLastName!!.length() == 0) {
+            contLastName!!.error = "Contact's last name is required"
         }
-        if (contactEmail!!.length() == 0) {
-            contactEmail!!.error = "Email is required"
+        /* Contact's phone fields filled */
+
+        if (contPhoneNumber!!.length() == 0) {
+            contPhoneNumber!!.error = "Contact's last name is required"
         }
-        if (pickupAddress!!.length() != 10) {
-            pickupAddress!!.error = "Pickup address is required"
-        }
-        if (deliveryAddress!!.length() == 0) {
-            deliveryAddress!!.error = "Delivery address is required"
-        }
+
         /* only if all the fields are filled, new order will be added to the DB */
         createOrder()
     }
@@ -93,11 +128,11 @@ class Customer : AppCompatActivity() {
             }){
             override fun getParams(): Map<String,String>{
                 val params:MutableMap<String,String> = HashMap()
-                params["contactName"]=contactName.text.toString().trim()
-                params["contactPhone"]=contactPhone.text.toString().trim()
-                params["contactEmail"] = contactEmail.text.toString().trim()
-                params["pickupAddress"] = pickupAddress.text.toString().trim()
-                params["deliveryAddress"] = deliveryAddress.text.toString().trim()
+//                params["contactName"]=contactName.text.toString().trim()
+//                params["contactPhone"]=contactPhone.text.toString().trim()
+//                params["contactEmail"] = contactEmail.text.toString().trim()
+//                params["pickupAddress"] = pickupAddress.text.toString().trim()
+//                params["deliveryAddress"] = deliveryAddress.text.toString().trim()
                 return params
             }
         }
