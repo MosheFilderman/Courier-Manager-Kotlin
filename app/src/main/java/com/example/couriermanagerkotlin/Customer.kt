@@ -4,7 +4,11 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.android.volley.Response
+import com.android.volley.toolbox.StringRequest
+import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Customer : AppCompatActivity() {
@@ -17,6 +21,7 @@ class Customer : AppCompatActivity() {
     lateinit var contactEmail: EditText
     lateinit var pickupAddress: EditText
     lateinit var deliveryAddress: EditText
+    lateinit var errorMassage: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,6 +80,28 @@ class Customer : AppCompatActivity() {
     }
 
     private fun createOrder() {
-
+        val url: String =  "http://10.100.102.234/courier_project/registration.php"
+        val stringRequest : StringRequest = object : StringRequest(
+            Method.POST,url,
+            Response.Listener { response ->
+                errorMassage.text = response
+            },
+            Response.ErrorListener { error->
+                errorMassage.text = error.toString()
+                startActivity(Intent(this@Customer, Login::class.java))
+                finish()
+            }){
+            override fun getParams(): Map<String,String>{
+                val params:MutableMap<String,String> = HashMap()
+                params["contactName"]=contactName.text.toString().trim()
+                params["contactPhone"]=contactPhone.text.toString().trim()
+                params["contactEmail"] = contactEmail.text.toString().trim()
+                params["pickupAddress"] = pickupAddress.text.toString().trim()
+                params["deliveryAddress"] = deliveryAddress.text.toString().trim()
+                return params
+            }
+        }
+        val requestQueue = Volley.newRequestQueue(this)
+        requestQueue.add(stringRequest)
     }
 }

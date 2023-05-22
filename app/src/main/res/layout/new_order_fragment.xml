@@ -76,6 +76,11 @@
             android:hint="delivery address"/>
     </com.google.android.material.textfield.TextInputLayout>
 
+    <TextView
+        android:id="@+id/errorMassage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
     <Button
         android:id="@+id/submit"
         android:onClick="newOrderField"
