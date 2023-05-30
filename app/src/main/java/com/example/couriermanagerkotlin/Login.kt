@@ -62,7 +62,6 @@ class Login : AppCompatActivity() {
                     Toast.makeText(this@Login, phone.text.toString(), Toast.LENGTH_SHORT).show()
                     sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
                     if (verifySMS(temporaryCode)) {
-
                         var editor: SharedPreferences.Editor = shrd!!.edit()
                         editor.putString("firstName", jsonInner.get("firstName").toString())
                         editor.putString("lastName", jsonInner.get("lastName").toString())
@@ -75,6 +74,8 @@ class Login : AppCompatActivity() {
                             "1" -> startActivity(Intent(this@Login, Courier::class.java))
                             "2" -> startActivity(Intent(this@Login, Manager::class.java))
                         }
+                    } else {
+                        Toast.makeText(this@Login, "error code", Toast.LENGTH_SHORT).show()
                     }
                 } else {
                     //   Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
@@ -167,22 +168,26 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun verifySMS(code: String): Boolean {
+    fun verifySMS(code: String):Boolean {
         var flag = false
+        var insertValue = false
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
         userInputCode = dialogLayout.findViewById(R.id.userInputCode)
         builder.setView(dialogLayout)
+
         builder.setPositiveButton("Verify") { dialogInterface, i ->
+            insertValue = true
             if (userInputCode.text.toString().equals(code)) {
 
-                flag = true
+                return@setPositiveButton
             }
             dialogInterface.dismiss()
         }
         builder.show()
-        return flag
+        Thread.sleep(10000)
+
     }
 
 }
