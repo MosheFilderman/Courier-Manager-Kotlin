@@ -1,6 +1,8 @@
 package com.example.couriermanagerkotlin
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -23,6 +25,9 @@ class Login : AppCompatActivity() {
     lateinit var phone: EditText
     lateinit var kuku: TextView
     lateinit var userInputCode: EditText
+
+    var shrd: SharedPreferences? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -31,25 +36,37 @@ class Login : AppCompatActivity() {
         phone = findViewById(R.id.phone)
         kuku = findViewById(R.id.kuku)
 
+        shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
+        //var savedEmail = shrd!!.getString("email", "none")
+        //var flag = shrd!!.getBoolean("connected", false)
+
+
     }
 
     fun login(view: View) {
-        val url: String = "http://10.100.102.234/courier_project/login.php"
+        val url: String = "http://172.16.104.224:82/courier_project/login.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
-                //errorMassage.text = response
-                if (response.toString().trim().equals("success")) {
+
+                if (!response.toString().trim().equals("error")) {
+                    val strRes = response.toString()
+                    val jsonArray = JSONArray(strRes)
+                    val jsonResponse = jsonArray.getJSONObject(0)
+                    val jsonArray_user = jsonResponse.getJSONArray("users")
                     val temporaryCode = (1000..9999).random().toString()
                     Toast.makeText(this@Login, phone.text.toString(), Toast.LENGTH_SHORT).show()
                     sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
-                    verifySMS(temporaryCode)
+                   if (verifySMS(temporaryCode)) {
+                        Toast.makeText(this@Login,"yessss",Toast.LENGTH_SHORT)
+                   }
                 } else {
-                    Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
+                 //   Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
+                    kuku.text = response.toString()
                 }
             },
             Response.ErrorListener { error ->
-                // errorMassage.text = error.toString()
-                Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
+                kuku.text = error.toString()
+                //Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
@@ -99,34 +116,6 @@ class Login : AppCompatActivity() {
 
     }
 
-//    fun forgotPassword(view: View) {
-//        val url: String = "http://172.16.0.50/courier_project/forgotPassword.php"
-//        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
-//            Response.Listener { response ->
-//                //errorMassage.text = response
-//                if (response.toString().trim().equals("success")) {
-//                    var code = (100000..999999).random()
-//                    sendSMS(code.toString())
-//                    verifySMS(code.toString())
-//
-//                } else {
-//                    Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT)
-//                        .show()
-//                }
-//            },
-//            Response.ErrorListener { error ->
-//                // errorMassage.text = error.toString()
-//                Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
-//            }) {
-//            override fun getParams(): Map<String, String> {
-//                val params: MutableMap<String, String> = HashMap()
-//                params["email"] = email.text.toString().trim()
-//                return params
-//            }
-//        }
-//        val requestQueue = Volley.newRequestQueue(this)
-//        requestQueue.add(stringRequest)
-//    }
 
     fun sendSMS(phone: String, code: String) {
         // on the below line we are creating a try and catch block
@@ -161,7 +150,8 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun verifySMS(code: String) {
+    fun verifySMS(code: String):Boolean {
+        var flag = false
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
@@ -169,13 +159,16 @@ class Login : AppCompatActivity() {
         builder.setView(dialogLayout)
         builder.setPositiveButton("Verify") { dialogInterface, i ->
             if (userInputCode.text.toString().equals(code)) {
-                startActivity(Intent(this@Login, Customer::class.java))
-                finish()
+                var editor: SharedPreferences.Editor = shrd!!.edit()
+                editor.putString("email", "none")
+                editor.putBoolean("connected", true)
+                editor.commit()
+                flag = true
             }
             dialogInterface.dismiss()
         }
         builder.show()
-
+       return flag
     }
 
 }

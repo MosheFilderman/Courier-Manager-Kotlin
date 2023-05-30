@@ -18,8 +18,6 @@ class Registration : AppCompatActivity() {
     lateinit var lastName :EditText
     lateinit var email :EditText
     lateinit var phone :EditText
-    lateinit var password :EditText
-    lateinit var confirmPassword :EditText
     lateinit var errorMassage: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,7 +39,7 @@ class Registration : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val url: String =  "http://10.100.102.234/courier_project/registration.php"
+        val url: String =  "http://172.16.104.224:82/courier_project/registration.php"
         val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
             Response.Listener { response ->
             errorMassage.text = response
@@ -84,16 +82,6 @@ class Registration : AppCompatActivity() {
         }
         if (phone!!.length() != 10) {
             phone!!.error = "phone should be 10 digits"
-            return false
-        }
-        if (password!!.length() == 0 && confirmPassword!!.length() == 0) {
-            password!!.error = "Password is required"
-            return false
-        } else if (password!!.length() < 8 && confirmPassword!!.length() < 8) {
-            password!!.error = "Password must be minimum 8 characters"
-            return false
-        } else if (password.text.toString() != confirmPassword.text.toString()) {
-            password!!.error = "Both password's must be the same"
             return false
         }
         // after all validation return true.
