@@ -24,6 +24,7 @@ class Login : AppCompatActivity() {
     lateinit var email: EditText
     lateinit var phone: EditText
     lateinit var kuku: TextView
+    lateinit var kuku1: TextView
     lateinit var userInputCode: EditText
 
     var shrd: SharedPreferences? = null
@@ -35,6 +36,7 @@ class Login : AppCompatActivity() {
         email = findViewById(R.id.email)
         phone = findViewById(R.id.phone)
         kuku = findViewById(R.id.kuku)
+        kuku1 = findViewById(R.id.kuku1)
 
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
         //var savedEmail = shrd!!.getString("email", "none")
@@ -44,23 +46,38 @@ class Login : AppCompatActivity() {
     }
 
     fun login(view: View) {
-        val url: String = "http://172.16.104.224:82/courier_project/login.php"
+        val url: String = "http://10.100.102.234/courier_project/login.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
 
                 if (!response.toString().trim().equals("error")) {
+                    kuku.text = response.toString()
                     val strRes = response.toString()
                     val jsonArray = JSONArray(strRes)
                     val jsonResponse = jsonArray.getJSONObject(0)
                     val jsonArray_user = jsonResponse.getJSONArray("users")
+                    var jsonInner: JSONObject = jsonArray_user.getJSONObject(0)
+                    kuku1.text = jsonInner.get("firstName").toString()
                     val temporaryCode = (1000..9999).random().toString()
                     Toast.makeText(this@Login, phone.text.toString(), Toast.LENGTH_SHORT).show()
                     sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
-                   if (verifySMS(temporaryCode)) {
-                        Toast.makeText(this@Login,"yessss",Toast.LENGTH_SHORT)
-                   }
+                    if (verifySMS(temporaryCode)) {
+
+                        var editor: SharedPreferences.Editor = shrd!!.edit()
+                        editor.putString("firstName", jsonInner.get("firstName").toString())
+                        editor.putString("lastName", jsonInner.get("lastName").toString())
+                        editor.putString("email", jsonInner.get("email").toString())
+                        editor.putString("eRole", jsonInner.get("eRole").toString())
+                        editor.putBoolean("connected", true)
+                        editor.commit()
+                        when (shrd!!.getString("eRole", "none")) {
+                            "0" -> startActivity(Intent(this@Login, Customer::class.java))
+                            "1" -> startActivity(Intent(this@Login, Courier::class.java))
+                            "2" -> startActivity(Intent(this@Login, Manager::class.java))
+                        }
+                    }
                 } else {
-                 //   Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
+                    //   Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
                     kuku.text = response.toString()
                 }
             },
@@ -150,7 +167,7 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun verifySMS(code: String):Boolean {
+    fun verifySMS(code: String): Boolean {
         var flag = false
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
@@ -159,16 +176,13 @@ class Login : AppCompatActivity() {
         builder.setView(dialogLayout)
         builder.setPositiveButton("Verify") { dialogInterface, i ->
             if (userInputCode.text.toString().equals(code)) {
-                var editor: SharedPreferences.Editor = shrd!!.edit()
-                editor.putString("email", "none")
-                editor.putBoolean("connected", true)
-                editor.commit()
+
                 flag = true
             }
             dialogInterface.dismiss()
         }
         builder.show()
-       return flag
+        return flag
     }
 
 }

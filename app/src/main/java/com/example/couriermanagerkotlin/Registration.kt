@@ -39,7 +39,7 @@ class Registration : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val url: String =  "http://172.16.104.224:82/courier_project/registration.php"
+        val url: String =  "http://10.100.102.234/courier_project/registration.php"
         val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
             Response.Listener { response ->
             errorMassage.text = response
