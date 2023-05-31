@@ -19,7 +19,7 @@ import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
 
-class Login : AppCompatActivity() {
+class Login : AppCompatActivity(), Koko {
 
     lateinit var email: EditText
     lateinit var phone: EditText
@@ -28,6 +28,10 @@ class Login : AppCompatActivity() {
     lateinit var userInputCode: EditText
 
     var shrd: SharedPreferences? = null
+
+    companion object {
+        var flag = false
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,50 +50,40 @@ class Login : AppCompatActivity() {
     }
 
     fun login(view: View) {
-        val url: String = "http://10.100.102.234/courier_project/login.php"
+        val url: String = "http://192.168.93.141/courier_project/login.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
 
                 if (!response.toString().trim().equals("error")) {
-                    kuku.text = response.toString()
                     val strRes = response.toString()
                     val jsonArray = JSONArray(strRes)
                     val jsonResponse = jsonArray.getJSONObject(0)
                     val jsonArray_user = jsonResponse.getJSONArray("users")
                     var jsonInner: JSONObject = jsonArray_user.getJSONObject(0)
-                    kuku1.text = jsonInner.get("firstName").toString()
                     val temporaryCode = (1000..9999).random().toString()
-                    Toast.makeText(this@Login, phone.text.toString(), Toast.LENGTH_SHORT).show()
                     sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
-                    if (verifySMS(temporaryCode)) {
-                        var editor: SharedPreferences.Editor = shrd!!.edit()
-                        editor.putString("firstName", jsonInner.get("firstName").toString())
-                        editor.putString("lastName", jsonInner.get("lastName").toString())
-                        editor.putString("email", jsonInner.get("email").toString())
-                        editor.putString("eRole", jsonInner.get("eRole").toString())
-                        editor.putBoolean("connected", true)
-                        editor.commit()
-                        when (shrd!!.getString("eRole", "none")) {
-                            "0" -> startActivity(Intent(this@Login, Customer::class.java))
-                            "1" -> startActivity(Intent(this@Login, Courier::class.java))
-                            "2" -> startActivity(Intent(this@Login, Manager::class.java))
-                        }
-                    } else {
-                        Toast.makeText(this@Login, "error code", Toast.LENGTH_SHORT).show()
-                    }
+                    var editor: SharedPreferences.Editor = shrd!!.edit()
+                    editor.putString("firstName", jsonInner.get("firstName").toString())
+                    editor.putString("lastName", jsonInner.get("lastName").toString())
+                    editor.putString("email", jsonInner.get("email").toString())
+                    editor.putString("eRole", jsonInner.get("eRole").toString())
+                    editor.putBoolean("connected", true)
+                    editor.commit()
+                    verifySMS(temporaryCode)
+
                 } else {
-                    //   Toast.makeText(this@Login, response.toString(), Toast.LENGTH_SHORT).show()
-                    kuku.text = response.toString()
+                    Toast.makeText(this@Login, "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT).show()
+
                 }
             },
             Response.ErrorListener { error ->
-                kuku.text = error.toString()
-                //Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
+
+                Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
                 params["email"] = email.text.toString().trim()
-                params["phone"] = phone.text.toString().trim()
+                params["phone"] = "+972" + phone.text.toString().substring(1)
                 return params
             }
         }
@@ -158,7 +152,7 @@ class Login : AppCompatActivity() {
             smsManager.sendTextMessage(phone, null, code, null, null)
 
             // on below line we are displaying a toast message for message send,
-            Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
+           // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
 
         } catch (e: Exception) {
 
@@ -168,9 +162,8 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun verifySMS(code: String):Boolean {
-        var flag = false
-        var insertValue = false
+    fun verifySMS(code: String) {
+
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
@@ -178,15 +171,21 @@ class Login : AppCompatActivity() {
         builder.setView(dialogLayout)
 
         builder.setPositiveButton("Verify") { dialogInterface, i ->
-            insertValue = true
+
             if (userInputCode.text.toString().equals(code)) {
 
-                return@setPositiveButton
+                when (shrd!!.getString("eRole", "none")) {
+                    "0" -> startActivity(Intent(this@Login, Customer::class.java))
+                    "1" -> startActivity(Intent(this@Login, Courier::class.java))
+                    "2" -> startActivity(Intent(this@Login, Manager::class.java))
+                }
             }
+
             dialogInterface.dismiss()
+
         }
         builder.show()
-        Thread.sleep(10000)
+
 
     }
 
