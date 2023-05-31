@@ -12,14 +12,13 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
 
-class Login : AppCompatActivity(), Koko {
+class Login : AppCompatActivity() {
 
     lateinit var email: EditText
     lateinit var phone: EditText
@@ -179,6 +178,8 @@ class Login : AppCompatActivity(), Koko {
                     "1" -> startActivity(Intent(this@Login, Courier::class.java))
                     "2" -> startActivity(Intent(this@Login, Manager::class.java))
                 }
+            }else{
+                Toast.makeText(this@Login, "Invalid Code", Toast.LENGTH_SHORT).show()
             }
 
             dialogInterface.dismiss()

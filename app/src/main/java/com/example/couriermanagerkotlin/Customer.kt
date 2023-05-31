@@ -93,7 +93,7 @@ class Customer : AppCompatActivity() {
         packageHeight = findViewById(R.id.packageHeight)
         packageWidth = findViewById(R.id.packageWidth)
         packageLength = findViewById(R.id.packageLength)
-        packageVolume = findViewById(R.id.packageVolume)
+        packageVolume = findViewById(R.id.packageWight)
 
         /* Confirm that all the fields are filled */
 
