@@ -25,17 +25,18 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
-            android:exported="true"/>
-        <activity
-            android:name=".Registration"
+            android:name=".CustomerNewOrder"
             android:exported="true" />
         <activity
-            android:name=".Customer"
+            android:name=".MainActivity"
+            android:exported="true" />
+        <activity
+            android:name=".Registration"
             android:exported="true" />
         <activity
             android:name=".Manager"
@@ -44,4 +45,5 @@
             android:name=".Courier"
             android:exported="true" />
     </application>
+
 </manifest>

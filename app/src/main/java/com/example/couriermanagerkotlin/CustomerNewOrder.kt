@@ -3,25 +3,20 @@ package com.example.couriermanagerkotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.fragment.app.Fragment
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.io.Serializable
 
-class Customer : AppCompatActivity() {
-    /* main activity variables */
-    lateinit var navigationBar: BottomNavigationView
-    lateinit var selected: Fragment
+class CustomerNewOrder : AppCompatActivity() {
     /* add order variables */
     lateinit var contFirstName: EditText
     lateinit var contLastName: EditText
-    lateinit var areaCode: EditText
+    lateinit var areaCode: Spinner
     lateinit var contPhoneNumber: EditText
     lateinit var contEmail: EditText
     lateinit var deliveryCity: Spinner
@@ -35,43 +30,21 @@ class Customer : AppCompatActivity() {
     lateinit var packageLength: EditText
     lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
-//    data class Measure(var height: Int, val width: Int, val length: Int, val weight: Int) :
-//        Serializable {
-//        var volume: Int = height * width * length
-//    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_customer)
+        setContentView(R.layout.activity_customer_new_order)
 
-        supportFragmentManager.beginTransaction().replace(R.id.frameContainer, CustomerOrderListFragment()).commit()
+        /* Area code spinner */
+        areaCode = findViewById(R.id.spinnerAreaCode)
+        val areaCodeArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.areaCodes))
+        areaCode.adapter = areaCodeArrayAdapter
 
-        navigationBar = findViewById(R.id.navigationBar)
-        navigationBar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.newOrder -> {
-                    selected = CustomerNewOrderFragment()
-                    true
-                }
-                R.id.orderList -> {
-                    selected = CustomerOrderListFragment()
-                    true
-                }
-                R.id.logout -> {
-                    startActivity(Intent(this@Customer, Login::class.java))
-                    finish()
-                    true
-                } else -> false
-            }
-            supportFragmentManager.beginTransaction().replace(R.id.frameContainer, selected).commit()
-            true
-        }
-
-
+        areaCode.setSelection(0, false)
     }
 
-    fun newOrderField() {
-        /* Catch the new order fragment fields */
+    fun newOrderField(view: View) {
+        /* Catch the new order fields */
 
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
@@ -105,7 +78,6 @@ class Customer : AppCompatActivity() {
             contLastName!!.error = "Contact's last name is required"
         }
         /* Contact's phone fields filled */
-
         if (contPhoneNumber!!.length() == 0) {
             contPhoneNumber!!.error = "Contact's last name is required"
         }
@@ -123,7 +95,7 @@ class Customer : AppCompatActivity() {
             },
             Response.ErrorListener { error->
                 errorMassage.text = error.toString()
-                startActivity(Intent(this@Customer, Login::class.java))
+                startActivity(Intent(this@CustomerNewOrder, Login::class.java))
                 finish()
             }){
             override fun getParams(): Map<String,String>{

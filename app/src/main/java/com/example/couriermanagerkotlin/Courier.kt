@@ -14,7 +14,7 @@ class Courier : AppCompatActivity() {
         setContentView(R.layout.activity_courier)
         supportFragmentManager.beginTransaction().replace(R.id.listmapview,CourierMapFragment()).commit()
 
-        navigationView = findViewById(R.id.nav) as BottomNavigationView
+        navigationView = findViewById(R.id.nav)
         navigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.listView->{
