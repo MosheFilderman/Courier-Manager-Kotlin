@@ -174,7 +174,7 @@ class Login : AppCompatActivity() {
             if (userInputCode.text.toString().equals(code)) {
 
                 when (shrd!!.getString("eRole", "none")) {
-                    "0" -> startActivity(Intent(this@Login, Customer::class.java))
+                    "0" -> startActivity(Intent(this@Login, CustomerOrderList::class.java))
                     "1" -> startActivity(Intent(this@Login, Courier::class.java))
                     "2" -> startActivity(Intent(this@Login, Manager::class.java))
                 }

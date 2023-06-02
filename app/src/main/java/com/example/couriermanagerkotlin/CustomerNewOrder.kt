@@ -3,11 +3,15 @@ package com.example.couriermanagerkotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -31,6 +35,23 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
 
+    /* Menu toolbar */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.customer_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.newOrder -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
+            R.id.orderList -> startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
+            R.id.logout -> {
+                startActivity(Intent(this@CustomerNewOrder, Login::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
@@ -41,7 +62,62 @@ class CustomerNewOrder : AppCompatActivity() {
         areaCode.adapter = areaCodeArrayAdapter
 
         areaCode.setSelection(0, false)
+
+        areaCode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {}
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@CustomerNewOrder, "Area code must bo chosen", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        /* Delivery city Spinner */
+        deliveryCity = findViewById(R.id.deliveryCity)
+        val deliveryCityArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys))
+        deliveryCity.adapter = deliveryCityArrayAdapter
+
+        deliveryCity.setSelection(0, false)
+
+        deliveryCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {}
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        /* Delivery city Spinner */
+        pickupCity = findViewById(R.id.pickupCity)
+        val pickupCityArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys))
+        pickupCity.adapter = pickupCityArrayAdapter
+
+        pickupCity.setSelection(0, false)
+
+        pickupCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {}
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
+
+
 
     fun newOrderField(view: View) {
         /* Catch the new order fields */
