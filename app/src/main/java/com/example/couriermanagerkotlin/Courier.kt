@@ -26,7 +26,7 @@ class Courier : AppCompatActivity() {
         lastName.text = data.getString("lastName", "no data")
         supportFragmentManager.beginTransaction().replace(R.id.listmapview,CourierMapFragment()).commit()
 
-        navigationView = findViewById(R.id.nav) as BottomNavigationView
+        navigationView = findViewById(R.id.nav)
         navigationView.setOnItemSelectedListener {
             when(it.itemId){
                 R.id.listView->{

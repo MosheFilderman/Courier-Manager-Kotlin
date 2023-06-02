@@ -3,25 +3,24 @@ package com.example.couriermanagerkotlin
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
+import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
-import androidx.fragment.app.Fragment
+import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import java.io.Serializable
 
-class Customer : AppCompatActivity() {
-    /* main activity variables */
-    lateinit var navigationBar: BottomNavigationView
-    lateinit var selected: Fragment
+class CustomerNewOrder : AppCompatActivity() {
     /* add order variables */
     lateinit var contFirstName: EditText
     lateinit var contLastName: EditText
-    lateinit var areaCode: EditText
+    lateinit var areaCode: Spinner
     lateinit var contPhoneNumber: EditText
     lateinit var contEmail: EditText
     lateinit var deliveryCity: Spinner
@@ -35,43 +34,93 @@ class Customer : AppCompatActivity() {
     lateinit var packageLength: EditText
     lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
-//    data class Measure(var height: Int, val width: Int, val length: Int, val weight: Int) :
-//        Serializable {
-//        var volume: Int = height * width * length
-//    }
+
+    /* Menu toolbar */
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.customer_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.newOrder -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
+            R.id.orderList -> startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
+            R.id.logout -> {
+                startActivity(Intent(this@CustomerNewOrder, Login::class.java))
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_customer)
+        setContentView(R.layout.activity_customer_new_order)
 
-        supportFragmentManager.beginTransaction().replace(R.id.frameContainer, CustomerOrderListFragment()).commit()
+        /* Area code spinner */
+        areaCode = findViewById(R.id.spinnerAreaCode)
+        val areaCodeArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.areaCodes))
+        areaCode.adapter = areaCodeArrayAdapter
 
-        navigationBar = findViewById(R.id.navigationBar)
-        navigationBar.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.newOrder -> {
-                    selected = CustomerNewOrderFragment()
-                    true
-                }
-                R.id.orderList -> {
-                    selected = CustomerOrderListFragment()
-                    true
-                }
-                R.id.logout -> {
-                    startActivity(Intent(this@Customer, Login::class.java))
-                    finish()
-                    true
-                } else -> false
+        areaCode.setSelection(0, false)
+
+        areaCode.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {}
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@CustomerNewOrder, "Area code must bo chosen", Toast.LENGTH_SHORT).show()
             }
-            supportFragmentManager.beginTransaction().replace(R.id.frameContainer, selected).commit()
-            true
         }
 
+        /* Delivery city Spinner */
+        deliveryCity = findViewById(R.id.deliveryCity)
+        val deliveryCityArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys))
+        deliveryCity.adapter = deliveryCityArrayAdapter
 
+        deliveryCity.setSelection(0, false)
+
+        deliveryCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {}
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        /* Delivery city Spinner */
+        pickupCity = findViewById(R.id.pickupCity)
+        val pickupCityArrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys))
+        pickupCity.adapter = pickupCityArrayAdapter
+
+        pickupCity.setSelection(0, false)
+
+        pickupCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {}
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
-    fun newOrderField() {
-        /* Catch the new order fragment fields */
+
+
+    fun newOrderField(view: View) {
+        /* Catch the new order fields */
 
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
@@ -105,7 +154,6 @@ class Customer : AppCompatActivity() {
             contLastName!!.error = "Contact's last name is required"
         }
         /* Contact's phone fields filled */
-
         if (contPhoneNumber!!.length() == 0) {
             contPhoneNumber!!.error = "Contact's last name is required"
         }
@@ -123,7 +171,7 @@ class Customer : AppCompatActivity() {
             },
             Response.ErrorListener { error->
                 errorMassage.text = error.toString()
-                startActivity(Intent(this@Customer, Login::class.java))
+                startActivity(Intent(this@CustomerNewOrder, Login::class.java))
                 finish()
             }){
             override fun getParams(): Map<String,String>{
