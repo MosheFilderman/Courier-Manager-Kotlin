@@ -6,7 +6,7 @@
     android:gravity="center">
 
     <TextView
-        android:text="your order's"
+        android:text="Your Order's"
         android:textStyle="bold"
         android:textSize="20sp"
         android:textAlignment="center"

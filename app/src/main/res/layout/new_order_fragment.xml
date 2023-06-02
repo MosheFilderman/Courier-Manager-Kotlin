@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:text="Open New Order"
+        android:text="New Order"
         android:textAlignment="center"
         android:textSize="25sp"
         android:textStyle="bold" />
@@ -21,23 +21,22 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="5dp"
-        android:text="Contact's Full Name"
+        android:text="Customer Details"
         android:textSize="18sp"
         android:textStyle="bold" />
 
 
     <EditText
         android:id="@+id/contFirstName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginRight="10dp"
-        android:hint="Contact's First Name" />
+        android:hint="First Name" />
 
     <EditText
         android:id="@+id/contLastName"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contact's Last Name" />
+        android:hint="Last Name" />
 
 
     <LinearLayout
@@ -54,7 +53,7 @@
 
         <EditText
             android:id="@+id/contPhoneNumber"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Number" />
     </LinearLayout>
@@ -64,7 +63,7 @@
         android:id="@+id/contEmail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Contact's email"
+        android:hint="Email"
         android:inputType="textEmailAddress" />
 
 
@@ -180,7 +179,7 @@
             android:inputType="number" />
 
         <EditText
-            android:id="@+id/packageWight"
+            android:id="@+id/packageWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Wight"

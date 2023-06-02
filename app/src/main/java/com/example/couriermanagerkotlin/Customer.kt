@@ -33,7 +33,7 @@ class Customer : AppCompatActivity() {
     lateinit var packageHeight: EditText
     lateinit var packageWidth: EditText
     lateinit var packageLength: EditText
-    lateinit var packageVolume: EditText
+    lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
 //    data class Measure(var height: Int, val width: Int, val length: Int, val weight: Int) :
 //        Serializable {
@@ -93,7 +93,7 @@ class Customer : AppCompatActivity() {
         packageHeight = findViewById(R.id.packageHeight)
         packageWidth = findViewById(R.id.packageWidth)
         packageLength = findViewById(R.id.packageLength)
-        packageVolume = findViewById(R.id.packageWight)
+        packageWeight = findViewById(R.id.packageWeight)
 
         /* Confirm that all the fields are filled */
 
