@@ -5,18 +5,18 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="20dp"
+    android:padding="10dp"
     tools:context=".CustomerNewOrder">
 
     <TextView
         android:id="@+id/newOrderTitle"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
         android:text="New Order"
-        android:textAlignment="center"
         android:textSize="25sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -26,7 +26,6 @@
         android:text="Customer Details"
         android:textSize="18sp"
         android:textStyle="bold" />
-
 
     <EditText
         android:id="@+id/contFirstName"
@@ -39,7 +38,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Last Name" />
-
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,9 +55,9 @@
             android:id="@+id/contPhoneNumber"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Number" />
+            android:hint="Phone number"
+            android:inputType="number"/>
     </LinearLayout>
-
 
     <EditText
         android:id="@+id/contEmail"
@@ -67,7 +65,6 @@
         android:layout_height="wrap_content"
         android:hint="Email"
         android:inputType="textEmailAddress" />
-
 
     <TextView
         android:layout_width="match_parent"
@@ -160,31 +157,31 @@
             android:id="@+id/packageHeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:hint="Height"
+            android:layout_marginEnd="5dp"
+            android:hint="Height(cm)"
             android:inputType="number" />
 
         <EditText
             android:id="@+id/packageWidth"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:hint="Width"
+            android:layout_marginEnd="5dp"
+            android:hint="Width(cm)"
             android:inputType="number" />
 
         <EditText
             android:id="@+id/packageLength"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:hint="Length"
+            android:layout_marginEnd="5dp"
+            android:hint="Length(cm)"
             android:inputType="number" />
 
         <EditText
             android:id="@+id/packageWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:hint="Weight"
+            android:hint="Weight(kg)"
             android:inputType="number" />
     </LinearLayout>
 
