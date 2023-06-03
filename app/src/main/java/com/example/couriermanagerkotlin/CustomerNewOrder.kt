@@ -15,8 +15,11 @@ import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
+
+    lateinit var orderID: String
     /* add order variables */
     lateinit var contFirstName: EditText
     lateinit var contLastName: EditText
@@ -34,6 +37,11 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageLength: EditText
     lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
+
+    /* String objects of the spinners */
+    lateinit var strAreaCode: String
+    lateinit var strDeliveryCity: String
+    lateinit var strPickupCity: String
 
     /* Menu toolbar */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -69,7 +77,11 @@ class CustomerNewOrder : AppCompatActivity() {
                 view: View?,
                 position: Int,
                 id: Long
-            ) {}
+            ) {
+                if (parent != null) {
+                    strAreaCode = parent.getItemAtPosition(position).toString()
+                }
+            }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Toast.makeText(this@CustomerNewOrder, "Area code must bo chosen", Toast.LENGTH_SHORT).show()
@@ -89,7 +101,11 @@ class CustomerNewOrder : AppCompatActivity() {
                 view: View?,
                 position: Int,
                 id: Long
-            ) {}
+            ) {
+                if (parent != null) {
+                    strDeliveryCity = parent.getItemAtPosition(position).toString()
+                }
+            }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Toast.makeText(this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT).show()
@@ -109,7 +125,11 @@ class CustomerNewOrder : AppCompatActivity() {
                 view: View?,
                 position: Int,
                 id: Long
-            ) {}
+            ) {
+                if (parent != null) {
+                    strPickupCity = parent.getItemAtPosition(position).toString()
+                }
+            }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Toast.makeText(this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT).show()
@@ -147,17 +167,33 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Confirm that all the fields are filled */
 
         /* Contact's full name fields filled */
-        if (contFirstName!!.length() == 0) {
-            contFirstName!!.error = "Contact's first name is required"
+        if (contFirstName.length() == 0) {
+            contFirstName.error = "Contact's first name is required"
         }
-        if (contLastName!!.length() == 0) {
-            contLastName!!.error = "Contact's last name is required"
+        if (contLastName.length() == 0) {
+            contLastName.error = "Contact's last name is required"
         }
         /* Contact's phone fields filled */
-        if (contPhoneNumber!!.length() == 0) {
-            contPhoneNumber!!.error = "Contact's last name is required"
+        if (contPhoneNumber.length() != 7) {
+            contPhoneNumber.error = "Phone number must contain 7 digit's."
         }
-
+        /* Contact's eMail field filled */
+        if (contEmail.length() == 0) {
+            contEmail.error = "Email address must be filled!"
+        }
+        /* Package measures field's */
+        if (packageHeight.length() == 0 && Integer.parseInt(packageHeight.text.toString()) > 50) {
+            packageHeight.error = "Package height must be filled & less then 50cm"
+        }
+        if (packageWidth.length() == 0 && Integer.parseInt(packageWidth.text.toString()) > 50) {
+            packageWidth.error = "Package width must be filled & less then 50cm"
+        }
+        if (packageLength.length() == 0 && Integer.parseInt(packageLength.text.toString()) > 50) {
+            packageLength.error = "Package length must be filled & less then 50cm"
+        }
+        if (packageWeight.length() == 0 && Integer.parseInt(packageWeight.text.toString()) > 11) {
+            packageWeight.error = "Package weight must be filled & less then 10kg"
+        }
         /* only if all the fields are filled, new order will be added to the DB */
         createOrder()
     }
@@ -176,11 +212,12 @@ class CustomerNewOrder : AppCompatActivity() {
             }){
             override fun getParams(): Map<String,String>{
                 val params:MutableMap<String,String> = HashMap()
-//                params["contactName"]=contactName.text.toString().trim()
-//                params["contactPhone"]=contactPhone.text.toString().trim()
-//                params["contactEmail"] = contactEmail.text.toString().trim()
-//                params["pickupAddress"] = pickupAddress.text.toString().trim()
-//                params["deliveryAddress"] = deliveryAddress.text.toString().trim()
+                params["orderId"] = UUID.randomUUID().toString()
+                params["contactName"] = contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim()
+                params["contactPhone"] = "+972" + (strAreaCode + contPhoneNumber.text.toString().trim()).substring(1)
+                params["contactEmail"] = contEmail.text.toString().trim()
+//              params["pickupAddress"] = pickupAddress.text.toString().trim()
+//              params["deliveryAddress"] = deliveryAddress.text.toString().trim()
                 return params
             }
         }
