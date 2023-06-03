@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Courier Manager Kotlin</string>
+    <string name="app_name">kuku</string>
 
     <string-array name="areaCodes">
         <item>Choose area code</item>
