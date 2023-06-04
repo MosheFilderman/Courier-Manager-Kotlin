@@ -14,10 +14,10 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
 class Registration : AppCompatActivity() {
-    lateinit var firstName :EditText
-    lateinit var lastName :EditText
-    lateinit var email :EditText
-    lateinit var phone :EditText
+    lateinit var firstName: EditText
+    lateinit var lastName: EditText
+    lateinit var email: EditText
+    lateinit var phone: EditText
     lateinit var errorMassage: TextView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,29 +30,28 @@ class Registration : AppCompatActivity() {
     }
 
     fun register(view: View) {
-        if(checkAllFields()){
-            Toast.makeText(this,"good job",Toast.LENGTH_LONG).show()
+        if (checkAllFields()) {
+            Toast.makeText(this, "good job", Toast.LENGTH_LONG).show()
             registerUser()
-        }
-        else
-            Toast.makeText(this,"Something went wrong",Toast.LENGTH_SHORT).show()
+        } else
+            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
     }
 
     private fun registerUser() {
-        val url: String =  "http://192.168.93.141/courier_project/registration.php"
-        val stringRequest : StringRequest = object : StringRequest(Method.POST,url,
+        val url: String = "http://10.100.102.234/courier_project/registration.php"
+        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
-            errorMassage.text = response
-        },
-        Response.ErrorListener { error->
-            errorMassage.text = error.toString()
-            startActivity(Intent(this@Registration, Login::class.java))
-            finish()
-        }){
-            override fun getParams(): Map<String,String>{
-                val params:MutableMap<String,String> = HashMap()
-                params["firstName"]=firstName.text.toString().trim()
-                params["lastName"]=lastName.text.toString().trim()
+                errorMassage.text = response
+            },
+            Response.ErrorListener { error ->
+                errorMassage.text = error.toString()
+                startActivity(Intent(this@Registration, Login::class.java))
+                finish()
+            }) {
+            override fun getParams(): Map<String, String> {
+                val params: MutableMap<String, String> = HashMap()
+                params["firstName"] = firstName.text.toString().trim()
+                params["lastName"] = lastName.text.toString().trim()
                 params["email"] = email.text.toString().trim()
                 params["phone"] = "+972" + phone.text.toString().trim().substring(1)
                 params["eRole"] = "0"

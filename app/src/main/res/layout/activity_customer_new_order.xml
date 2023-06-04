@@ -189,13 +189,13 @@
         android:id="@+id/errorMassage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:visibility="gone" />
+        android:text="" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:onClick="newOrderField"
+        android:onClick="newOrder"
         android:text="submit order" />
 
 </LinearLayout>

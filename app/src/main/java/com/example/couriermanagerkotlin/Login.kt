@@ -26,11 +26,8 @@ class Login : AppCompatActivity() {
     lateinit var kuku1: TextView
     lateinit var userInputCode: EditText
 
-    var shrd: SharedPreferences? = null
+    lateinit var shrd: SharedPreferences
 
-    companion object {
-        var flag = false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,9 +39,24 @@ class Login : AppCompatActivity() {
         kuku1 = findViewById(R.id.kuku1)
 
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
-        //var savedEmail = shrd!!.getString("email", "none")
-        //var flag = shrd!!.getBoolean("connected", false)
+        if (shrd.getBoolean("connected", false)) {
+            when (shrd.getString("eRole", "none")) {
+                "0" -> {
+                    startActivity(Intent(this@Login, CustomerOrderList::class.java))
+                    finish()
 
+                }
+
+                "1" -> {
+                    startActivity(Intent(this@Login, Courier::class.java))
+                    finish()
+                }
+                "2" -> {
+                    startActivity(Intent(this@Login, Manager::class.java))
+                    finish()
+                }
+            }
+        }
 
     }
 
@@ -71,7 +83,8 @@ class Login : AppCompatActivity() {
                     verifySMS(temporaryCode)
 
                 } else {
-                    Toast.makeText(this@Login, "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this@Login, "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT)
+                        .show()
 
                 }
             },
@@ -121,7 +134,7 @@ class Login : AppCompatActivity() {
             smsManager.sendTextMessage(phone, null, code, null, null)
 
             // on below line we are displaying a toast message for message send,
-           // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
+            // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
 
         } catch (e: Exception) {
 
@@ -148,7 +161,7 @@ class Login : AppCompatActivity() {
                     "1" -> startActivity(Intent(this@Login, Courier::class.java))
                     "2" -> startActivity(Intent(this@Login, Manager::class.java))
                 }
-            }else{
+            } else {
                 Toast.makeText(this@Login, "Invalid Code", Toast.LENGTH_SHORT).show()
             }
 
@@ -159,7 +172,6 @@ class Login : AppCompatActivity() {
 
 
     }
-
 
 
 }
