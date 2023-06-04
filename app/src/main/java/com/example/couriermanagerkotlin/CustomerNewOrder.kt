@@ -85,16 +85,18 @@ class CustomerNewOrder : AppCompatActivity() {
 
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
-        contLastName = findViewById(R.id.contLastName)/* Contact phone number */
-        areaCode = findViewById(R.id.spinnerAreaCode)
-        contPhoneNumber = findViewById(R.id.contPhoneNumber)/* Contact email */
-        contEmail = findViewById(R.id.contEmail)/* Delivery address */
-        deliveryCity = findViewById(R.id.deliveryCity)
+        contLastName = findViewById(R.id.contLastName)
+        /* Contact phone number */
+        contPhoneNumber = findViewById(R.id.contPhoneNumber)
+        /* Contact email */
+        contEmail = findViewById(R.id.contEmail)
+        /* Delivery address */
         deliveryStreet = findViewById(R.id.deliveryStreet)
-        deliveryBuild = findViewById(R.id.deliveryBuild)/* Pickup address */
-        pickupCity = findViewById(R.id.pickupCity)
+        deliveryBuild = findViewById(R.id.deliveryBuild)
+        /* Pickup address */
         pickupStreet = findViewById(R.id.pickupStreet)
-        pickupBuild = findViewById(R.id.pickupBuild)/* Package measure's */
+        pickupBuild = findViewById(R.id.pickupBuild)
+        /* Package measure's */
         packageHeight = findViewById(R.id.packageHeight)
         packageWidth = findViewById(R.id.packageWidth)
         packageLength = findViewById(R.id.packageLength)
@@ -104,7 +106,7 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
         val areaCodeArrayAdapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.areaCodes)
+            this@CustomerNewOrder, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.areaCodes)
         )
         areaCode.adapter = areaCodeArrayAdapter
 
@@ -151,7 +153,7 @@ class CustomerNewOrder : AppCompatActivity() {
             }
         }
 
-        /* Delivery city Spinner */
+        /* Pickup city Spinner */
         pickupCity = findViewById(R.id.pickupCity)
         val pickupCityArrayAdapter = ArrayAdapter(
             this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
@@ -209,6 +211,12 @@ class CustomerNewOrder : AppCompatActivity() {
                         "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim()
                     params["contactEmail"] = contEmail.text.toString().trim()
                     params["eStatus"] = "0"
+                   params["pickUpCity"] = strPickupCity
+                    params["pickupStreet"] = pickupStreet.text.toString().trim()
+                    params["pickupBuild"] = pickupBuild.text.toString().trim()
+                    params["deliveryCity"] = strDeliveryCity
+                    params["deliveryStreet"] = deliveryStreet.text.toString().trim()
+                    params["deliveryBuild"] = deliveryBuild.text.toString().trim()
 
                     return params
                 }

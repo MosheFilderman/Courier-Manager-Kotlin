@@ -19,7 +19,11 @@ class CustomerOrderList : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
-            R.id.newOrder -> startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
+            R.id.newOrder -> {
+                startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
+                finish()
+            }
+
             R.id.orderList -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
             R.id.logout -> {
                 var editor: SharedPreferences.Editor = shrd!!.edit()

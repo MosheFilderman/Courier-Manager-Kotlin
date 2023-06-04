@@ -15,10 +15,12 @@
 
     <string-array name="citys">
         <item>Choose City</item>
-        <item>Haifa</item>
-        <item>Kiryat Haim</item>
-        <item>Kiryat Biyalik</item>
-        <item>kiryat Motzkin</item>
-        <item>Kiryat Yam</item>
+        <item>חיפה</item>
+        <item>קרית ים</item>
+        <item>קרית ביאליק</item>
+        <item>קרית מוצקין</item>
+        <item>קרית אתא</item>
     </string-array>
+
+
 </resources>

@@ -4,16 +4,16 @@
     <item
         android:id="@+id/newOrder"
         android:icon="@drawable/add_plus_icon"
-        android:title="new order"
+        android:title="New Order"
         app:showAsAction="collapseActionView"/>
     <item
         android:id="@+id/orderList"
         android:icon="@drawable/list_icon"
-        android:title="order's list"
+        android:title="Order's List"
         app:showAsAction="collapseActionView"/>
     <item
         android:id="@+id/logout"
         android:icon="@drawable/logout_icon"
-        android:title="log out"
+        android:title="Log Out"
         app:showAsAction="collapseActionView"/>
 </menu>
