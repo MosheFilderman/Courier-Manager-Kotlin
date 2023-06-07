@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
@@ -30,16 +31,17 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var contPhoneNumber: EditText
     lateinit var contEmail: EditText
     lateinit var deliveryCity: Spinner
-    lateinit var deliveryStreet: EditText
+    lateinit var deliveryStreet: AutoCompleteTextView
     lateinit var deliveryBuild: EditText
     lateinit var pickupCity: Spinner
-    lateinit var pickupStreet: EditText
+    lateinit var pickupStreet: AutoCompleteTextView
     lateinit var pickupBuild: EditText
     lateinit var packageHeight: EditText
     lateinit var packageWidth: EditText
     lateinit var packageLength: EditText
     lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
+    lateinit var comment:EditText
 
     /* String objects of the spinners */
     lateinit var strAreaCode: String
@@ -91,10 +93,10 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Contact email */
         contEmail = findViewById(R.id.contEmail)
         /* Delivery address */
-        deliveryStreet = findViewById(R.id.deliveryStreet)
+        deliveryStreet = findViewById<AutoCompleteTextView>(R.id.deliveryStreet)
         deliveryBuild = findViewById(R.id.deliveryBuild)
         /* Pickup address */
-        pickupStreet = findViewById(R.id.pickupStreet)
+        pickupStreet = findViewById<AutoCompleteTextView>(R.id.pickupStreet)
         pickupBuild = findViewById(R.id.pickupBuild)
         /* Package measure's */
         packageHeight = findViewById(R.id.packageHeight)
@@ -102,7 +104,9 @@ class CustomerNewOrder : AppCompatActivity() {
         packageLength = findViewById(R.id.packageLength)
         packageWeight = findViewById(R.id.packageWeight)
         errorMassage = findViewById(R.id.errorMassage)
+        comment = findViewById(R.id.comment)
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
+
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
         val areaCodeArrayAdapter = ArrayAdapter(
@@ -191,7 +195,7 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     private fun createOrder() {
-        val url: String = "http://10.100.102.234/courier_project/newOrder.php"
+        val url: String = "http://192.168.93.141/courier_project/newOrder.php"
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, url, Response.Listener { response ->
                 errorMassage.text = response
@@ -217,6 +221,7 @@ class CustomerNewOrder : AppCompatActivity() {
                     params["deliveryCity"] = strDeliveryCity
                     params["deliveryStreet"] = deliveryStreet.text.toString().trim()
                     params["deliveryBuild"] = deliveryBuild.text.toString().trim()
+                    params["comments"] = comment.text.toString().trim()
 
                     return params
                 }
