@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:layout_marginEnd="10dp"
-            android:text="Customer Phone:"
+            android:text="Customer eMail:"
             android:textStyle="bold" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:gravity="start"
             android:layout_marginEnd="10dp"
-            android:text="Customer eMail:"
+            android:text="Customer Phone:"
             android:textStyle="bold" />
 
         <TextView

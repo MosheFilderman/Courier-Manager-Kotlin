@@ -46,7 +46,7 @@ class Login : AppCompatActivity() {
                     finish()
                 }
                 "COURIER" -> {
-                    startActivity(Intent(this@Login, Courier::class.java))
+                    startActivity(Intent(this@Login, CourierListView::class.java))
                     finish()
                 }
                 "MANAGER" -> {
@@ -69,6 +69,7 @@ class Login : AppCompatActivity() {
                     var jsonInner: JSONObject = jsonArrayUser.getJSONObject(0)
                     val temporaryCode = (1000..9999).random().toString()
                     sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
+
                     var editor: SharedPreferences.Editor = shrd!!.edit()
                     editor.putString("firstName", jsonInner.get("firstName").toString())
                     editor.putString("lastName", jsonInner.get("lastName").toString())
@@ -76,6 +77,7 @@ class Login : AppCompatActivity() {
                     editor.putString("eRole", jsonInner.get("eRole").toString())
                     editor.putBoolean("connected", true)
                     editor.apply()
+
                     verifySMS(temporaryCode)
                 } else {
                     Toast.makeText(this@Login, "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT)
@@ -105,30 +107,25 @@ class Login : AppCompatActivity() {
     fun sendSMS(phone: String, code: String) {
         // on the below line we are creating a try and catch block
         try {
-
             // on below line we are initializing sms manager.
-            //as after android 10 the getDefault function no longer works
-            //so we have to check that if our android version is greater
-            //than or equal to android version 6.0 i.e SDK 23
+            // as after android 10 the getDefault function no longer works
+            // so we have to check that if our android version is greater
+            // than or equal to android version 6.0 i.e SDK 23
             val smsManager: SmsManager
             if (Build.VERSION.SDK_INT >= 23) {
-                //if SDK is greater that or equal to 23 then
-                //this is how we will initialize the SmsManager
+                // if SDK is greater that or equal to 23 then
+                // this is how we will initialize the SmsManager
                 smsManager = this.getSystemService(SmsManager::class.java)
             } else {
-                //if user's SDK is less than 23 then
-                //SmsManager will be initialized like this
+                // if user's SDK is less than 23 then
+                // SmsManager will be initialized like this
                 smsManager = SmsManager.getDefault()
             }
-
             // on below line we are sending text message.
             smsManager.sendTextMessage(phone, null, code, null, null)
-
             // on below line we are displaying a toast message for message send,
             // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
-
         } catch (e: Exception) {
-
             // on catch block we are displaying toast message for error.
             Toast.makeText(applicationContext, e.message.toString(), Toast.LENGTH_LONG)
                 .show()
@@ -139,28 +136,32 @@ class Login : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
+
         userInputCode = dialogLayout.findViewById(R.id.userInputCode)
+
         builder.setView(dialogLayout)
 
         builder.setPositiveButton("Verify") { dialogInterface, i ->
-
             if (userInputCode.text.toString().compareTo(code) == 0) {
                 when (shrd.getString("eRole", "none")) {
-                    "CUSTOMER" -> startActivity(Intent(this@Login, CustomerOrderList::class.java))
-                    "COURIER" -> startActivity(Intent(this@Login, Courier::class.java))
-                    "MANAGER" -> startActivity(Intent(this@Login, Manager::class.java))
+                    "CUSTOMER" -> {
+                        startActivity(Intent(this@Login, CustomerOrderList::class.java))
+                        finish()
+                    }
+                    "COURIER" -> {
+                        startActivity(Intent(this@Login, CourierListView::class.java))
+                        finish()
+                    }
+                    "MANAGER" -> {
+                        startActivity(Intent(this@Login, Manager::class.java))
+                        finish()
+                    }
                 }
             } else {
                 Toast.makeText(this@Login, "Invalid Code", Toast.LENGTH_SHORT).show()
             }
-
             dialogInterface.dismiss()
-
         }
         builder.show()
-
-
     }
-
-
 }

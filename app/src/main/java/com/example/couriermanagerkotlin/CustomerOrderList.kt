@@ -14,6 +14,7 @@ import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -22,51 +23,61 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
     lateinit var emptyListMsg: TextView
     lateinit var orderList: ListView
+    lateinit var menu: BottomNavigationView
+    lateinit var firstName: TextView
+    lateinit var lastName: TextView
+
     var contactsNames = mutableListOf<String>()
     var contactsPhones = mutableListOf<String>()
     var contactsEmails = mutableListOf<String>()
     var ordersStatus = mutableListOf<String>()
     var ordersComment = mutableListOf<String>()
 
-
-    /* Menu toolbar */
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.customer_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.newOrder -> {
-                startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
-                finish()
-            }
-            R.id.orderList -> {
-                Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT)
-                    .show()
-            }
-            R.id.logout -> {
-                val editor: SharedPreferences.Editor = shrd.edit()
-                editor.putBoolean("connected", false)
-                editor.putString("firstName", "")
-                editor.putString("lastName", "")
-                editor.putString("email", "")
-                editor.putString("eRole", "")
-                editor.commit()
-                startActivity(Intent(this@CustomerOrderList, Login::class.java))
-                finish()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_order_list)
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
+        firstName = findViewById(R.id.firstName)
+        lastName = findViewById(R.id.lastName)
+        firstName.text = shrd.getString("firstName", "")
+        lastName.text = shrd.getString("lastName", "")
+
         orderList = findViewById(R.id.orderList)
         emptyListMsg = findViewById(R.id.emptyListMsg)
+        menu = findViewById(R.id.nav)
+
+        menu.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.newOrder -> {
+                    startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
+                    emptyListMsg.visibility = View.GONE
+                    orderList.visibility = View.GONE
+                    finish()
+                    true
+                }
+                R.id.orderList -> {
+                    Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
+                    true
+                }
+                R.id.logout -> {
+                    val editor: SharedPreferences.Editor = shrd.edit()
+                    editor.putBoolean("connected", false)
+                    editor.putString("firstName", "")
+                    editor.putString("lastName", "")
+                    editor.putString("email", "")
+                    editor.putString("eRole", "")
+                    editor.apply()
+
+                    startActivity(Intent(this@CustomerOrderList, Login::class.java))
+                    emptyListMsg.visibility = View.GONE
+                    orderList.visibility = View.GONE
+                    finish()
+                    true
+                }
+                else -> false
+            }
+            true
+        }
 
         getCustomerOrders()
     }
@@ -99,7 +110,7 @@ class CustomerOrderList : AppCompatActivity() {
                         contactsPhones as ArrayList<String>,
                         contactsEmails as ArrayList<String>,
                         ordersStatus as ArrayList<String>,
-                        ordersComment  as ArrayList<String>
+                        ordersComment as ArrayList<String>
                     )
                 } else {
                     emptyListMsg.visibility = View.VISIBLE
@@ -118,8 +129,4 @@ class CustomerOrderList : AppCompatActivity() {
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
     }
-
-
-
 }
-
