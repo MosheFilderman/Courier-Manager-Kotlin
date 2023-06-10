@@ -40,7 +40,7 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageLength: EditText
     lateinit var packageWeight: EditText
     lateinit var errorMassage: TextView
-    lateinit var comment:EditText
+    lateinit var comment: EditText
 
     /* String objects of the spinners */
     lateinit var strAreaCode: String
@@ -63,6 +63,7 @@ class CustomerNewOrder : AppCompatActivity() {
                     this@CustomerNewOrder, CustomerOrderList::class.java
                 )
             )
+
             R.id.logout -> {
                 var editor: SharedPreferences.Editor = shrd!!.edit()
                 editor.putBoolean("connected", false)
@@ -108,7 +109,9 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
         val areaCodeArrayAdapter = ArrayAdapter(
-            this@CustomerNewOrder, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.areaCodes)
+            this@CustomerNewOrder,
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.areaCodes)
         )
         areaCode.adapter = areaCodeArrayAdapter
 
@@ -181,16 +184,17 @@ class CustomerNewOrder : AppCompatActivity() {
         }
     }
 
-
     fun newOrder(view: View) {
         if (checkOrderField()) {
-            Toast.makeText(this, "good job", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "All fields filled correctly.", Toast.LENGTH_SHORT).show()
             createOrder()
-            startActivity(Intent(this@CustomerNewOrder,CustomerOrderList::class.java))
+            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
+            Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
+            errorMassage.visibility = View.VISIBLE
+            finish()
         } else {
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
-
     }
 
     private fun createOrder() {
@@ -199,9 +203,8 @@ class CustomerNewOrder : AppCompatActivity() {
             object : StringRequest(Method.POST, url, Response.Listener { response ->
                 errorMassage.text = response
             }, Response.ErrorListener { error ->
-                Toast.makeText(this@CustomerNewOrder, error.toString(), Toast.LENGTH_LONG).show()
+                errorMassage.visibility = View.VISIBLE
                 errorMassage.text = error.toString()
-
             }) {
                 override fun getParams(): Map<String, String> {
                     val params: MutableMap<String, String> = HashMap()
@@ -231,7 +234,6 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     private fun checkOrderField(): Boolean {
-
         /* Contact's full name fields filled */
         if (contFirstName.length() == 0) {
             contFirstName.error = "Contact's first name is required"

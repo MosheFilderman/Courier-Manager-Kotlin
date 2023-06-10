@@ -3,21 +3,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/newOrderBackground"
     tools:context=".CustomerNewOrder">
 
     <LinearLayout
-
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/newOrderTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
             android:gravity="center"
             android:text="New Order"
             android:textSize="25sp"
@@ -36,12 +35,18 @@
             android:id="@+id/contFirstName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="3dp"
+            android:layout_marginBottom="7dp"
             android:hint="First Name" />
 
         <EditText
             android:id="@+id/contLastName"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="3dp"
+            android:layout_marginBottom="7dp"
             android:hint="Last Name" />
 
         <LinearLayout
@@ -54,12 +59,18 @@
                 android:id="@+id/spinnerAreaCode"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
             <EditText
                 android:id="@+id/contPhoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:hint="Phone number"
                 android:inputType="number" />
         </LinearLayout>
@@ -68,6 +79,9 @@
             android:id="@+id/contEmail"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:padding="3dp"
+            android:layout_marginBottom="7dp"
             android:hint="Email"
             android:inputType="textEmailAddress" />
 
@@ -90,12 +104,18 @@
                 android:id="@+id/deliveryCity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
             <AutoCompleteTextView
                 android:id="@+id/deliveryStreet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp"
                 android:hint="Street" />
 
@@ -103,6 +123,9 @@
                 android:id="@+id/deliveryBuild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:hint="building"
                 android:inputType="number" />
         </LinearLayout>
@@ -126,12 +149,18 @@
                 android:id="@+id/pickupCity"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
             <AutoCompleteTextView
                 android:id="@+id/pickupStreet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp"
                 android:hint="Street" />
 
@@ -139,6 +168,9 @@
                 android:id="@+id/pickupBuild"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
                 android:hint="building"
                 android:inputType="number" />
         </LinearLayout>
@@ -156,52 +188,79 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/packageHeight"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:hint="Height(cm)"
-                android:inputType="number" />
+                android:gravity="center"
+                android:orientation="horizontal">
 
-            <EditText
-                android:id="@+id/packageWidth"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:hint="Width(cm)"
-                android:inputType="number" />
+                <EditText
+                    android:id="@+id/packageHeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="Height(cm)"
+                    android:inputType="number" />
 
-            <EditText
-                android:id="@+id/packageLength"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="5dp"
-                android:hint="Length(cm)"
-                android:inputType="number" />
+                <EditText
+                    android:id="@+id/packageWidth"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:hint="Width(cm)"
+                    android:inputType="number" />
+            </LinearLayout>
 
-            <EditText
-                android:id="@+id/packageWeight"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Weight(kg)"
-                android:inputType="number" />
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <EditText
+                    android:id="@+id/packageLength"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="Length(cm)"
+                    android:inputType="number" />
+
+                <EditText
+                    android:id="@+id/packageWeight"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:hint="Weight(kg)"
+                    android:inputType="number" />
+            </LinearLayout>
         </LinearLayout>
+
+        <EditText
+            android:id="@+id/comment"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:background="@color/white"
+            android:padding="3dp"
+            android:hint="Comment to the courier"
+            android:inputType="text" />
 
         <TextView
             android:id="@+id/errorMassage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="" />
-
-        <EditText
-            android:id="@+id/comment"
-            android:layout_width="match_parent"
-            android:layout_height="50sp"
-            android:inputType="text"
-            android:hint="Comment to the courier" />
+            android:visibility="gone" />
 
         <Button
             android:layout_width="wrap_content"

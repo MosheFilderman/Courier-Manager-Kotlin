@@ -2,7 +2,7 @@
     <string name="app_name">kuku</string>
 
     <string-array name="areaCodes">
-        <item>Choose area code</item>
+        <item>Area code</item>
         <item>050</item>
         <item>052</item>
         <item>053</item>
