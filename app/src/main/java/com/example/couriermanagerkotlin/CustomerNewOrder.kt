@@ -188,6 +188,7 @@ class CustomerNewOrder : AppCompatActivity() {
         if (checkOrderField()) {
             Toast.makeText(this, "good job", Toast.LENGTH_LONG).show()
             createOrder()
+            startActivity(Intent(this@CustomerNewOrder,CustomerOrderList::class.java))
         } else {
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
         }
@@ -195,7 +196,7 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     private fun createOrder() {
-        val url: String = "http://192.168.93.141/courier_project/newOrder.php"
+        val url: String = "http://10.100.102.234/courier_project/newOrder.php"
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, url, Response.Listener { response ->
                 errorMassage.text = response
@@ -221,10 +222,11 @@ class CustomerNewOrder : AppCompatActivity() {
                     params["deliveryCity"] = strDeliveryCity
                     params["deliveryStreet"] = deliveryStreet.text.toString().trim()
                     params["deliveryBuild"] = deliveryBuild.text.toString().trim()
-                    params["comments"] = comment.text.toString().trim()
+                    params["comment"] = comment.text.toString().trim()
 
                     return params
                 }
+
             }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
