@@ -200,6 +200,7 @@
             android:id="@+id/comment"
             android:layout_width="match_parent"
             android:layout_height="50sp"
+            android:inputType="text"
             android:hint="Comment to the courier" />
 
         <Button

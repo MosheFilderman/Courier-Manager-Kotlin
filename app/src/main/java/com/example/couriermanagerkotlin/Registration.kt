@@ -31,14 +31,15 @@ class Registration : AppCompatActivity() {
 
     fun register(view: View) {
         if (checkAllFields()) {
-            Toast.makeText(this, "good job", Toast.LENGTH_LONG).show()
+            Toast.makeText(this, "All field's filled successfully.", Toast.LENGTH_LONG).show()
             registerUser()
+            startActivity(Intent(this@Registration, Login::class.java))
         } else
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
     }
 
     private fun registerUser() {
-        val url: String = "http://10.100.102.234/courier_project/registration.php"
+        val url: String = "http://10.0.0.7/courier_project/registration.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
                 errorMassage.text = response
@@ -54,7 +55,7 @@ class Registration : AppCompatActivity() {
                 params["lastName"] = lastName.text.toString().trim()
                 params["email"] = email.text.toString().trim()
                 params["phone"] = "+972" + phone.text.toString().trim().substring(1)
-                params["eRole"] = "0"
+                params["eRole"] = eRole.CUSTOMER.name
                 return params
             }
         }

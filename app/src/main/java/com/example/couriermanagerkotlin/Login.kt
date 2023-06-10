@@ -41,36 +41,32 @@ class Login : AppCompatActivity() {
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
         if (shrd.getBoolean("connected", false)) {
             when (shrd.getString("eRole", "none")) {
-                "0" -> {
+                "CUSTOMER" -> {
                     startActivity(Intent(this@Login, CustomerOrderList::class.java))
                     finish()
-
                 }
-
-                "1" -> {
+                "COURIER" -> {
                     startActivity(Intent(this@Login, Courier::class.java))
                     finish()
                 }
-                "2" -> {
+                "MANAGER" -> {
                     startActivity(Intent(this@Login, Manager::class.java))
                     finish()
                 }
             }
         }
-
     }
 
     fun login(view: View) {
-        val url: String = "http://192.168.93.141/courier_project/login.php"
+        val url: String = "http://10.0.0.7/courier_project/login.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
-
-                if (!response.toString().trim().equals("error")) {
+                if (response.toString().trim().compareTo("error") != 0) {
                     val strRes = response.toString()
                     val jsonArray = JSONArray(strRes)
                     val jsonResponse = jsonArray.getJSONObject(0)
-                    val jsonArray_user = jsonResponse.getJSONArray("users")
-                    var jsonInner: JSONObject = jsonArray_user.getJSONObject(0)
+                    val jsonArrayUser = jsonResponse.getJSONArray("users")
+                    var jsonInner: JSONObject = jsonArrayUser.getJSONObject(0)
                     val temporaryCode = (1000..9999).random().toString()
                     sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
                     var editor: SharedPreferences.Editor = shrd!!.edit()
@@ -79,17 +75,14 @@ class Login : AppCompatActivity() {
                     editor.putString("email", jsonInner.get("email").toString())
                     editor.putString("eRole", jsonInner.get("eRole").toString())
                     editor.putBoolean("connected", true)
-                    editor.commit()
+                    editor.apply()
                     verifySMS(temporaryCode)
-
                 } else {
                     Toast.makeText(this@Login, "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT)
                         .show()
-
                 }
             },
             Response.ErrorListener { error ->
-
                 Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
             }) {
             override fun getParams(): Map<String, String> {
@@ -103,13 +96,11 @@ class Login : AppCompatActivity() {
         requestQueue.add(stringRequest)
     }
 
-
     fun registration(view: View) {
         startActivity(Intent(this, Registration::class.java))
         finish()
 
     }
-
 
     fun sendSMS(phone: String, code: String) {
         // on the below line we are creating a try and catch block
@@ -145,7 +136,6 @@ class Login : AppCompatActivity() {
     }
 
     fun verifySMS(code: String) {
-
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
@@ -154,12 +144,11 @@ class Login : AppCompatActivity() {
 
         builder.setPositiveButton("Verify") { dialogInterface, i ->
 
-            if (userInputCode.text.toString().equals(code)) {
-
-                when (shrd!!.getString("eRole", "none")) {
-                    "0" -> startActivity(Intent(this@Login, CustomerOrderList::class.java))
-                    "1" -> startActivity(Intent(this@Login, Courier::class.java))
-                    "2" -> startActivity(Intent(this@Login, Manager::class.java))
+            if (userInputCode.text.toString().compareTo(code) == 0) {
+                when (shrd.getString("eRole", "none")) {
+                    "CUSTOMER" -> startActivity(Intent(this@Login, CustomerOrderList::class.java))
+                    "COURIER" -> startActivity(Intent(this@Login, Courier::class.java))
+                    "MANAGER" -> startActivity(Intent(this@Login, Manager::class.java))
                 }
             } else {
                 Toast.makeText(this@Login, "Invalid Code", Toast.LENGTH_SHORT).show()

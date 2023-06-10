@@ -52,11 +52,13 @@
     <ListView
         android:id="@+id/orderList"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
     <TextView
-        android:id="@+id/lola"
+        android:id="@+id/emptyListMsg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:visibility="gone"/>
 
 </LinearLayout>

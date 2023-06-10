@@ -22,7 +22,6 @@ import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
-    lateinit var orderID: String
 
     /* add order variables */
     lateinit var contFirstName: EditText
@@ -64,7 +63,6 @@ class CustomerNewOrder : AppCompatActivity() {
                     this@CustomerNewOrder, CustomerOrderList::class.java
                 )
             )
-
             R.id.logout -> {
                 var editor: SharedPreferences.Editor = shrd!!.edit()
                 editor.putBoolean("connected", false)
@@ -75,7 +73,6 @@ class CustomerNewOrder : AppCompatActivity() {
                 editor.commit()
                 startActivity(Intent(this@CustomerNewOrder, Login::class.java))
                 finish()
-
             }
         }
         return super.onOptionsItemSelected(item)
@@ -105,6 +102,7 @@ class CustomerNewOrder : AppCompatActivity() {
         packageWeight = findViewById(R.id.packageWeight)
         errorMassage = findViewById(R.id.errorMassage)
         comment = findViewById(R.id.comment)
+
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
 
         /* Area code spinner */
@@ -196,7 +194,7 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     private fun createOrder() {
-        val url: String = "http://10.100.102.234/courier_project/newOrder.php"
+        val url: String = "http://10.0.0.7/courier_project/newOrder.php"
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, url, Response.Listener { response ->
                 errorMassage.text = response
@@ -215,8 +213,8 @@ class CustomerNewOrder : AppCompatActivity() {
                     params["contactPhone"] =
                         "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim()
                     params["contactEmail"] = contEmail.text.toString().trim()
-                    params["eStatus"] = "0"
-                   params["pickUpCity"] = strPickupCity
+                    params["eStatus"] = eStatus.NEW.name
+                    params["pickUpCity"] = strPickupCity
                     params["pickupStreet"] = pickupStreet.text.toString().trim()
                     params["pickupBuild"] = pickupBuild.text.toString().trim()
                     params["deliveryCity"] = strDeliveryCity
@@ -238,7 +236,6 @@ class CustomerNewOrder : AppCompatActivity() {
         if (contFirstName.length() == 0) {
             contFirstName.error = "Contact's first name is required"
             return false
-
         }
         if (contLastName.length() == 0) {
             contLastName.error = "Contact's last name is required"
@@ -270,7 +267,5 @@ class CustomerNewOrder : AppCompatActivity() {
         }
         // after all validation return true.
         return true
-
-
     }
 }
