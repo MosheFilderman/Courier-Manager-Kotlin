@@ -4,15 +4,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:gravity="top"
+    android:orientation="vertical"
     tools:context=".CustomerOrderList">
 
     <LinearLayout
+        android:id="@+id/viewPort"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="-81dp"
         android:gravity="top"
+        android:orientation="vertical"
         android:padding="10dp">
 
         <LinearLayout
@@ -42,7 +45,6 @@
                 android:gravity="center"
                 android:text=""
                 android:textSize="20sp" />
-
         </LinearLayout>
 
         <LinearLayout
@@ -51,48 +53,43 @@
             android:orientation="horizontal">
 
             <TextView
-                android:gravity="center"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
+                android:gravity="center"
                 android:text="Your Order's"
                 android:textSize="25sp"
-                android:textStyle="bold"/>
-            
-            <EditText
+                android:textStyle="bold" />
+
+            <SearchView
                 android:id="@+id/search"
                 android:layout_width="match_parent"
                 android:layout_height="fill_parent"
-                app:queryHint="Search..."
                 app:closeIcon="@drawable/baseline_clear_24"
-                app:searchIcon="@drawable/baseline_search_24"/>
-
-
-
-
+                app:queryHint="Search..."
+                app:searchIcon="@drawable/baseline_search_24" />
         </LinearLayout>
-
 
         <ListView
             android:id="@+id/orderList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_gravity="start"/>
+            android:layout_gravity="start"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/emptyListMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         app:menu="@menu/customer_menu" />
 

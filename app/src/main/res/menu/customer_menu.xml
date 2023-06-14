@@ -11,9 +11,4 @@
         android:icon="@drawable/list_icon"
         android:title="Order's List"
         app:showAsAction="collapseActionView"/>
-    <item
-        android:id="@+id/logout"
-        android:icon="@drawable/logout_icon"
-        android:title="Log Out"
-        app:showAsAction="collapseActionView"/>
 </menu>

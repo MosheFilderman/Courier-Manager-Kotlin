@@ -38,7 +38,7 @@ class Registration : AppCompatActivity() {
     }
 
     private fun registerUser() {
-        val url: String = "http://10.0.0.7/courier_project/registration.php"
+        val url: String = "http://192.168.93.141/courier_project/registration.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
                 errorMassage.text = response
@@ -67,9 +67,25 @@ class Registration : AppCompatActivity() {
     // when user clicks on the PROCEED button
     // this function is triggered.
 
-    fun checkAllFields():Boolean{
-       if(Validations.checkPhone(phone)) return true
-
+    fun checkAllFields(): Boolean {
+        if (firstName.toString().length == 0) {
+            firstName.error = "This field is required"
+            return false
+        }
+        if (lastName!!.length() == 0) {
+            lastName!!.error = "This field is required"
+            return false
+        }
+        if (email!!.length() == 0) {
+            email!!.error = "Email is required"
+            return false
+        }
+        if (phone!!.length() != 10) {
+            phone!!.error = "phone should be 10 digits"
+            return false
+        }
+        //   after all validation return true.
+        return true
     }
 
 }

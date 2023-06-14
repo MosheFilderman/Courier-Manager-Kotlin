@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="start"
     android:orientation="vertical"
-    android:padding="10dp">
+    android:gravity="center">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +19,7 @@
             android:text="Customer Name:"
             android:textStyle="bold" />
 
-        <TextView
+        <EditText
             android:id="@+id/firstColumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -40,7 +39,7 @@
             android:text="Customer Phone:"
             android:textStyle="bold" />
 
-        <TextView
+        <EditText
             android:id="@+id/secondColumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -60,7 +59,7 @@
             android:text="Customer eMail:"
             android:textStyle="bold" />
 
-        <TextView
+        <EditText
             android:id="@+id/thirdColumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -80,7 +79,7 @@
             android:text="Order Status:"
             android:textStyle="bold" />
 
-        <TextView
+        <EditText
             android:id="@+id/fourthColumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
@@ -100,7 +99,7 @@
             android:text="Comment's:"
             android:textStyle="bold"/>
 
-        <TextView
+        <EditText
             android:id="@+id/fifthColumn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>

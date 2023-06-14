@@ -17,6 +17,7 @@ import android.widget.SearchView
 import android.widget.SearchView.*
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -33,14 +34,11 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var menu: BottomNavigationView
     lateinit var firstName: TextView
     lateinit var lastName: TextView
-    lateinit var search: EditText
+    lateinit var search: SearchView
+    lateinit var adapter: OrderListView
 
-
-    var contactsNames = mutableListOf<String>()
-    var contactsPhones = mutableListOf<String>()
-    var contactsEmails = mutableListOf<String>()
-    var ordersStatus = mutableListOf<String>()
-    var ordersComment = mutableListOf<String>()
+    var orders = ArrayList<Order>()
+    var searchOrderList = ArrayList<Order>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,9 +50,22 @@ class CustomerOrderList : AppCompatActivity() {
         lastName.text = shrd.getString("lastName", "")
         search = findViewById(R.id.search)
 
-
-
         orderList = findViewById(R.id.orderList)
+        orderList.setOnItemClickListener { parent, view, position, id ->
+            var builder = AlertDialog.Builder(this)
+            var inflater = layoutInflater
+            var dialogLayout = inflater.inflate(R.layout.edit_order_info, null)
+
+            builder.setView(dialogLayout)
+
+            
+            builder.setPositiveButton("Close"){dialogInterface, i ->
+                dialogInterface.dismiss()
+
+            }
+            builder.show()
+        }
+
         emptyListMsg = findViewById(R.id.emptyListMsg)
         menu = findViewById(R.id.nav)
 
@@ -94,65 +105,34 @@ class CustomerOrderList : AppCompatActivity() {
             true
         }
 
-        var adapter =
-            ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contactsEmails)
-        orderList.adapter = adapter
-
-
         getCustomerOrders()
+        orderList.adapter = OrderListView(this, orders)
 
-//        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
-//            override fun onQueryTextSubmit(query: String?): Boolean {
-//                if (contactsEmails.contains(query)) {
-//                    adapter.filter.filter(query)
-//                    Toast.makeText(
-//                        this@CustomerOrderList,
-//                        contactsEmails.contains(query).toString(),
-//                        Toast.LENGTH_LONG
-//                    ).show()
-////                   Toast.makeText(this@CustomerOrderList,contactsEmails.toString(),Toast.LENGTH_LONG).show()
-//                } else {
-//                    Toast.makeText(
-//                        this@CustomerOrderList,
-//                        contactsEmails.contains(query).toString(),
-//                        Toast.LENGTH_LONG
-//                    ).show()
-////                    Toast.makeText(this@CustomerOrderList,contactsEmails.toString(),Toast.LENGTH_LONG).show()
-//                }
-//                return false
-//            }
+        search.setOnQueryTextListener(
+            object : SearchView.OnQueryTextListener {
+                override fun onQueryTextSubmit(query: String?): Boolean {
+                    return false
+                }
 
-//            override fun onQueryTextChange(p0: String?): Boolean {
-//                adapter.filter.filter(p0)
-////                Toast.makeText(this@CustomerOrderList,"text change",Toast.LENGTH_LONG).show()
-//                return false
-//            }
-//
-//
-//        })
-
-//        search.addTextChangedListener(object: TextWatcher{
-//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                TODO("Not yet implemented")
-//            }
-//
-//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-//                adapter.filter.filter(p0)
-//            }
-//
-//            override fun afterTextChanged(p0: Editable?) {
-//                TODO("Not yet implemented")
-//            }
-//
-//        })
+                override fun onQueryTextChange(p0: String?): Boolean {
+                    searchOrderList.clear()
+                    for (tmpOrder in orders) {
+                        if (tmpOrder.email.lowercase().startsWith(p0!!.lowercase())) {
+                            searchOrderList.add(tmpOrder)
+                        }
+                    }
+                    orderList.adapter = OrderListView(this@CustomerOrderList, searchOrderList)
+                    return false
+                }
+            })
     }
+
 
     fun getCustomerOrders() {
         val url: String = "http://192.168.93.141/courier_project/getCustomerOrders.php"
 
-        val stringRequest: StringRequest = object : StringRequest(
-            Method.POST, url,
-            Response.Listener { response ->
+        val stringRequest: StringRequest =
+            object : StringRequest(Method.POST, url, Response.Listener { response ->
                 if (!response.toString().trim().equals("empty")) {
                     orderList.visibility = View.VISIBLE
                     val strRes = response.toString()
@@ -162,42 +142,29 @@ class CustomerOrderList : AppCompatActivity() {
 
                     for (i in 0 until jsonArrayOrders.length()) {
                         var jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
-                        contactsNames.add(jsonInner.get("contactName").toString())
-                        contactsPhones.add(jsonInner.get("contactPhone").toString())
-                        contactsEmails.add(jsonInner.get("contactEmail").toString())
-                        ordersStatus.add(jsonInner.get("eStatus").toString())
-                        ordersComment.add(jsonInner.get("comment").toString())
+                        var tmpOrder = Order(
+                            jsonInner.get("contactName").toString(),
+                            jsonInner.get("contactPhone").toString(),
+                            jsonInner.get("contactEmail").toString(),
+                            jsonInner.get("eStatus").toString(),
+                            jsonInner.get("comment").toString()
+                        )
+                        orders.add(tmpOrder)
                     }
-
-                    orderList.adapter = OrderListView(
-                        this,
-                        contactsNames as ArrayList<String>,
-                        contactsEmails as ArrayList<String>,
-                        contactsPhones as ArrayList<String>,
-                        ordersStatus as ArrayList<String>,
-                        ordersComment as ArrayList<String>
-                    )
                 } else {
                     emptyListMsg.visibility = View.VISIBLE
                     emptyListMsg.text = "Your order list still empty"
                 }
-            },
-            Response.ErrorListener { error ->
-                Toast.makeText(this@CustomerOrderList, error.toString(), Toast.LENGTH_SHORT)
-                    .show()
+            }, Response.ErrorListener { error ->
+                Toast.makeText(this@CustomerOrderList, error.toString(), Toast.LENGTH_SHORT).show()
             }) {
-            override fun getParams(): Map<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["email"] = shrd.getString("email", "none").toString()
-                return params
+                override fun getParams(): Map<String, String> {
+                    val params: MutableMap<String, String> = HashMap()
+                    params["email"] = shrd.getString("email", "none").toString()
+                    return params
+                }
             }
-        }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-    }
-
-
-    fun search() {
-
     }
 }
