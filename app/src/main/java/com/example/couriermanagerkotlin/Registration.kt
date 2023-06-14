@@ -66,26 +66,14 @@ class Registration : AppCompatActivity() {
     // are filled or not by the user.
     // when user clicks on the PROCEED button
     // this function is triggered.
-    private fun checkAllFields(): Boolean {
-        if (firstName!!.length() == 0) {
-            firstName!!.error = "This field is required"
-            return false
-        }
-        if (lastName!!.length() == 0) {
-            lastName!!.error = "This field is required"
-            return false
-        }
-        if (email!!.length() == 0) {
-            email!!.error = "Email is required"
-            return false
-        }
-        if (phone!!.length() != 10) {
-            phone!!.error = "phone should be 10 digits"
-            return false
-        }
-        // after all validation return true.
-        return true
+
+    fun checkAllFields():Boolean{
+       if(Validations.checkPhone(phone)) return true
+
     }
+
 }
+
+
 
 

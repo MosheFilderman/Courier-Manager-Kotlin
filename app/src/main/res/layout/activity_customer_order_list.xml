@@ -52,12 +52,22 @@
 
             <TextView
                 android:gravity="center"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:text="Your Order's"
                 android:textSize="25sp"
                 android:textStyle="bold"/>
+            
+            <EditText
+                android:id="@+id/search"
+                android:layout_width="match_parent"
+                android:layout_height="fill_parent"
+                app:queryHint="Search..."
+                app:closeIcon="@drawable/baseline_clear_24"
+                app:searchIcon="@drawable/baseline_search_24"/>
+
+
 
 
         </LinearLayout>

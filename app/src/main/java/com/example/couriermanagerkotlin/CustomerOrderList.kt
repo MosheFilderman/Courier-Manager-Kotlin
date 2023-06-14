@@ -5,10 +5,16 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ArrayAdapter
+import android.widget.EditText
 import android.widget.ListView
+import android.widget.SearchView
+import android.widget.SearchView.*
 import android.widget.TextView
 import android.widget.Toast
 import com.android.volley.Response
@@ -17,6 +23,7 @@ import com.android.volley.toolbox.Volley
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import org.json.JSONArray
 import org.json.JSONObject
+import android.widget.SearchView.OnQueryTextListener as OnQueryTextListener1
 
 
 class CustomerOrderList : AppCompatActivity() {
@@ -26,6 +33,8 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var menu: BottomNavigationView
     lateinit var firstName: TextView
     lateinit var lastName: TextView
+    lateinit var search: EditText
+
 
     var contactsNames = mutableListOf<String>()
     var contactsPhones = mutableListOf<String>()
@@ -41,13 +50,16 @@ class CustomerOrderList : AppCompatActivity() {
         lastName = findViewById(R.id.lastName)
         firstName.text = shrd.getString("firstName", "")
         lastName.text = shrd.getString("lastName", "")
+        search = findViewById(R.id.search)
+
+
 
         orderList = findViewById(R.id.orderList)
         emptyListMsg = findViewById(R.id.emptyListMsg)
         menu = findViewById(R.id.nav)
 
         menu.setOnItemSelectedListener {
-            when(it.itemId){
+            when (it.itemId) {
                 R.id.newOrder -> {
                     startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
                     emptyListMsg.visibility = View.GONE
@@ -55,10 +67,12 @@ class CustomerOrderList : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 R.id.orderList -> {
                     Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
                     true
                 }
+
                 R.id.logout -> {
                     val editor: SharedPreferences.Editor = shrd.edit()
                     editor.putBoolean("connected", false)
@@ -74,16 +88,67 @@ class CustomerOrderList : AppCompatActivity() {
                     finish()
                     true
                 }
+
                 else -> false
             }
             true
         }
 
+        var adapter =
+            ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, contactsEmails)
+        orderList.adapter = adapter
+
+
         getCustomerOrders()
+
+//        search.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+//            override fun onQueryTextSubmit(query: String?): Boolean {
+//                if (contactsEmails.contains(query)) {
+//                    adapter.filter.filter(query)
+//                    Toast.makeText(
+//                        this@CustomerOrderList,
+//                        contactsEmails.contains(query).toString(),
+//                        Toast.LENGTH_LONG
+//                    ).show()
+////                   Toast.makeText(this@CustomerOrderList,contactsEmails.toString(),Toast.LENGTH_LONG).show()
+//                } else {
+//                    Toast.makeText(
+//                        this@CustomerOrderList,
+//                        contactsEmails.contains(query).toString(),
+//                        Toast.LENGTH_LONG
+//                    ).show()
+////                    Toast.makeText(this@CustomerOrderList,contactsEmails.toString(),Toast.LENGTH_LONG).show()
+//                }
+//                return false
+//            }
+
+//            override fun onQueryTextChange(p0: String?): Boolean {
+//                adapter.filter.filter(p0)
+////                Toast.makeText(this@CustomerOrderList,"text change",Toast.LENGTH_LONG).show()
+//                return false
+//            }
+//
+//
+//        })
+
+//        search.addTextChangedListener(object: TextWatcher{
+//            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                TODO("Not yet implemented")
+//            }
+//
+//            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+//                adapter.filter.filter(p0)
+//            }
+//
+//            override fun afterTextChanged(p0: Editable?) {
+//                TODO("Not yet implemented")
+//            }
+//
+//        })
     }
 
     fun getCustomerOrders() {
-        val url: String = "http://10.0.0.7/courier_project/getCustomerOrders.php"
+        val url: String = "http://192.168.93.141/courier_project/getCustomerOrders.php"
 
         val stringRequest: StringRequest = object : StringRequest(
             Method.POST, url,
@@ -98,8 +163,8 @@ class CustomerOrderList : AppCompatActivity() {
                     for (i in 0 until jsonArrayOrders.length()) {
                         var jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
                         contactsNames.add(jsonInner.get("contactName").toString())
-                        contactsPhones.add(jsonInner.get("contactEmail").toString())
-                        contactsEmails.add(jsonInner.get("contactPhone").toString())
+                        contactsPhones.add(jsonInner.get("contactPhone").toString())
+                        contactsEmails.add(jsonInner.get("contactEmail").toString())
                         ordersStatus.add(jsonInner.get("eStatus").toString())
                         ordersComment.add(jsonInner.get("comment").toString())
                     }
@@ -107,8 +172,8 @@ class CustomerOrderList : AppCompatActivity() {
                     orderList.adapter = OrderListView(
                         this,
                         contactsNames as ArrayList<String>,
-                        contactsPhones as ArrayList<String>,
                         contactsEmails as ArrayList<String>,
+                        contactsPhones as ArrayList<String>,
                         ordersStatus as ArrayList<String>,
                         ordersComment as ArrayList<String>
                     )
@@ -118,7 +183,8 @@ class CustomerOrderList : AppCompatActivity() {
                 }
             },
             Response.ErrorListener { error ->
-                Toast.makeText(this@CustomerOrderList, error.toString(), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@CustomerOrderList, error.toString(), Toast.LENGTH_SHORT)
+                    .show()
             }) {
             override fun getParams(): Map<String, String> {
                 val params: MutableMap<String, String> = HashMap()
@@ -128,5 +194,10 @@ class CustomerOrderList : AppCompatActivity() {
         }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
+    }
+
+
+    fun search() {
+
     }
 }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.Filter
 import android.widget.TextView
 import org.json.JSONArray
 
@@ -17,6 +18,7 @@ class OrderListView(context: Context, contactsNames: ArrayList<String>, contacts
     var contactsEmails = contactsEmails
     var ordersStatus = ordersStatus
     var orderComment = orderComments
+
 
     init {
         this.myContext = context
@@ -61,6 +63,8 @@ class OrderListView(context: Context, contactsNames: ArrayList<String>, contacts
 
         return view
     }
+
+
 
 
 }

@@ -58,7 +58,7 @@ class Login : AppCompatActivity() {
     }
 
     fun login(view: View) {
-        val url: String = "http://10.0.0.7/courier_project/login.php"
+        val url: String = "http://10.100.102.234/courier_project/login.php"
         val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
             Response.Listener { response ->
                 if (response.toString().trim().compareTo("error") != 0) {
