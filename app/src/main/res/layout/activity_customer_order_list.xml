@@ -12,8 +12,6 @@
         android:id="@+id/viewPort"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="-81dp"
         android:gravity="top"
         android:orientation="vertical"
         android:padding="10dp">

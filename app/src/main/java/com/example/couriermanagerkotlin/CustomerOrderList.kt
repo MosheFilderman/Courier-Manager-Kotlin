@@ -35,7 +35,6 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var firstName: TextView
     lateinit var lastName: TextView
     lateinit var search: SearchView
-    lateinit var adapter: OrderListView
 
     var orders = ArrayList<Order>()
     var searchOrderList = ArrayList<Order>()
@@ -54,14 +53,28 @@ class CustomerOrderList : AppCompatActivity() {
         orderList.setOnItemClickListener { parent, view, position, id ->
             var builder = AlertDialog.Builder(this)
             var inflater = layoutInflater
-            var dialogLayout = inflater.inflate(R.layout.edit_order_info, null)
+            var dialogLayout = inflater.inflate(R.layout.list_view, null)
 
             builder.setView(dialogLayout)
 
-            
-            builder.setPositiveButton("Close"){dialogInterface, i ->
-                dialogInterface.dismiss()
+            val name: TextView = dialogLayout.findViewById(R.id.firstColumn)
+            val phone: TextView = dialogLayout.findViewById(R.id.secondColumn)
+            val email: TextView = dialogLayout.findViewById(R.id.thirdColumn)
+            val status: TextView = dialogLayout.findViewById(R.id.fourthColumn)
+            val comment: TextView = dialogLayout.findViewById(R.id.fifthColumn)
 
+            name.text = orders[position].name
+            phone.text = orders[position].phone
+            email.text = orders[position].email
+            status.text = orders[position].status.name
+            comment.text = orders[position].comment
+
+            builder.setPositiveButton("Cancel Order"){dialogInterface, i ->
+                // change current order status to CANCELED
+            }
+
+            builder.setNegativeButton("Close"){dialogInterface, i ->
+                dialogInterface.dismiss()
             }
             builder.show()
         }
@@ -99,13 +112,13 @@ class CustomerOrderList : AppCompatActivity() {
                     finish()
                     true
                 }
-
                 else -> false
             }
             true
         }
 
         getCustomerOrders()
+
         orderList.adapter = OrderListView(this, orders)
 
         search.setOnQueryTextListener(
@@ -127,9 +140,8 @@ class CustomerOrderList : AppCompatActivity() {
             })
     }
 
-
     fun getCustomerOrders() {
-        val url: String = "http://192.168.93.141/courier_project/getCustomerOrders.php"
+        val url: String = "http://10.0.0.7/courier_project/getCustomerOrders.php"
 
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -143,10 +155,11 @@ class CustomerOrderList : AppCompatActivity() {
                     for (i in 0 until jsonArrayOrders.length()) {
                         var jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
                         var tmpOrder = Order(
+                            jsonInner.get("order_id").toString(),
                             jsonInner.get("contactName").toString(),
                             jsonInner.get("contactPhone").toString(),
                             jsonInner.get("contactEmail").toString(),
-                            jsonInner.get("eStatus").toString(),
+                            eStatus.findStatus(jsonInner.get("eStatus").toString()),
                             jsonInner.get("comment").toString()
                         )
                         orders.add(tmpOrder)

@@ -48,7 +48,7 @@ class OrderListView(context: Context, orders: ArrayList<Order>): BaseAdapter() {
         contactName.text = orders[position].name
         contactPhone.text = orders[position].phone
         contactEmail.text = orders[position].email
-        status.text = orders[position].status
+        status.text = orders[position].status.name
         comment.text = orders[position].comment
 
         return view
