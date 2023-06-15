@@ -5,47 +5,48 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
+import android.widget.RadioButton
+import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 
-class Registration : AppCompatActivity() {
+class AddEmployee : AppCompatActivity() {
     lateinit var firstName: EditText
     lateinit var lastName: EditText
     lateinit var email: EditText
     lateinit var phone: EditText
     lateinit var errorMassage: TextView
+    lateinit var radioGroup : RadioGroup
+    lateinit var radioButton : RadioButton
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_registration)
+        setContentView(R.layout.activity_add_employee)
         firstName = findViewById(R.id.firstName)
         lastName = findViewById(R.id.lastName)
         email = findViewById(R.id.email)
         phone = findViewById(R.id.phone)
         errorMassage = findViewById(R.id.errorMassage)
+        radioGroup = findViewById(R.id.radioGroup)
+        radioButton  = findViewById(radioGroup.checkedRadioButtonId)
     }
 
-    fun register(view: View) {
-        if (checkAllFields()) {
-            Toast.makeText(this, "All field's filled successfully.", Toast.LENGTH_LONG).show()
-            registerUser()
-            startActivity(Intent(this@Registration, Login::class.java))
-            finish()
-        } else
-            Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
+    fun AddEmployee(view: View) {
+        registerEmployee()
     }
-
-    private fun registerUser() {
+    fun checkRadioButton(view: View) {}
+    private fun registerEmployee() {
         val url: String = "http://10.100.102.234/courier_project/registration.php"
-        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
+        val stringRequest: StringRequest = object : StringRequest(
+            Method.POST, url,
             Response.Listener { response ->
                 errorMassage.text = response
             },
             Response.ErrorListener { error ->
                 errorMassage.text = error.toString()
-                startActivity(Intent(this@Registration, Login::class.java))
+                startActivity(Intent(this@AddEmployee, Login::class.java))
                 finish()
             }) {
             override fun getParams(): Map<String, String> {
@@ -54,42 +55,11 @@ class Registration : AppCompatActivity() {
                 params["lastName"] = lastName.text.toString().trim()
                 params["email"] = email.text.toString().trim()
                 params["phone"] = "+972" + phone.text.toString().trim().substring(1)
-                params["eRole"] = eRole.CUSTOMER.name
+                params["eRole"] = radioButton.text.toString()
                 return params
             }
         }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
     }
-
-    // function which checks all the text fields
-    // are filled or not by the user.
-    // when user clicks on the PROCEED button
-    // this function is triggered.
-
-    fun checkAllFields(): Boolean {
-        if (firstName.toString().length == 0) {
-            firstName.error = "This field is required"
-            return false
-        }
-        if (lastName!!.length() == 0) {
-            lastName!!.error = "This field is required"
-            return false
-        }
-        if (email!!.length() == 0) {
-            email!!.error = "Email is required"
-            return false
-        }
-        if (phone!!.length() != 10) {
-            phone!!.error = "phone should be 10 digits"
-            return false
-        }
-        //   after all validation return true.
-        return true
-    }
-
 }
-
-
-
-
