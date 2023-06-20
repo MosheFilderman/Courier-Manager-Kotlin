@@ -28,65 +28,20 @@ class Registration : AppCompatActivity() {
     }
 
     fun register(view: View) {
-        if (checkAllFields()) {
+        if (Validations.isEmpty(firstName) && Validations.isEmpty(lastName) && Validations.isEmpty(email) && Validations.checkPhoneLength(phone)) {
             Toast.makeText(this, "All field's filled successfully.", Toast.LENGTH_LONG).show()
-            registerUser()
+            DButilities.registerUser(this@Registration,firstName.text.toString().trim(),lastName.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim())
             startActivity(Intent(this@Registration, Login::class.java))
             finish()
         } else
             Toast.makeText(this, "Something went wrong", Toast.LENGTH_SHORT).show()
     }
 
-    private fun registerUser() {
-        val url: String = "http://10.100.102.234/courier_project/registration.php"
-        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
-            Response.Listener { response ->
-                errorMassage.text = response
-            },
-            Response.ErrorListener { error ->
-                errorMassage.text = error.toString()
-                startActivity(Intent(this@Registration, Login::class.java))
-                finish()
-            }) {
-            override fun getParams(): Map<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["firstName"] = firstName.text.toString().trim()
-                params["lastName"] = lastName.text.toString().trim()
-                params["email"] = email.text.toString().trim()
-                params["phone"] = "+972" + phone.text.toString().trim().substring(1)
-                params["eRole"] = eRole.CUSTOMER.name
-                return params
-            }
-        }
-        val requestQueue = Volley.newRequestQueue(this)
-        requestQueue.add(stringRequest)
-    }
 
-    // function which checks all the text fields
-    // are filled or not by the user.
-    // when user clicks on the PROCEED button
-    // this function is triggered.
 
-    fun checkAllFields(): Boolean {
-        if (firstName.toString().length == 0) {
-            firstName.error = "This field is required"
-            return false
-        }
-        if (lastName!!.length() == 0) {
-            lastName!!.error = "This field is required"
-            return false
-        }
-        if (email!!.length() == 0) {
-            email!!.error = "Email is required"
-            return false
-        }
-        if (phone!!.length() != 10) {
-            phone!!.error = "phone should be 10 digits"
-            return false
-        }
-        //   after all validation return true.
-        return true
-    }
+
+
+
 
 }
 

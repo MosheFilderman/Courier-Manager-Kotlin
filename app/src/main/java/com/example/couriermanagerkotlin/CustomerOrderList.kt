@@ -38,10 +38,38 @@ class CustomerOrderList : AppCompatActivity() {
     var orders = ArrayList<Order>()
     var searchOrderList = ArrayList<Order>()
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.logout_search_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+
+            R.id.logout -> {
+                val editor: SharedPreferences.Editor = shrd.edit()
+                editor.putBoolean("connected", false)
+                editor.putString("firstName", "")
+                editor.putString("lastName", "")
+                editor.putString("email", "")
+                editor.putString("eRole", "")
+                editor.apply()
+
+                startActivity(Intent(this@CustomerOrderList, Login::class.java))
+                emptyListMsg.visibility = View.GONE
+                orderList.visibility = View.GONE
+                finish()
+                true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_order_list)
-        shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
         firstName = findViewById(R.id.firstName)
         lastName = findViewById(R.id.lastName)
         firstName.text = shrd.getString("firstName", "")
@@ -55,6 +83,7 @@ class CustomerOrderList : AppCompatActivity() {
             var builder = AlertDialog.Builder(this)
             var inflater = layoutInflater
             var dialogLayout = inflater.inflate(R.layout.list_view, null)
+            orderList.visibility = View.VISIBLE
 
             builder.setView(dialogLayout)
 
@@ -71,7 +100,7 @@ class CustomerOrderList : AppCompatActivity() {
             comment.text = orders[position].comment
 
             builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                updateOrder(orderId,eStatus.CANCELLED)
+                DButilities.deleteOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
                 orders.removeAt(position)
                 orderList.adapter = OrderListView(this, orders)
             }
@@ -99,28 +128,14 @@ class CustomerOrderList : AppCompatActivity() {
                     true
                 }
 
-                R.id.logout -> {
-                    val editor: SharedPreferences.Editor = shrd.edit()
-                    editor.putBoolean("connected", false)
-                    editor.putString("firstName", "")
-                    editor.putString("lastName", "")
-                    editor.putString("email", "")
-                    editor.putString("eRole", "")
-                    editor.apply()
 
-                    startActivity(Intent(this@CustomerOrderList, Login::class.java))
-                    emptyListMsg.visibility = View.GONE
-                    orderList.visibility = View.GONE
-                    finish()
-                    true
-                }
 
                 else -> false
             }
             true
         }
-
         getCustomerOrders()
+
 
         orderList.adapter = OrderListView(this, orders)
 
@@ -143,8 +158,9 @@ class CustomerOrderList : AppCompatActivity() {
             })
     }
 
+
     fun getCustomerOrders() {
-        val url: String = "http://10.100.102.234/courier_project/getCustomerOrders.php"
+        val url: String = "http://${DButilities.ipv4Address}/courier_project/getCustomerOrders.php"
         val stringRequest: StringRequest =
             object : StringRequest(Method.POST, url, Response.Listener { response ->
                 if (!response.toString().trim().equals("empty")) {
@@ -166,6 +182,7 @@ class CustomerOrderList : AppCompatActivity() {
                         )
                         orders.add(tmpOrder)
                     }
+
                 } else {
                     emptyListMsg.visibility = View.VISIBLE
                     emptyListMsg.text = "Your order list still empty"
@@ -181,26 +198,9 @@ class CustomerOrderList : AppCompatActivity() {
             }
         val requestQueue = Volley.newRequestQueue(this)
         requestQueue.add(stringRequest)
-    }
-
-    fun updateOrder(orderId:String,status:eStatus){
-        val url: String = "http://10.100.102.234/courier_project/updateOrder.php"
-        val stringRequest: StringRequest =
-            object : StringRequest(Method.POST, url, Response.Listener { response ->
-                Toast.makeText(this@CustomerOrderList, response.toString(), Toast.LENGTH_SHORT).show()
-            }, Response.ErrorListener { error ->
-                Toast.makeText(this@CustomerOrderList, error.toString(), Toast.LENGTH_SHORT).show()
-            }) {
-                override fun getParams(): Map<String, String> {
-                    val params: MutableMap<String, String> = HashMap()
-                    params["orderId"] = orderId
-                    params["status"] = status.name
-                    return params
-                }
-            }
-        val requestQueue = Volley.newRequestQueue(this)
-        requestQueue.add(stringRequest)
 
 
     }
+
+
 }

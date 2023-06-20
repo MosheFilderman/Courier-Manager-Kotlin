@@ -3,21 +3,69 @@ package com.example.couriermanagerkotlin
 import android.view.View
 import android.widget.EditText
 
- class Validations {
+open class Validations {
 
 
-
-
-
-    protected fun checkPhoneLength(view: EditText): Boolean {
-        if (view.text.toString()!!.length != 10) {
-            view!!.error = "phone should be 10 digits"
-            return false
+    companion object {
+        fun checkPhoneLength(view: EditText): Boolean {
+            if (view.text.toString()!!.length != 10) {
+                view!!.error = "phone should be 10 digits"
+                return false
+            }
+            return true
         }
-        return true
+
+        fun isEmpty(view: EditText): Boolean {
+            if (view!!.length() == 0) {
+                view!!.error = "This field is required"
+                return false
+            }
+            return true
+        }
+
+
+        fun checkOrderMeasures(packageHeight :EditText, packageWidth :EditText, packageLength :EditText, packageWeight : EditText  ): Boolean {
+/* Package measures field's */
+            if (packageHeight!!.length() == 0 && Integer.parseInt(packageHeight.text.toString()) > 50) {
+                packageHeight.error = "Package height must be filled & less then 50cm"
+                return false
+            }
+            if (packageWidth.length() == 0 && Integer.parseInt(packageWidth.text.toString()) > 50) {
+                packageWidth.error = "Package width must be filled & less then 50cm"
+                return false
+            }
+            if (packageLength.length() == 0 && Integer.parseInt(packageLength.text.toString()) > 50) {
+                packageLength.error = "Package length must be filled & less then 50cm"
+                return false
+            }
+            if (packageWeight.length() == 0 && Integer.parseInt(packageWeight.text.toString()) > 11) {
+                packageWeight.error = "Package weight must be filled & less then 10kg"
+                return false
+            }
+            // after all validation return true.
+            return true
+        }
     }
 
-    companion object
 
-
+//    fun checkAllFields(): Boolean {
+//        if (firstName.toString().length == 0) {
+//            firstName.error = "This field is required"
+//            return false
+//        }
+//        if (lastName!!.length() == 0) {
+//            lastName!!.error = "This field is required"
+//            return false
+//        }
+//        if (email!!.length() == 0) {
+//            email!!.error = "Email is required"
+//            return false
+//        }
+//        if (phone!!.length() != 10) {
+//            phone!!.error = "phone should be 10 digits"
+//            return false
+//        }
+//        //   after all validation return true.
+//        return true
+//    }
 }

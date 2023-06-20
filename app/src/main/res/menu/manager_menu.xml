@@ -5,7 +5,7 @@
 
     <item
         android:id="@+id/courierList"
-        android:icon="@drawable/list_menu"
+        android:icon="@drawable/baseline_list_24"
         android:title="Courier List"/>
 
     <item

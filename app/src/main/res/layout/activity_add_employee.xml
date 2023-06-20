@@ -76,11 +76,11 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <RadioGroup
+            android:gravity="center"
             android:id="@+id/radioGroup"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="5dp">
+            android:orientation="horizontal">
 
             <RadioButton
                 android:id="@+id/radioManager"
@@ -105,7 +105,7 @@
             android:id="@+id/addNewEmployee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="AddEmployee"
+            android:onClick="addEmployee"
             android:text="Add Employee" />
 
         <TextView
