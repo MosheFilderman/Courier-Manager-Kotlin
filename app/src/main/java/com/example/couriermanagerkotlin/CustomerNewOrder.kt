@@ -30,16 +30,16 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var contPhoneNumber: EditText
     lateinit var contEmail: EditText
     lateinit var deliveryCity: Spinner
-    lateinit var deliveryStreet: AutoCompleteTextView
+    lateinit var deliveryStreet: EditText
     lateinit var deliveryBuild: EditText
     lateinit var pickupCity: Spinner
-    lateinit var pickupStreet: AutoCompleteTextView
+    lateinit var pickupStreet: EditText
     lateinit var pickupBuild: EditText
     lateinit var packageHeight: EditText
     lateinit var packageWidth: EditText
     lateinit var packageLength: EditText
     lateinit var packageWeight: EditText
-    lateinit var errorMassage: TextView
+    lateinit var errorMessage: TextView
     lateinit var comment: EditText
 
     /* String objects of the spinners */
@@ -55,9 +55,10 @@ class CustomerNewOrder : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.newOrder -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
+            R.id.newOrder -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT)
+                .show()
 
-            R.id.orderList ->{
+            R.id.orderList -> {
                 startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
                 finish()
 
@@ -100,7 +101,9 @@ class CustomerNewOrder : AppCompatActivity() {
         packageWidth = findViewById(R.id.packageWidth)
         packageLength = findViewById(R.id.packageLength)
         packageWeight = findViewById(R.id.packageWeight)
-        errorMassage = findViewById(R.id.errorMassage)
+
+        errorMessage = findViewById(R.id.errorMassage)
+        errorMessage.visibility = View.GONE
         comment = findViewById(R.id.comment)
 
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
@@ -184,52 +187,38 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     fun newOrder(view: View) {
-        if (Validations.checkOrderMeasures(packageHeight,packageWidth,packageLength,packageHeight) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) &&Validations.isEmpty(contEmail) && Validations.isEmpty(contPhoneNumber)) {
+        if (Validations.checkOrderMeasures(
+                packageHeight,
+                packageWidth,
+                packageLength,
+                packageHeight
+            ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
+                contEmail
+            ) && Validations.isEmpty(contPhoneNumber)
+        ) {
             Toast.makeText(this, "All fields filled correctly.", Toast.LENGTH_SHORT).show()
-            createOrder()
+            val orderToAdd = Order(
+                UUID.randomUUID().toString(),
+                contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim(),
+                "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
+                contEmail.text.toString().trim(),
+                eStatus.NEW,
+                strPickupCity,
+                pickupStreet.text.toString().trim(),
+                pickupBuild.text.toString().trim(),
+                strDeliveryCity,
+                deliveryStreet.text.toString().trim(),
+                deliveryBuild.text.toString().trim(),
+                comment.text.toString().trim()
+            )
+            DButilities.createOrder(this@CustomerNewOrder, orderToAdd, shrd.getString("email", "none").toString(), errorMessage)
             startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
             Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
-            errorMassage.visibility = View.VISIBLE
+            errorMessage.visibility = View.VISIBLE
             finish()
         } else {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun createOrder() {
-        val url: String = "http://${DButilities.ipv4Address}/courier_project/newOrder.php"
-        val stringRequest: StringRequest =
-            object : StringRequest(Method.POST, url, Response.Listener { response ->
-                errorMassage.text = response
-            }, Response.ErrorListener { error ->
-                errorMassage.visibility = View.VISIBLE
-                errorMassage.text = error.toString()
-            }) {
-                override fun getParams(): Map<String, String> {
-                    val params: MutableMap<String, String> = HashMap()
-                    params["orderId"] = UUID.randomUUID().toString()
-                    params["email"] = shrd.getString("email", "none").toString()
-                    params["contactName"] =
-                        contFirstName.text.toString().trim() + " " + contLastName.text.toString()
-                            .trim()
-                    params["contactPhone"] =
-                        "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim()
-                    params["contactEmail"] = contEmail.text.toString().trim()
-                    params["eStatus"] = eStatus.NEW.name
-                    params["pickUpCity"] = strPickupCity
-                    params["pickupStreet"] = pickupStreet.toString().trim()
-                    params["pickupBuild"] = pickupBuild.toString().trim()
-                    params["deliveryCity"] = strDeliveryCity
-                    params["deliveryStreet"] = deliveryStreet.toString().trim()
-                    params["deliveryBuild"] = deliveryBuild.toString().trim()
-                    params["comment"] = comment.toString().trim()
-
-                    return params
-                }
-
-            }
-        val requestQueue = Volley.newRequestQueue(this)
-        requestQueue.add(stringRequest)
     }
 
 

@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.view.View
+import android.widget.ListView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Response
@@ -15,7 +17,8 @@ import org.json.JSONObject
 class DButilities {
 
     companion object {
-        val ipv4Address: String = "10.100.102.234"
+        const val ipv4Address: String = "192.168.93.141"
+        var orders = ArrayList<Order>()
 
         fun registerUser(
             context: Context,
@@ -136,7 +139,7 @@ class DButilities {
 
 
         fun deleteOrder(context: Context, orderId: String, status: eStatus) {
-            val url: String = "http://10.100.102.234/courier_project/deleteOrder.php"
+            val url: String = "http://${ipv4Address}/courier_project/deleteOrder.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
@@ -152,21 +155,21 @@ class DButilities {
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
-
-
         }
 
 
         fun getCustomerOrders(
             context: Context,
-            email: String,
-            orders: ArrayList<Order>
+            orderList: ListView,
+            emptyListMsg: TextView,
+            email: String
         ) {
             val url: String = "http://${ipv4Address}/courier_project/getCustomerOrders.php"
+            orders.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    if (!response.toString().trim().equals("empty")) {
-                        //  orderList.visibility = View.VISIBLE
+                    if (!response.toString().trim().equals("No data")) {
+                        orderList.visibility = View.VISIBLE
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
@@ -180,15 +183,21 @@ class DButilities {
                                 jsonInner.get("contactPhone").toString(),
                                 jsonInner.get("contactEmail").toString(),
                                 eStatus.findStatus(jsonInner.get("eStatus").toString()),
+                                jsonInner.get("pickupCity").toString(),
+                                jsonInner.get("pickupStreet").toString(),
+                                jsonInner.get("pickupBuild").toString(),
+                                jsonInner.get("deliveryCity").toString(),
+                                jsonInner.get("deliveryStreet").toString(),
+                                jsonInner.get("deliveryBuild").toString(),
                                 jsonInner.get("comment").toString()
                             )
                             orders.add(tmpOrder)
                         }
-
                     } else {
-//                        emptyListMsg.visibility = View.VISIBLE
-//                        emptyListMsg.text = "Your order list still empty"
+                        emptyListMsg.visibility = View.VISIBLE
+                        emptyListMsg.text = "Your order list still empty"
                     }
+
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
@@ -200,8 +209,38 @@ class DButilities {
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
+        }
 
+        fun createOrder(context: Context, order: Order, userEmail: String, errorMassage: TextView) {
+            val url: String = "http://${ipv4Address}/courier_project/newOrder.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    errorMassage.text = response
+                }, Response.ErrorListener { error ->
+                    errorMassage.visibility = View.VISIBLE
+                    errorMassage.text = error.toString()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["orderId"] = order.orderId
+                        params["email"] = userEmail
+                        params["contactName"] = order.name
+                        params["contactPhone"] = order.phone
+                        params["contactEmail"] = order.email
+                        params["eStatus"] = order.status.name
+                        params["pickupCity"] = order.pickupCity
+                        params["pickupStreet"] = order.pickupStreet
+                        params["pickupBuild"] = order.pickupBuild
+                        params["deliveryCity"] = order.deliveryCity
+                        params["deliveryStreet"] = order.deliveryStreet
+                        params["deliveryBuild"] = order.deliveryBuild
+                        params["comment"] = order.comment
 
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
         }
     }
 }

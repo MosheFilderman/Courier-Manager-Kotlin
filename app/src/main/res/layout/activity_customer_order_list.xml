@@ -9,6 +9,7 @@
     tools:context=".CustomerOrderList">
 
     <LinearLayout
+        android:layout_above="@id/nav"
         android:id="@+id/viewPort"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
