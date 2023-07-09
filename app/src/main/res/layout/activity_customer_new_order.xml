@@ -109,15 +109,15 @@
                 android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/deliveryStreet"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="3dp"
-                android:layout_marginBottom="7dp"
+                android:layout_height="37dp"
                 android:layout_marginEnd="10dp"
-                android:hint="Street" />
+                android:layout_marginBottom="7dp"
+                android:background="@color/white"
+                android:hint="Street"
+                android:padding="3dp" />
 
             <EditText
                 android:id="@+id/deliveryBuild"
@@ -154,7 +154,7 @@
                 android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
-            <AutoCompleteTextView
+            <EditText
                 android:id="@+id/pickupStreet"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

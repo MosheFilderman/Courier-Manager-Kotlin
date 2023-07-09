@@ -4,11 +4,11 @@
 
     <item
         android:id="@+id/listView"
-        android:icon="@drawable/list_menu"
+        android:icon="@drawable/baseline_list_24"
         android:title="list View"/>
     <item
         android:id="@+id/mapView"
-        android:icon="@drawable/map_icon"
+        android:icon="@drawable/baseline_map_24"
         android:title="Map View"/>
 
 </menu>

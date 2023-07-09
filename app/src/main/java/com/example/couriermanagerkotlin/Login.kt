@@ -22,10 +22,7 @@ class Login : AppCompatActivity() {
 
     lateinit var email: EditText
     lateinit var phone: EditText
-    lateinit var kuku: TextView
-    lateinit var kuku1: TextView
     lateinit var userInputCode: EditText
-
     lateinit var shrd: SharedPreferences
 
 
@@ -35,20 +32,24 @@ class Login : AppCompatActivity() {
 
         email = findViewById(R.id.email)
         phone = findViewById(R.id.phone)
-        kuku = findViewById(R.id.kuku)
-        kuku1 = findViewById(R.id.kuku1)
 
-        shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
+
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+        var editor: SharedPreferences.Editor = shrd!!.edit()
+        editor.clear()
+
         if (shrd.getBoolean("connected", false)) {
             when (shrd.getString("eRole", "none")) {
                 "CUSTOMER" -> {
                     startActivity(Intent(this@Login, CustomerOrderList::class.java))
                     finish()
                 }
+
                 "COURIER" -> {
                     startActivity(Intent(this@Login, CourierListView::class.java))
                     finish()
                 }
+
                 "MANAGER" -> {
                     startActivity(Intent(this@Login, Manager::class.java))
                     finish()
@@ -57,52 +58,9 @@ class Login : AppCompatActivity() {
         }
     }
 
-    fun login(view: View) {
-        val url: String = "http://10.0.0.7/courier_project/login.php"
-
-        val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
-            Response.Listener { response ->
-                if (response.toString().trim().compareTo("error") != 0) {
-                    val strRes = response.toString()
-                    val jsonArray = JSONArray(strRes)
-                    val jsonResponse = jsonArray.getJSONObject(0)
-                    val jsonArrayUser = jsonResponse.getJSONArray("users")
-                    var jsonInner: JSONObject = jsonArrayUser.getJSONObject(0)
-                    val temporaryCode = (1000..9999).random().toString()
-                    sendSMS("+972" + phone.text.toString().substring(1), temporaryCode)
-
-                    var editor: SharedPreferences.Editor = shrd!!.edit()
-                    editor.putString("firstName", jsonInner.get("firstName").toString())
-                    editor.putString("lastName", jsonInner.get("lastName").toString())
-                    editor.putString("email", jsonInner.get("email").toString())
-                    editor.putString("eRole", jsonInner.get("eRole").toString())
-                    editor.putBoolean("connected", true)
-                    editor.apply()
-
-                    verifySMS(temporaryCode)
-                } else {
-                    Toast.makeText(this@Login, "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            },
-            Response.ErrorListener { error ->
-                Toast.makeText(this@Login, error.toString(), Toast.LENGTH_SHORT).show()
-            }) {
-            override fun getParams(): Map<String, String> {
-                val params: MutableMap<String, String> = HashMap()
-                params["email"] = email.text.toString().trim()
-                params["phone"] = "+972" + phone.text.toString().substring(1)
-                return params
-            }
-        }
-        val requestQueue = Volley.newRequestQueue(this)
-        requestQueue.add(stringRequest)
-    }
-
     fun registration(view: View) {
         startActivity(Intent(this, Registration::class.java))
         finish()
-
     }
 
     fun sendSMS(phone: String, code: String) {
@@ -149,10 +107,12 @@ class Login : AppCompatActivity() {
                         startActivity(Intent(this@Login, CustomerOrderList::class.java))
                         finish()
                     }
+
                     "COURIER" -> {
                         startActivity(Intent(this@Login, CourierListView::class.java))
                         finish()
                     }
+
                     "MANAGER" -> {
                         startActivity(Intent(this@Login, Manager::class.java))
                         finish()
@@ -165,4 +125,27 @@ class Login : AppCompatActivity() {
         }
         builder.show()
     }
+
+    fun login(view: View) {
+
+        if (Validations.isEmpty(email) && Validations.isEmpty(phone)) {
+            DButilities.login(
+                this@Login,
+                email.text.toString().trim(),
+                phone.text.toString().trim(),
+                shrd
+            )
+            if (shrd.getBoolean("connected", false)){
+                val temporaryCode = (1000..9999).random().toString()
+                sendSMS(shrd.getString("phone","none").toString(), temporaryCode)
+                verifySMS(temporaryCode)
+            }
+
+
+
+        }
+
+    }
+
+
 }

@@ -33,7 +33,6 @@
             android:gravity="center"
             android:text=""
             android:textSize="20sp" />
-
     </LinearLayout>
 
     <ListView
