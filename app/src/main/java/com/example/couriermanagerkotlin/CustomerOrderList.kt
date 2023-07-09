@@ -96,7 +96,7 @@ class CustomerOrderList : AppCompatActivity() {
             comment.text = orders[position].comment
 
             builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                DButilities.deleteOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
+                DButilities.cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
                 orders.removeAt(position)
                 if(orders.isEmpty()) {
                     emptyListMsg.visibility = View.VISIBLE

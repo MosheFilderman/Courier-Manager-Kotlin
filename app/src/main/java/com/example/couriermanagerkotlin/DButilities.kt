@@ -1,13 +1,11 @@
 package com.example.couriermanagerkotlin
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
 import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat.startActivity
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -138,7 +136,7 @@ class DButilities {
         }
 
 
-        fun deleteOrder(context: Context, orderId: String, status: eStatus) {
+        fun cancelOrder(context: Context, orderId: String, status: eStatus) {
             val url: String = "http://${ipv4Address}/courier_project/deleteOrder.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
