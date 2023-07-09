@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">kuku</string>
 
+    <string name="mapbox_access_token">pk.eyJ1IjoiczNyZ2kiLCJhIjoiY2xqdm5ieWIyMTd3ZjNmcXN3cnIwaWVrOCJ9.E4qPFnkB0GYRA7lLsgFSww</string>
+
     <string-array name="areaCodes">
         <item>Area code</item>
         <item>050</item>

@@ -8,8 +8,6 @@ enum class eStatus {
     CANCELLED,
     UNKNOWN;
 
-
-
     companion object {
         fun findStatus(value: String): eStatus {
             var result: eStatus = UNKNOWN
