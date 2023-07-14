@@ -100,8 +100,8 @@ class DButilities {
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
                         val jsonArrayUser = jsonResponse.getJSONArray("users")
-                        var jsonInner: JSONObject = jsonArrayUser.getJSONObject(0)
-                        var editor: SharedPreferences.Editor = shrd!!.edit()
+                        val jsonInner: JSONObject = jsonArrayUser.getJSONObject(0)
+                        val editor: SharedPreferences.Editor = shrd!!.edit()
                         editor.putString("firstName", jsonInner.get("firstName").toString())
                         editor.putString("lastName", jsonInner.get("lastName").toString())
                         editor.putString("email", jsonInner.get("email").toString())
@@ -166,7 +166,7 @@ class DButilities {
             orders.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    if (!response.toString().trim().equals("No data")) {
+                    if (!response.toString().trim().equals("no data")) {
                         orderList.visibility = View.VISIBLE
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)

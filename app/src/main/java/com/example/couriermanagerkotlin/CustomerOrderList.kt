@@ -3,7 +3,6 @@ package com.example.couriermanagerkotlin
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,8 +10,8 @@ import android.view.View
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import com.example.couriermanagerkotlin.DButilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.DButilities.Companion.orders
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -36,21 +35,24 @@ class CustomerOrderList : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-
             R.id.logout -> {
-                val editor: SharedPreferences.Editor = shrd.edit()
-                editor.putBoolean("connected", false)
-                editor.putString("firstName", "")
-                editor.putString("lastName", "")
-                editor.putString("email", "")
-                editor.putString("eRole", "")
-                editor.apply()
-
-                startActivity(Intent(this@CustomerOrderList, Login::class.java))
-                emptyListMsg.visibility = View.GONE
-                orderList.visibility = View.GONE
-                finish()
-                true
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Exit")
+                builder.setMessage("Are you sure you wish to logout?")
+                builder.setIcon(R.drawable.baseline_close_24)
+                builder.setPositiveButton("YES") { dialogInterface, _ ->
+                    val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
+                    val editor: SharedPreferences.Editor = shrd.edit()
+                    editor.clear()
+                    editor.commit()
+                    startActivity(Intent(this@CustomerOrderList, Login::class.java))
+                    finish()
+                }
+                builder.setNegativeButton("NO") { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                }
+                val alertDialog = builder.create()
+                alertDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -69,10 +71,11 @@ class CustomerOrderList : AppCompatActivity() {
         menu = findViewById(R.id.nav)
 
         orderList = findViewById(R.id.orderList)
+        // Click on order open dialog with all the order details
         orderList.setOnItemClickListener { parent, view, position, id ->
-            var builder = AlertDialog.Builder(this)
-            var inflater = layoutInflater
-            var dialogLayout = inflater.inflate(R.layout.order_full_info, null)
+            val builder = AlertDialog.Builder(this)
+            val inflater = layoutInflater
+            val dialogLayout = inflater.inflate(R.layout.order_full_info, null)
             orderList.visibility = View.VISIBLE
 
             builder.setView(dialogLayout)
@@ -119,18 +122,17 @@ class CustomerOrderList : AppCompatActivity() {
                     startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
                     emptyListMsg.visibility = View.GONE
                     orderList.visibility = View.GONE
-                    //finish()
                     true
                 }
 
                 R.id.orderList -> {
-                    Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT).show()
                     true
                 }
                 else -> false
             }
             true
         }
+        menu.selectedItemId = R.id.orderList
 
         //MUHAMAD
         getCustomerOrders(this@CustomerOrderList, orderList, emptyListMsg, shrd.getString("email","none").toString())

@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -15,9 +16,14 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
+import com.android.volley.Request
 import com.android.volley.Response
+import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import org.json.JSONArray
+import org.json.JSONObject
 import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
@@ -47,6 +53,8 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var strDeliveryCity: String
     lateinit var strPickupCity: String
 
+    lateinit var deliveryAddress: EditText
+
     /* Menu toolbar */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.customer_menu, menu)
@@ -65,15 +73,22 @@ class CustomerNewOrder : AppCompatActivity() {
             }
 
             R.id.logout -> {
-                var editor: SharedPreferences.Editor = shrd!!.edit()
-                editor.putBoolean("connected", false)
-                editor.putString("firstName", "")
-                editor.putString("lastName", "")
-                editor.putString("email", "")
-                editor.putString("eRole", "")
-                editor.commit()
-                startActivity(Intent(this@CustomerNewOrder, Login::class.java))
-                finish()
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Exit")
+                builder.setMessage("Are you sure you wish to logout?")
+                builder.setIcon(R.drawable.baseline_close_24)
+                builder.setPositiveButton("YES") { dialogInterface, _ ->
+                    val editor: SharedPreferences.Editor = shrd.edit()
+                    editor.clear()
+                    editor.apply()
+                    startActivity(Intent(this@CustomerNewOrder, Login::class.java))
+                    finish()
+                }
+                builder.setNegativeButton("NO") { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                }
+                val alertDialog = builder.create()
+                alertDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -83,6 +98,8 @@ class CustomerNewOrder : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
 
+        deliveryAddress =  findViewById(R.id.deliveryAddress)
+
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
         contLastName = findViewById(R.id.contLastName)
@@ -91,11 +108,11 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Contact email */
         contEmail = findViewById(R.id.contEmail)
         /* Delivery address */
-        deliveryStreet = findViewById<AutoCompleteTextView>(R.id.deliveryStreet)
-        deliveryBuild = findViewById(R.id.deliveryBuild)
-        /* Pickup address */
-        pickupStreet = findViewById<AutoCompleteTextView>(R.id.pickupStreet)
-        pickupBuild = findViewById(R.id.pickupBuild)
+//        deliveryStreet = findViewById<AutoCompleteTextView>(R.id.deliveryStreet)
+//        deliveryBuild = findViewById(R.id.deliveryBuild)
+//        /* Pickup address */
+//        pickupStreet = findViewById<AutoCompleteTextView>(R.id.pickupStreet)
+//        pickupBuild = findViewById(R.id.pickupBuild)
         /* Package measure's */
         packageHeight = findViewById(R.id.packageHeight)
         packageWidth = findViewById(R.id.packageWidth)
@@ -136,55 +153,58 @@ class CustomerNewOrder : AppCompatActivity() {
         }
 
         /* Delivery city Spinner */
-        deliveryCity = findViewById(R.id.deliveryCity)
-        val deliveryCityArrayAdapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
-        )
-        deliveryCity.adapter = deliveryCityArrayAdapter
-
-        deliveryCity.setSelection(0, false)
-
-        deliveryCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                if (parent != null) {
-                    strDeliveryCity = parent.getItemAtPosition(position).toString()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(
-                    this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
+//        deliveryCity = findViewById(R.id.deliveryCity)
+//        val deliveryCityArrayAdapter = ArrayAdapter(
+//            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
+//        )
+//        deliveryCity.adapter = deliveryCityArrayAdapter
+//
+//        deliveryCity.setSelection(0, false)
+//
+//        deliveryCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+//            ) {
+//                if (parent != null) {
+//                    strDeliveryCity = parent.getItemAtPosition(position).toString()
+//                }
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                Toast.makeText(
+//                    this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        }
 
         /* Pickup city Spinner */
-        pickupCity = findViewById(R.id.pickupCity)
-        val pickupCityArrayAdapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
-        )
-        pickupCity.adapter = pickupCityArrayAdapter
+//        pickupCity = findViewById(R.id.pickupCity)
+//        val pickupCityArrayAdapter = ArrayAdapter(
+//            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
+//        )
+//        pickupCity.adapter = pickupCityArrayAdapter
+//
+//        pickupCity.setSelection(0, false)
+//
+//        pickupCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+//            ) {
+//                if (parent != null) {
+//                    strPickupCity = parent.getItemAtPosition(position).toString()
+//                }
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                Toast.makeText(
+//                    this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        }
 
-        pickupCity.setSelection(0, false)
 
-        pickupCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                if (parent != null) {
-                    strPickupCity = parent.getItemAtPosition(position).toString()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(
-                    this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
     }
+
 
     fun newOrder(view: View) {
         if (Validations.checkOrderMeasures(

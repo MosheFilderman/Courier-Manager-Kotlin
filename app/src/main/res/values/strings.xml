@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">kuku</string>
+    <string name="app_name">Courier Manager</string>
 
-    <string name="mapbox_access_token">pk.eyJ1IjoiczNyZ2kiLCJhIjoiY2xqdm5ieWIyMTd3ZjNmcXN3cnIwaWVrOCJ9.E4qPFnkB0GYRA7lLsgFSww</string>
+    <string name="GOOGLE_API_KEY">AIzaSyBWW5fWoGo1sSJDo48KmpIkXGHnZn5lk_k</string>
 
     <string-array name="areaCodes">
         <item>Area code</item>
@@ -22,47 +22,6 @@
         <item>קרית ביאליק</item>
         <item>קרית מוצקין</item>
         <item>קרית אתא</item>
-    </string-array>
-
-
-    <string-array name="haifaStreets">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-    </string-array>
-
-    <string-array name="yamStreets">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-    </string-array>
-
-    <string-array name="biyalikStreets">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-    </string-array>
-
-    <string-array name="motzkinStreets">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-    </string-array>
-
-    <string-array name="ataStreets">
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
-        <item></item>
     </string-array>
 
 </resources>

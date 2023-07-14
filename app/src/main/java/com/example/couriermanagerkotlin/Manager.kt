@@ -10,6 +10,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Manager : AppCompatActivity() {
@@ -21,17 +22,24 @@ class Manager : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-
             R.id.logout -> {
-                var editor: SharedPreferences.Editor = shrd!!.edit()
-                editor.putBoolean("connected", false)
-                editor.putString("firstName", "")
-                editor.putString("lastName", "")
-                editor.putString("email", "")
-                editor.putString("eRole", "")
-                editor.commit()
-                startActivity(Intent(this@Manager, Login::class.java))
-                finish()
+                val builder = AlertDialog.Builder(this)
+                builder.setTitle("Exit")
+                builder.setMessage("Are you sure you wish to logout?")
+                builder.setIcon(R.drawable.baseline_close_24)
+                builder.setPositiveButton("YES") { dialogInterface, i ->
+                    Toast.makeText(this@Manager, "in logout", Toast.LENGTH_SHORT).show()
+                    val editor: SharedPreferences.Editor = shrd.edit()
+                    editor.clear()
+                    editor.apply()
+                    startActivity(Intent(this, Login::class.java))
+                    finish()
+                }
+                builder.setNegativeButton("NO") { dialogInterface, _ ->
+                    dialogInterface.dismiss()
+                }
+                val alertDialog = builder.create()
+                alertDialog.show()
             }
         }
         return super.onOptionsItemSelected(item)

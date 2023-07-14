@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -12,6 +13,8 @@ import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -24,6 +27,8 @@ class Login : AppCompatActivity() {
     lateinit var phone: EditText
     lateinit var userInputCode: EditText
     lateinit var shrd: SharedPreferences
+    lateinit var message: TextView
+    val PERMISSIONS_REQUEST_ACCESS_SEND_SMS = 9002
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,11 +37,13 @@ class Login : AppCompatActivity() {
 
         email = findViewById(R.id.email)
         phone = findViewById(R.id.phone)
+        message = findViewById(R.id.message)
 
 
         shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
-        var editor: SharedPreferences.Editor = shrd!!.edit()
-        editor.clear()
+//        val editor = shrd.edit()
+//        editor.clear()
+//        editor.apply()
 
         if (shrd.getBoolean("connected", false)) {
             when (shrd.getString("eRole", "none")) {
@@ -127,7 +134,16 @@ class Login : AppCompatActivity() {
     }
 
     fun login(view: View) {
-
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                android.Manifest.permission.SEND_SMS
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.SEND_SMS), PERMISSIONS_REQUEST_ACCESS_SEND_SMS
+            )
+        }
         if (Validations.isEmpty(email) && Validations.isEmpty(phone)) {
             DButilities.login(
                 this@Login,
@@ -135,17 +151,13 @@ class Login : AppCompatActivity() {
                 phone.text.toString().trim(),
                 shrd
             )
-            if (shrd.getBoolean("connected", false)){
+            if (shrd.getBoolean("connected", false)) {
                 val temporaryCode = (1000..9999).random().toString()
-                sendSMS(shrd.getString("phone","none").toString(), temporaryCode)
+                sendSMS(shrd.getString("phone", "none").toString(), temporaryCode)
                 verifySMS(temporaryCode)
             }
-
-
-
         }
-
     }
-
-
 }
+
+

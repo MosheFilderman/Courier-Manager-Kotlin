@@ -7,6 +7,15 @@
     tools:context=".CourierListView">
 
     <LinearLayout
+        android:id="@+id/viewPort"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/nav"
+        android:gravity="top"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
@@ -38,8 +47,10 @@
     <ListView
         android:id="@+id/listViewOrders"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="10dp"/>
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"/>
+
+    </LinearLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
