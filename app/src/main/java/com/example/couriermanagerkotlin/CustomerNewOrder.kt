@@ -27,8 +27,16 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
+import java.io.IOException
 import java.util.Locale
 import java.util.UUID
+import com.google.maps.GeoApiContext
+import com.google.maps.GeocodingApi
+import com.google.maps.errors.ApiException
+import com.google.maps.model.GeocodingResult
+import com.google.maps.model.LatLng
+
+
 
 class CustomerNewOrder : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
@@ -51,14 +59,14 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageWeight: EditText
     lateinit var errorMessage: TextView
     lateinit var comment: EditText
-//    private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
+  //  private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
+
 
     /* String objects of the spinners */
     lateinit var strAreaCode: String
     lateinit var strDeliveryCity: String
     lateinit var strPickupCity: String
 
-    lateinit var deliveryAddress: EditText
 
     /* Menu toolbar */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -102,10 +110,10 @@ class CustomerNewOrder : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
-        val validator = AddressValidator(this) // Replace requireContext() with the appropriate context
-        val validatedAddress: Address? = validator.validateAddress("גורדון  8 קרית ים")
-
-        deliveryAddress =  findViewById(R.id.deliveryAddress)
+        val validator = AddressValidator(this)
+     //  val validatedAddress: Address? = validator.validateAddress("גורדון 8 קרית מוצקין")
+        val apiKey = R.string.GOOGLE_API_KEY
+        val geoApiContext: GeoApiContext = GeoApiContext.Builder().apiKey(apiKey.toString()).build()
 
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
@@ -115,11 +123,11 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Contact email */
         contEmail = findViewById(R.id.contEmail)
         /* Delivery address */
-//        deliveryStreet = findViewById<AutoCompleteTextView>(R.id.deliveryStreet)
-//        deliveryBuild = findViewById(R.id.deliveryBuild)
-//        /* Pickup address */
-//        pickupStreet = findViewById<AutoCompleteTextView>(R.id.pickupStreet)
-//        pickupBuild = findViewById(R.id.pickupBuild)
+        deliveryStreet = findViewById<AutoCompleteTextView>(R.id.deliveryStreet)
+        deliveryBuild = findViewById(R.id.deliveryBuild)
+        /* Pickup address */
+        pickupStreet = findViewById<AutoCompleteTextView>(R.id.pickupStreet)
+        pickupBuild = findViewById(R.id.pickupBuild)
         /* Package measure's */
         packageHeight = findViewById(R.id.packageHeight)
         packageWidth = findViewById(R.id.packageWidth)
@@ -127,10 +135,10 @@ class CustomerNewOrder : AppCompatActivity() {
         packageWeight = findViewById(R.id.packageWeight)
 
         errorMessage = findViewById(R.id.errorMassage)
-        if (validatedAddress != null) {
-            errorMessage.text = validatedAddress.toString()
-        }
-
+//        if (validatedAddress != null) {
+//
+//        }
+        errorMessage.text = validateAddressTest("גורדון 8 קרית ים",geoApiContext).toString()
         comment = findViewById(R.id.comment)
 
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
@@ -163,54 +171,54 @@ class CustomerNewOrder : AppCompatActivity() {
         }
 
         /* Delivery city Spinner */
-//        deliveryCity = findViewById(R.id.deliveryCity)
-//        val deliveryCityArrayAdapter = ArrayAdapter(
-//            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
-//        )
-//        deliveryCity.adapter = deliveryCityArrayAdapter
-//
-//        deliveryCity.setSelection(0, false)
-//
-//        deliveryCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-//            ) {
-//                if (parent != null) {
-//                    strDeliveryCity = parent.getItemAtPosition(position).toString()
-//                }
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                Toast.makeText(
-//                    this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
+        deliveryCity = findViewById(R.id.deliveryCity)
+        val deliveryCityArrayAdapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
+        )
+        deliveryCity.adapter = deliveryCityArrayAdapter
+
+        deliveryCity.setSelection(0, false)
+
+        deliveryCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                if (parent != null) {
+                    strDeliveryCity = parent.getItemAtPosition(position).toString()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(
+                    this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
         /* Pickup city Spinner */
-//        pickupCity = findViewById(R.id.pickupCity)
-//        val pickupCityArrayAdapter = ArrayAdapter(
-//            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
-//        )
-//        pickupCity.adapter = pickupCityArrayAdapter
-//
-//        pickupCity.setSelection(0, false)
-//
-//        pickupCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-//            override fun onItemSelected(
-//                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-//            ) {
-//                if (parent != null) {
-//                    strPickupCity = parent.getItemAtPosition(position).toString()
-//                }
-//            }
-//
-//            override fun onNothingSelected(parent: AdapterView<*>?) {
-//                Toast.makeText(
-//                    this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT
-//                ).show()
-//            }
-//        }
+        pickupCity = findViewById(R.id.pickupCity)
+        val pickupCityArrayAdapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.citys)
+        )
+        pickupCity.adapter = pickupCityArrayAdapter
+
+        pickupCity.setSelection(0, false)
+
+        pickupCity.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                if (parent != null) {
+                    strPickupCity = parent.getItemAtPosition(position).toString()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(
+                    this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
 
 
     }
@@ -252,6 +260,24 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
 
+
+    fun validateAddressTest(address: String,geoApiContext:GeoApiContext): Boolean {
+        try {
+            val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
+            if (results.isNotEmpty()) {
+                val formattedAddress = results[0].formattedAddress
+                // Compare the formatted address with the original input
+                return formattedAddress.equals(address, ignoreCase = true)
+            }
+        } catch (e: ApiException) {
+            e.printStackTrace()
+        } catch (e: InterruptedException) {
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+        return false
+    }
 
 
 }

@@ -97,50 +97,43 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/deliveryAddress"
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="3dp"
-            android:layout_marginBottom="7dp"
-            android:hint="Enter Address" />
+            android:gravity="center"
+            android:orientation="horizontal">
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal">-->
+            <Spinner
+                android:id="@+id/deliveryCity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="10dp" />
 
-<!--            <Spinner-->
-<!--                android:id="@+id/deliveryCity"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@color/white"-->
-<!--                android:padding="3dp"-->
-<!--                android:layout_marginBottom="7dp"-->
-<!--                android:layout_marginEnd="10dp" />-->
+            <EditText
+                android:id="@+id/deliveryStreet"
+                android:layout_width="wrap_content"
+                android:layout_height="37dp"
+                android:layout_marginEnd="10dp"
+                android:layout_marginBottom="7dp"
+                android:background="@color/white"
+                android:hint="Street"
+                android:padding="3dp" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/deliveryStreet"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="37dp"-->
-<!--                android:layout_marginEnd="10dp"-->
-<!--                android:layout_marginBottom="7dp"-->
-<!--                android:background="@color/white"-->
-<!--                android:hint="Street"-->
-<!--                android:padding="3dp" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/deliveryBuild"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/white"-->
-<!--                android:padding="3dp"-->
-<!--                android:layout_marginBottom="7dp"-->
-<!--                android:hint="building"-->
-<!--                android:inputType="number" />-->
-<!--        </LinearLayout>-->
+            <EditText
+                android:id="@+id/deliveryBuild"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
+                android:hint="building"
+                android:inputType="number" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -151,41 +144,41 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:gravity="center"-->
-<!--            android:orientation="horizontal">-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-<!--            <Spinner-->
-<!--                android:id="@+id/pickupCity"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:background="@color/white"-->
-<!--                android:padding="3dp"-->
-<!--                android:layout_marginBottom="7dp"-->
-<!--                android:layout_marginEnd="10dp" />-->
+            <Spinner
+                android:id="@+id/pickupCity"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="10dp" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/pickupStreet"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/white"-->
-<!--                android:padding="3dp"-->
-<!--                android:layout_marginBottom="7dp"-->
-<!--                android:layout_marginEnd="10dp"-->
-<!--                android:hint="Street" />-->
+            <EditText
+                android:id="@+id/pickupStreet"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="10dp"
+                android:hint="Street" />
 
-<!--            <EditText-->
-<!--                android:id="@+id/pickupBuild"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:background="@color/white"-->
-<!--                android:padding="3dp"-->
-<!--                android:layout_marginBottom="7dp"-->
-<!--                android:hint="building"-->
-<!--                android:inputType="number" />-->
-<!--        </LinearLayout>-->
+            <EditText
+                android:id="@+id/pickupBuild"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
+                android:hint="building"
+                android:inputType="number" />
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
