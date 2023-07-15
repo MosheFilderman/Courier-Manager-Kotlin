@@ -151,6 +151,7 @@ class Login : AppCompatActivity() {
                 phone.text.toString().trim(),
                 shrd
             )
+            Toast.makeText(this@Login,shrd.getBoolean("connected", false).toString(),Toast.LENGTH_LONG).show()
             if (shrd.getBoolean("connected", false)) {
                 val temporaryCode = (1000..9999).random().toString()
                 sendSMS(shrd.getString("phone", "none").toString(), temporaryCode)

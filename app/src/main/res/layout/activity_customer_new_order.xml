@@ -268,8 +268,9 @@
         <TextView
             android:id="@+id/errorMassage"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone" />
+            android:layout_height="match_parent"
+            android:textSize="36dp"
+           android:text="hello" />
 
         <Button
             android:layout_width="wrap_content"

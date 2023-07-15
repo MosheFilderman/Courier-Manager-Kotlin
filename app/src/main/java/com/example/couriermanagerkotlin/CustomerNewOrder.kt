@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.location.Geocoder
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +18,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.content.ContentProviderCompat.requireContext
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
@@ -24,6 +26,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Locale
 import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
@@ -47,6 +50,7 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageWeight: EditText
     lateinit var errorMessage: TextView
     lateinit var comment: EditText
+//    private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
 
     /* String objects of the spinners */
     lateinit var strAreaCode: String
@@ -97,6 +101,7 @@ class CustomerNewOrder : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
+        val validator = AddressValidator(this) // Replace requireContext() with the appropriate context
 
         deliveryAddress =  findViewById(R.id.deliveryAddress)
 
@@ -120,6 +125,9 @@ class CustomerNewOrder : AppCompatActivity() {
         packageWeight = findViewById(R.id.packageWeight)
 
         errorMessage = findViewById(R.id.errorMassage)
+        Toast.makeText(this@CustomerNewOrder,validator.validateAddress("סתם כתובת").toString(),Toast.LENGTH_LONG).show()
+//        errorMessage.text = "ruuygyu"
+            //validator.validateAddress("השיירה 11 חיפה").toString()
         errorMessage.visibility = View.GONE
         comment = findViewById(R.id.comment)
 
@@ -240,6 +248,8 @@ class CustomerNewOrder : AppCompatActivity() {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 
 
 }
