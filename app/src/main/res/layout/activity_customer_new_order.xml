@@ -29,6 +29,7 @@
             android:padding="5dp"
             android:text="Customer Details"
             android:textSize="18sp"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:textStyle="bold" />
 
         <EditText
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="3dp"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:layout_marginBottom="7dp"
             android:hint="First Name" />
 
@@ -46,6 +48,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="3dp"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:layout_marginBottom="7dp"
             android:hint="Last Name" />
 
@@ -269,8 +272,8 @@
             android:id="@+id/errorMassage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="36dp"
-           android:text="hello" />
+            android:textSize="16dp"
+           android:text="" />
 
         <Button
             android:layout_width="wrap_content"

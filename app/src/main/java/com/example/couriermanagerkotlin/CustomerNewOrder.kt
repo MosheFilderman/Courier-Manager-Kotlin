@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.location.Address
 import android.location.Geocoder
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -102,6 +103,7 @@ class CustomerNewOrder : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
         val validator = AddressValidator(this) // Replace requireContext() with the appropriate context
+        val validatedAddress: Address? = validator.validateAddress("גורדון  8 קרית ים")
 
         deliveryAddress =  findViewById(R.id.deliveryAddress)
 
@@ -125,10 +127,10 @@ class CustomerNewOrder : AppCompatActivity() {
         packageWeight = findViewById(R.id.packageWeight)
 
         errorMessage = findViewById(R.id.errorMassage)
-        Toast.makeText(this@CustomerNewOrder,validator.validateAddress("סתם כתובת").toString(),Toast.LENGTH_LONG).show()
-//        errorMessage.text = "ruuygyu"
-            //validator.validateAddress("השיירה 11 חיפה").toString()
-        errorMessage.visibility = View.GONE
+        if (validatedAddress != null) {
+            errorMessage.text = validatedAddress.toString()
+        }
+
         comment = findViewById(R.id.comment)
 
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)

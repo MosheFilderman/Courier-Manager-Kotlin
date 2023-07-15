@@ -8,26 +8,21 @@ import java.io.IOException
 import java.util.*
 
 class AddressValidator(private val context: Context) {
+    private val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
 
-        private val geocoder: Geocoder = Geocoder(context, Locale.getDefault())
+    fun validateAddress(address: String): Address? {
+        try {
+            val addresses: List<Address> = geocoder.getFromLocationName(address, 1) as List<Address>
 
-        fun validateAddress(address: String): Address? {
-            try {
-                val addresses: List<Address> =
-                    geocoder.getFromLocationName(address, 5) as List<Address> // Adjust the maxResults as per your requirement
-
-                for (validatedAddress in addresses) {
-                    if (validatedAddress.countryCode == "IL") {
-                        return validatedAddress
-                    }
-                }
-            } catch (e: IOException) {
-                Log.e("AddressValidator", "Error geocoding address", e)
+            if (addresses.isNotEmpty()) {
+                val validatedAddress: Address = addresses[0]
+                return validatedAddress
             }
-            return null
+        } catch (e: IOException) {
+            Log.e("AddressValidator", "Error geocoding address", e)
         }
-
-
-
+        return null
+    }
 }
+
 
