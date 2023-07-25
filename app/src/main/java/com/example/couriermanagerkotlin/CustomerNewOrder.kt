@@ -35,6 +35,9 @@ import com.google.maps.GeocodingApi
 import com.google.maps.errors.ApiException
 import com.google.maps.model.GeocodingResult
 import com.google.maps.model.LatLng
+import com.google.maps.GeoApiContext.Builder
+import com.example.couriermanagerkotlin.DButilities.Companion.streets
+
 
 
 
@@ -47,12 +50,15 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var areaCode: Spinner
     lateinit var contPhoneNumber: EditText
     lateinit var contEmail: EditText
-    lateinit var deliveryCity: Spinner
-    lateinit var deliveryStreet: EditText
-    lateinit var deliveryBuild: EditText
+
     lateinit var pickupCity: Spinner
-    lateinit var pickupStreet: EditText
+    lateinit var pickupStreet: Spinner
     lateinit var pickupBuild: EditText
+
+    lateinit var deliveryStreet:Spinner
+    lateinit var deliveryCity: Spinner
+    lateinit var deliveryBuild: EditText
+
     lateinit var packageHeight: EditText
     lateinit var packageWidth: EditText
     lateinit var packageLength: EditText
@@ -66,6 +72,7 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var strAreaCode: String
     lateinit var strDeliveryCity: String
     lateinit var strPickupCity: String
+    lateinit var strPickupStreet:String
 
 
     /* Menu toolbar */
@@ -111,9 +118,15 @@ class CustomerNewOrder : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
         val validator = AddressValidator(this)
-     //  val validatedAddress: Address? = validator.validateAddress("גורדון 8 קרית מוצקין")
-        val apiKey = R.string.GOOGLE_API_KEY
-        val geoApiContext: GeoApiContext = GeoApiContext.Builder().apiKey(apiKey.toString()).build()
+        //  val validatedAddress: Address? = validator.validateAddress("גורדון 8 קרית מוצקין")
+//        val apiKey = R.string.GOOGLE_API_KEY
+//        try {
+//            val geoApiContext = GeoApiContext.Builder().apiKey(apiKey.toString()).build()
+//            // Rest of your code using the geoApiContext
+//        } catch (e: Exception) {
+//            e.printStackTrace()
+//        }
+//           val geoApiContext: GeoApiContext = GeoApiContext.Builder().apiKey(apiKey.toString()).build()
 
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
@@ -123,10 +136,10 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Contact email */
         contEmail = findViewById(R.id.contEmail)
         /* Delivery address */
-        deliveryStreet = findViewById<AutoCompleteTextView>(R.id.deliveryStreet)
+        deliveryStreet = findViewById(R.id.deliveryStreet)
         deliveryBuild = findViewById(R.id.deliveryBuild)
         /* Pickup address */
-        pickupStreet = findViewById<AutoCompleteTextView>(R.id.pickupStreet)
+        pickupStreet = findViewById(R.id.pickupStreet)
         pickupBuild = findViewById(R.id.pickupBuild)
         /* Package measure's */
         packageHeight = findViewById(R.id.packageHeight)
@@ -135,10 +148,8 @@ class CustomerNewOrder : AppCompatActivity() {
         packageWeight = findViewById(R.id.packageWeight)
 
         errorMessage = findViewById(R.id.errorMassage)
-//        if (validatedAddress != null) {
-//
-//        }
-        errorMessage.text = validateAddressTest("גורדון 8 קרית ים",geoApiContext).toString()
+
+//        errorMessage.text = validateAddressTest("גורדון 8 קרית ים",geoApiContext).toString()
         comment = findViewById(R.id.comment)
 
         shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
@@ -210,6 +221,37 @@ class CustomerNewOrder : AppCompatActivity() {
             ) {
                 if (parent != null) {
                     strPickupCity = parent.getItemAtPosition(position).toString()
+                    Toast.makeText(this@CustomerNewOrder, strPickupCity,Toast.LENGTH_LONG).show()
+                    DButilities.getStreetByCity(this@CustomerNewOrder,strPickupCity)
+                    updateStreetSpinner()
+                    Toast.makeText(this@CustomerNewOrder, streets.toString(),Toast.LENGTH_LONG).show()
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(
+                    this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
+        /* Pickup street Spinner */
+        pickupStreet = findViewById(R.id.pickupStreet)
+
+        val pickupStreetArrayAdapter = ArrayAdapter(
+            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.street)
+        )
+
+        pickupStreet.adapter = pickupStreetArrayAdapter
+        pickupStreet.setSelection(0, false)
+
+        pickupStreet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                if (parent != null) {
+                    strPickupStreet = parent.getItemAtPosition(position).toString()
+
                 }
             }
 
@@ -221,8 +263,42 @@ class CustomerNewOrder : AppCompatActivity() {
         }
 
 
+//        deliveryStreet = findViewById(R.id.deliveryStreet)
+//
+//
+//       val deliveryStreetArrayAdapter = ArrayAdapter(this,android.R.layout.simple_spinner_item, resources.getStringArray(R.array.street))
+//        deliveryStreet.adapter=deliveryStreetArrayAdapter
+//        deliveryStreet.setSelection(0, false)
+//        updateStreetSpinner(streets)
+//
+//
+//        deliveryStreet.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+//            override fun onItemSelected(
+//                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+//            ) {
+//                if (parent != null) {
+////                    strPickupCity = parent.getItemAtPosition(position).toString()
+////                    DButilities.getStreetByCity(this@CustomerNewOrder,deliveryCity.toString())
+//                }
+//            }
+//
+//            override fun onNothingSelected(parent: AdapterView<*>?) {
+//                Toast.makeText(
+//                    this@CustomerNewOrder, "Pickup city must bo chosen", Toast.LENGTH_SHORT
+//                ).show()
+//            }
+//        }
+
+
+
     }
 
+
+    fun updateStreetSpinner() {
+        val streetAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, streets)
+        //streetAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        pickupStreet.adapter = streetAdapter
+    }
 
     fun newOrder(view: View) {
         if (Validations.checkOrderMeasures(
@@ -242,14 +318,19 @@ class CustomerNewOrder : AppCompatActivity() {
                 contEmail.text.toString().trim(),
                 eStatus.NEW,
                 strPickupCity,
-                pickupStreet.text.toString().trim(),
+                pickupStreet.toString().trim(),
                 pickupBuild.text.toString().trim(),
                 strDeliveryCity,
-                deliveryStreet.text.toString().trim(),
+                deliveryStreet.toString().trim(),
                 deliveryBuild.text.toString().trim(),
                 comment.text.toString().trim()
             )
-            DButilities.createOrder(this@CustomerNewOrder, orderToAdd, shrd.getString("email", "none").toString(), errorMessage)
+            DButilities.createOrder(
+                this@CustomerNewOrder,
+                orderToAdd,
+                shrd.getString("email", "none").toString(),
+                errorMessage
+            )
             startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
             Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
             errorMessage.visibility = View.VISIBLE
@@ -260,10 +341,10 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
 
-
-    fun validateAddressTest(address: String,geoApiContext:GeoApiContext): Boolean {
+    fun validateAddressTest(address: String, geoApiContext: GeoApiContext):Boolean {
         try {
-            val results: Array<GeocodingResult> = GeocodingApi.geocode(geoApiContext, address).await()
+            val results: Array<GeocodingResult> =
+                GeocodingApi.geocode(geoApiContext, address).await()
             if (results.isNotEmpty()) {
                 val formattedAddress = results[0].formattedAddress
                 // Compare the formatted address with the original input
@@ -278,6 +359,9 @@ class CustomerNewOrder : AppCompatActivity() {
         }
         return false
     }
+
+
+
 
 
 }

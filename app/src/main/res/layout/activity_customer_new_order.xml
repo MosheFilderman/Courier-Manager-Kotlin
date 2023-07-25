@@ -114,15 +114,14 @@
                 android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/deliveryStreet"
                 android:layout_width="wrap_content"
-                android:layout_height="37dp"
-                android:layout_marginEnd="10dp"
-                android:layout_marginBottom="7dp"
+                android:layout_height="match_parent"
                 android:background="@color/white"
-                android:hint="Street"
-                android:padding="3dp" />
+                android:padding="3dp"
+                android:layout_marginBottom="7dp"
+                android:layout_marginEnd="10dp"/>
 
             <EditText
                 android:id="@+id/deliveryBuild"
@@ -159,15 +158,14 @@
                 android:layout_marginBottom="7dp"
                 android:layout_marginEnd="10dp" />
 
-            <EditText
+            <Spinner
                 android:id="@+id/pickupStreet"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:background="@color/white"
                 android:padding="3dp"
                 android:layout_marginBottom="7dp"
-                android:layout_marginEnd="10dp"
-                android:hint="Street" />
+                android:layout_marginEnd="10dp" />
 
             <EditText
                 android:id="@+id/pickupBuild"

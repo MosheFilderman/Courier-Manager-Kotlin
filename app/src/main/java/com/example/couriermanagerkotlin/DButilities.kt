@@ -2,6 +2,7 @@ package com.example.couriermanagerkotlin
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.util.Log
 import android.view.View
 import android.widget.ListView
 import android.widget.TextView
@@ -15,8 +16,9 @@ import org.json.JSONObject
 class DButilities {
 
     companion object {
-        const val ipv4Address: String ="10.100.102.234"
+        const val ipv4Address: String ="192.168.55.141"
         var orders = ArrayList<Order>()
+        var streets = ArrayList<String>()
 
         fun registerUser(
             context: Context,
@@ -240,5 +242,40 @@ class DButilities {
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
         }
+
+
+        fun getStreetByCity(context: Context,city:String){
+
+            val url: String = "http://${ipv4Address}/courier_project/getStreetByCity.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    if (!response.toString().trim().equals("error")) {
+                        streets.clear()
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayStreets = jsonResponse.getJSONArray("streets")
+                        for(i in 0 until jsonArrayStreets.length()){
+                            var jsonInner: JSONObject = jsonArrayStreets.getJSONObject(i)
+                            streets.add(jsonInner.get("streetName").toString())
+
+                        }
+
+                    }else{
+
+                    }
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["cityName"] = city
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        }
     }
-}
