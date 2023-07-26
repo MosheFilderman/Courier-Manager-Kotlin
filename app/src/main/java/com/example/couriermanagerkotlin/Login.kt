@@ -15,11 +15,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import org.json.JSONArray
-import org.json.JSONObject
 
 class Login : AppCompatActivity() {
 
@@ -145,7 +140,7 @@ class Login : AppCompatActivity() {
             )
         }
         if (Validations.isEmpty(email) && Validations.isEmpty(phone)) {
-            DButilities.login(
+            DBUtilities.login(
                 this@Login,
                 email.text.toString().trim(),
                 phone.text.toString().trim(),

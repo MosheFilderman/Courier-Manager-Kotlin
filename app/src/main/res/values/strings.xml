@@ -16,7 +16,7 @@
     </string-array>
 
     <string-array name="citys">
-        <item>Choose City</item>
+        <item>נא לבחור עיר</item>
         <item>חיפה</item>
         <item>קרית ים</item>
         <item>קרית ביאליק</item>
@@ -24,6 +24,8 @@
         <item>קרית אתא</item>
     </string-array>
 
-    <string-array name="street"><item>Choose Street</item></string-array>
+    <string-array name="streetStarting">
+        <item>קודם להזין עיר</item>
+    </string-array>
 
 </resources>

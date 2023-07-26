@@ -10,10 +10,6 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import android.widget.Toast
-import com.android.volley.Response
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
 
 class AddEmployee : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
@@ -56,7 +52,7 @@ class AddEmployee : AppCompatActivity() {
 
     fun addEmployee(view: View) {
         if(Validations.isEmpty(firstName) && Validations.isEmpty(lastName) && Validations.isEmpty(email) && Validations.checkPhoneLength(phone) )
-         DButilities.registerEmployee(this@AddEmployee,firstName.text.toString().trim(),lastName.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim(),radioButton.text.toString())
+         DBUtilities.registerEmployee(this@AddEmployee,firstName.text.toString().trim(),lastName.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim(),radioButton.text.toString())
 
     }
 

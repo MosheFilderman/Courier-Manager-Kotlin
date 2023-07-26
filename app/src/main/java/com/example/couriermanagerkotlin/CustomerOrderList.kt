@@ -12,8 +12,8 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.couriermanagerkotlin.DButilities.Companion.getCustomerOrders
-import com.example.couriermanagerkotlin.DButilities.Companion.orders
+import com.example.couriermanagerkotlin.DBUtilities.Companion.getCustomerOrders
+import com.example.couriermanagerkotlin.DBUtilities.Companion.orders
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
@@ -99,7 +99,7 @@ class CustomerOrderList : AppCompatActivity() {
             comment.text = orders[position].comment
 
             builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                DButilities.cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
+                DBUtilities.cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
                 orders.removeAt(position)
                 if(orders.isEmpty()) {
                     emptyListMsg.visibility = View.VISIBLE
