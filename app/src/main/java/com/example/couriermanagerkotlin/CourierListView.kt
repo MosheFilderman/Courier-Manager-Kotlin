@@ -41,7 +41,7 @@ class CourierListView : AppCompatActivity() {
                     val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
                     val editor: SharedPreferences.Editor = shrd.edit()
                     editor.clear()
-                    editor.commit()
+                    editor.apply()
                     startActivity(Intent(this@CourierListView, Login::class.java))
                     finish()
                 }

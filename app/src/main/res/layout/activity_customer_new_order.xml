@@ -96,8 +96,6 @@
             android:textSize="18sp"
             android:textStyle="bold" />
 
-
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -141,7 +139,7 @@
                     android:layout_height="wrap_content"
                     android:background="@color/white"
                     android:padding="3dp"
-                    android:layout_marginBottom="7dp"
+                    android:layout_margin="7dp"
                     android:layout_marginEnd="10dp"
                     android:hint="Enter street name"/>
 
@@ -155,7 +153,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Street: "/>
+                    android:text="Building: "/>
 
                 <EditText
                     android:id="@+id/deliveryBuild"
@@ -164,12 +162,11 @@
                     android:background="@color/white"
                     android:padding="3dp"
                     android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp"
                     android:hint="building"
                     android:inputType="number" />
 
             </LinearLayout>
-
-
         </LinearLayout>
 
         <TextView
@@ -185,36 +182,74 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
-            <Spinner
-                android:id="@+id/pickupCity"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:padding="3dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginEnd="10dp" />
-
-            <AutoCompleteTextView
-                android:id="@+id/pickupStreet"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:padding="3dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginEnd="10dp"
-                android:hint="נא להזין רחוב" />
-
-            <EditText
-                android:id="@+id/pickupBuild"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="3dp"
-                android:layout_marginBottom="7dp"
-                android:hint="building"
-                android:inputType="number" />
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="City: "/>
+
+                <Spinner
+                    android:id="@+id/pickupCity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Street: "/>
+
+                <AutoCompleteTextView
+                    android:id="@+id/pickupStreet"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="Enter street name" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Building: "/>
+
+                <EditText
+                    android:id="@+id/pickupBuild"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="3dp"
+                    android:layout_marginBottom="7dp"
+                    android:layout_marginEnd="10dp"
+                    android:hint="building"
+                    android:inputType="number" />
+
+            </LinearLayout>
+
         </LinearLayout>
 
         <TextView
@@ -302,7 +337,7 @@
             android:id="@+id/errorMassage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="16dp"
+            android:textSize="16sp"
            android:text="" />
 
         <Button

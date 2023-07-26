@@ -36,9 +36,12 @@ class Login : AppCompatActivity() {
 
 
         shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
-//        val editor = shrd.edit()
-//        editor.clear()
-//        editor.apply()
+
+//        Toast.makeText(this,shrd.getString("firstName", "fff"),Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this,shrd.getString("lastName", "lll"),Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this,shrd.getString("email", "eee"),Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this,shrd.getString("phone", "ppp"),Toast.LENGTH_SHORT).show()
+//        Toast.makeText(this,shrd.getBoolean("connected", false).toString(),Toast.LENGTH_SHORT).show()
 
         if (shrd.getBoolean("connected", false)) {
             when (shrd.getString("eRole", "none")) {
@@ -146,7 +149,6 @@ class Login : AppCompatActivity() {
                 phone.text.toString().trim(),
                 shrd
             )
-            Toast.makeText(this@Login,shrd.getBoolean("connected", false).toString(),Toast.LENGTH_LONG).show()
             if (shrd.getBoolean("connected", false)) {
                 val temporaryCode = (1000..9999).random().toString()
                 sendSMS(shrd.getString("phone", "none").toString(), temporaryCode)

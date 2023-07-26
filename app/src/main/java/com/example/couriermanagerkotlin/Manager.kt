@@ -60,14 +60,6 @@ class Manager : AppCompatActivity() {
         firstName.text = shrd.getString("firstName", "")
         lastName.text = shrd.getString("lastName", "")
 
-//        Toast.makeText(this,shrd.getString("firstName", "fff"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getString("lastName", "lll"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getString("email", "eee"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getString("phone", "ppp"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getBoolean("connected", false).toString(),Toast.LENGTH_SHORT).show()
-
-
-
         menu.setOnItemSelectedListener {
             when (it.itemId) {
                 R.id.addEmployee -> {

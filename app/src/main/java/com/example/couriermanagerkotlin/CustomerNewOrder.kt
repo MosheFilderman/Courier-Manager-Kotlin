@@ -5,6 +5,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -49,15 +50,15 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageWeight: EditText
     lateinit var errorMessage: TextView
     lateinit var comment: EditText
-  //  private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
+    //  private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
 
 
     /* String objects of the spinners */
     lateinit var strAreaCode: String
     lateinit var strDeliveryCity: String
-    lateinit var strDeliveryStreet:String
+    var strDeliveryStreet: String? = null
     lateinit var strPickupCity: String
-    lateinit var strPickupStreet:String
+    var strPickupStreet: String? = null
 
 
     /* Menu toolbar */
@@ -147,7 +148,7 @@ class CustomerNewOrder : AppCompatActivity() {
         comment = findViewById(R.id.comment)
 
         /* Get Shared Preference */
-        shrd = getSharedPreferences("savefile", Context.MODE_PRIVATE)
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
 
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
@@ -190,20 +191,50 @@ class CustomerNewOrder : AppCompatActivity() {
             ) {
                 if (parent != null) {
                     strDeliveryCity = parent.getItemAtPosition(position).toString()
-                    DBUtilities.getStreetByCity(this@CustomerNewOrder,strDeliveryCity)
-                    updateStreetSpinner(deliveryStreet)
+                    DBUtilities.getStreetByCity(this@CustomerNewOrder, strDeliveryCity)
+
+                    /* Reassign the autocomplete values */
+                    val arrayAdapter = ArrayAdapter(
+                        this@CustomerNewOrder,
+                        android.R.layout.simple_list_item_1,
+                        streets
+                    )
+                    deliveryStreet.setAdapter(arrayAdapter)
+
+                    deliveryStreet.threshold = 1
+
+                    deliveryStreet.setOnItemClickListener { parent, view, position, id ->
+                        strDeliveryStreet = parent.getItemAtPosition(position).toString()
+                    }
                 }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 Toast.makeText(
-                    this@CustomerNewOrder, "Delivery city must bo chosen", Toast.LENGTH_SHORT
+                    this@CustomerNewOrder, "Delivery street must bo chosen", Toast.LENGTH_SHORT
                 ).show()
             }
         }
 
         /* Pickup street AutoComplete */
-        startAutoComplete(deliveryStreet)
+        val deliveryStreetArrayAdapter = ArrayAdapter(
+            this@CustomerNewOrder,
+            android.R.layout.simple_list_item_1,
+            resources.getStringArray(R.array.streetStarting)
+        )
+        deliveryStreet.setAdapter(deliveryStreetArrayAdapter)
+
+        deliveryStreet.threshold = 1
+
+        deliveryStreet.setOnItemClickListener { parent, view, position, id ->
+
+
+            Toast.makeText(
+                this@CustomerNewOrder,
+                parent.getItemAtPosition(position).toString(),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
 
         /* Pickup city Spinner */
         val pickupCityArrayAdapter = ArrayAdapter(
@@ -219,9 +250,21 @@ class CustomerNewOrder : AppCompatActivity() {
             ) {
                 if (parent != null) {
                     strPickupCity = parent.getItemAtPosition(position).toString()
-                    Toast.makeText(this@CustomerNewOrder, strPickupCity,Toast.LENGTH_LONG).show()
-                    DBUtilities.getStreetByCity(this@CustomerNewOrder,strPickupCity)
-                    updateStreetSpinner(pickupStreet)
+                    DBUtilities.getStreetByCity(this@CustomerNewOrder, strPickupCity)
+
+                    /* Reassign the autocomplete values */
+                    val arrayAdapter = ArrayAdapter(
+                        this@CustomerNewOrder,
+                        android.R.layout.simple_list_item_1,
+                        streets
+                    )
+                    pickupStreet.setAdapter(arrayAdapter)
+
+                    pickupStreet.threshold = 1
+
+                    pickupStreet.setOnItemClickListener { parent, view, position, id ->
+                        strPickupStreet = parent.getItemAtPosition(position).toString()
+                    }
                 }
             }
 
@@ -233,15 +276,36 @@ class CustomerNewOrder : AppCompatActivity() {
         }
 
         /* Pickup street AutoComplete */
-        startAutoComplete(pickupStreet)
+        val pickupStreetArrayAdapter = ArrayAdapter(
+            this@CustomerNewOrder,
+            android.R.layout.simple_list_item_1,
+            resources.getStringArray(R.array.streetStarting)
+        )
+        pickupStreet.setAdapter(pickupStreetArrayAdapter)
+
+        pickupStreet.threshold = 1
+
+        pickupStreet.setOnItemClickListener { parent, view, position, id ->
+
+
+            Toast.makeText(
+                this@CustomerNewOrder,
+                parent.getItemAtPosition(position).toString(),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
 
-    fun newOrder() {
+    fun newOrder(view: View) {
+        if (strDeliveryStreet.isNullOrEmpty() || strPickupStreet.isNullOrEmpty()) {
+            deliveryStreet.error = "Must choose street from the option's."
+            return
+        }
         if (Validations.checkOrderMeasures(
                 packageHeight,
                 packageWidth,
                 packageLength,
-                packageHeight
+                packageWeight
             ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
                 contEmail
             ) && Validations.isEmpty(contPhoneNumber)
@@ -254,13 +318,14 @@ class CustomerNewOrder : AppCompatActivity() {
                 contEmail.text.toString().trim(),
                 eStatus.NEW,
                 strPickupCity,
-                pickupStreet.toString().trim(),
+                strPickupStreet!!,
                 pickupBuild.text.toString().trim(),
                 strDeliveryCity,
-                deliveryStreet.toString().trim(),
+                strDeliveryStreet!!,
                 deliveryBuild.text.toString().trim(),
                 comment.text.toString().trim()
             )
+            Log.d("Order object", orderToAdd.toString())
             DBUtilities.createOrder(
                 this@CustomerNewOrder,
                 orderToAdd,
@@ -274,33 +339,10 @@ class CustomerNewOrder : AppCompatActivity() {
         } else {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
+
     }
 
-    private fun startAutoComplete(autoComplete: AutoCompleteTextView) {
-        val arrayAdapter = ArrayAdapter(this@CustomerNewOrder, android.R.layout.simple_list_item_1, resources.getStringArray(R.array.streetStarting))
-        autoComplete.setAdapter(arrayAdapter)
-
-        autoComplete.threshold = 1
-
-        autoComplete.setOnItemClickListener { parent, view, position, id ->
-            Toast.makeText(this@CustomerNewOrder, parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun updateStreetSpinner(autoComplete: AutoCompleteTextView) {
-        val arrayAdapter = ArrayAdapter(this@CustomerNewOrder, android.R.layout.simple_list_item_1, streets)
-        autoComplete.setAdapter(arrayAdapter)
-
-        autoComplete.threshold = 1
-
-        autoComplete.setOnItemClickListener { parent, view, position, id ->
-            Toast.makeText(this@CustomerNewOrder, parent.getItemAtPosition(position).toString(), Toast.LENGTH_SHORT).show()
-        }
-    }
-
-
-
-    fun validateAddressTest(address: String, geoApiContext: GeoApiContext):Boolean {
+    fun validateAddressTest(address: String, geoApiContext: GeoApiContext): Boolean {
         try {
             val results: Array<GeocodingResult> =
                 GeocodingApi.geocode(geoApiContext, address).await()
