@@ -3,8 +3,6 @@ package com.example.couriermanagerkotlin
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.location.Address
-import android.location.Geocoder
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -27,12 +25,8 @@ import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
 import java.io.IOException
 import java.util.UUID
-import com.google.maps.GeoApiContext
-import com.google.maps.GeocodingApi
-import com.google.maps.errors.ApiException
-import com.google.maps.model.GeocodingResult
-import java.util.Locale
-
+import com.example.couriermanagerkotlin.GoogleUtilities.Companion.validateAddressWithVolley
+import com.example.couriermanagerkotlin.DBUtilities.Companion.createOrder
 
 class CustomerNewOrder : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
@@ -113,18 +107,6 @@ class CustomerNewOrder : AppCompatActivity() {
         setContentView(R.layout.activity_customer_new_order)
         errorMessage = findViewById(R.id.errorMassage)
 
-        validateAddressWithVolley(this,"גורדון 8, קרית ים, ישראל", getString(R.string.GOOGLE_API_KEY)) { latLng ->
-            if (latLng != null) {
-                // Address is valid and from Israel, perform your desired action using the latitude and longitude
-                val latitude = latLng.first
-                val longitude = latLng.second
-                Log.d("Address validated successfully","Address is valid and from Israel. Latitude: $latitude, Longitude: $longitude")
-            } else {
-                // Address is not valid, not from Israel, or cannot be geocoded, handle accordingly
-                Log.e("Address validation gone wrong...","Address is not valid or not from Israel.")
-            }
-        }
-
 //        val validator = AddressValidator(this)
 //        val validatedAddress: Address? = validator.validateAddress("השיירה 11 חיפה")
 //        val apiKey = R.string.GOOGLE_API_KEY
@@ -165,9 +147,6 @@ class CustomerNewOrder : AppCompatActivity() {
         packageLength = findViewById(R.id.packageLength)
         packageWeight = findViewById(R.id.packageWeight)
 
-
-
-//        errorMessage.text = validateAddressTest("גורדון 8 קרית ים").toString()
         comment = findViewById(R.id.comment)
 
         /* Get Shared Preference */
@@ -324,6 +303,9 @@ class CustomerNewOrder : AppCompatActivity() {
             deliveryStreet.error = "Must choose street from the option's."
             return
         }
+        val pickupAddress = "${strPickupStreet} ${pickupBuild}, ${strPickupCity}, IL"
+        val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild}, ${strDeliveryCity}, IL"
+
         if (Validations.checkOrderMeasures(
                 packageHeight,
                 packageWidth,
@@ -332,6 +314,8 @@ class CustomerNewOrder : AppCompatActivity() {
             ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
                 contEmail
             ) && Validations.isEmpty(contPhoneNumber)
+            && addressValidation(this.applicationContext, pickupAddress)
+            && addressValidation(this.applicationContext, deliveryAddress)
         ) {
             Toast.makeText(this, "All fields filled correctly.", Toast.LENGTH_SHORT).show()
             val orderToAdd = Order(
@@ -348,8 +332,7 @@ class CustomerNewOrder : AppCompatActivity() {
                 deliveryBuild.text.toString().trim(),
                 comment.text.toString().trim()
             )
-            Log.d("Order object", orderToAdd.toString())
-            DBUtilities.createOrder(
+            createOrder(
                 this@CustomerNewOrder,
                 orderToAdd,
                 shrd.getString("email", "none").toString(),
@@ -362,60 +345,23 @@ class CustomerNewOrder : AppCompatActivity() {
         } else {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
-
     }
 
-    fun validateAddressWithVolley(
-        context: Context,
-        addressToValidate: String,
-        apiKey: String,
-        callback: (Pair<Double, Double>?) -> Unit
-    ) {
-        val baseUrl = "https://maps.googleapis.com/maps/api/geocode/json"
-        val url = "${baseUrl}?address=${addressToValidate}&key=${apiKey}"
-        Log.d("The final URL", "The URL: $url")
-        val requestQueue: RequestQueue = Volley.newRequestQueue(context.applicationContext)
-        val request = JsonObjectRequest(Request.Method.GET, url, null,
-            Response.Listener { response ->
-                Log.e("response from goecoding", response.toString())
-                val status = response.optString("status", "")
-                val results = response.optJSONArray("results")
+    fun addressValidation(context: Context, addressToValidate: String): Boolean {
+        var result = false
 
-                if (status == "OK" && results != null && results.length() > 0) {
-                    // Address is valid
-                    val addressComponents = results.getJSONObject(0).optJSONArray("address_components")
-                    if (addressComponents != null) {
-                        // Check if the address belongs to Israel (country code: IL)
-                        for (i in 0 until addressComponents.length()) {
-                            val component = addressComponents.getJSONObject(i)
-                            val types = component.optJSONArray("types")
-                            if (types != null && types.length() > 0) {
-                                for (j in 0 until types.length()) {
-                                    if (types.getString(j) == "country" && component.getString("short_name") == "IL") {
-                                        // Address belongs to Israel
-                                        val location = results.getJSONObject(0).getJSONObject("geometry").getJSONObject("location")
-                                        val latitude = location.optDouble("lat", 0.0)
-                                        val longitude = location.optDouble("lng", 0.0)
-                                        callback(Pair(latitude, longitude))
-                                        return@Listener
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // Address is not valid or not from Israel
-                callback(null)
-            },
-            Response.ErrorListener { error ->
-                // Handle network error
-                callback(null)
+        validateAddressWithVolley(this,addressToValidate, getString(R.string.GOOGLE_API_KEY)) { latLng ->
+            if (latLng != null) {
+                // Address is valid and from Israel, perform your desired action using the latitude and longitude
+                val latitude = latLng.first
+                val longitude = latLng.second
+                Log.d("Address validated successfully","Address is valid and from Israel. Latitude: $latitude, Longitude: $longitude")
+                result = true
+            } else {
+                // Address is not valid, not from Israel, or cannot be geocoded, handle accordingly
+                Log.e("Address validation gone wrong...","Address is not valid or not from Israel.")
             }
-        )
-
-        requestQueue.add(request)
+        }
+        return result
     }
-
-
 }

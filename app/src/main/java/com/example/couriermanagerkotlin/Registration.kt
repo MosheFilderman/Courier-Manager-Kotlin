@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
+import com.example.couriermanagerkotlin.DBUtilities.Companion.registerUser
 
 class Registration : AppCompatActivity() {
     lateinit var firstName: EditText
@@ -27,7 +28,7 @@ class Registration : AppCompatActivity() {
     fun register(view: View) {
         if (Validations.isEmpty(firstName) && Validations.isEmpty(lastName) && Validations.isEmpty(email) && Validations.checkPhoneLength(phone)) {
             Toast.makeText(this, "All field's filled successfully.", Toast.LENGTH_LONG).show()
-            DBUtilities.registerUser(this@Registration,firstName.text.toString().trim(),lastName.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim())
+            registerUser(this@Registration,firstName.text.toString().trim(),lastName.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim())
             startActivity(Intent(this@Registration, Login::class.java))
             finish()
         } else
