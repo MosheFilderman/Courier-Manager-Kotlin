@@ -15,7 +15,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "192.168.55.141"
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
 
@@ -167,7 +167,7 @@ class DBUtilities {
             orders.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    if (!response.toString().trim().equals("no data")) {
+                    if (!response.toString().trim().equals("empty")) {
                         orderList.visibility = View.VISIBLE
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)

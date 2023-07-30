@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">Courier Manager</string>
 
-    <string name="GOOGLE_API_KEY">AIzaSyBWW5fWoGo1sSJDo48KmpIkXGHnZn5lk_k</string>
+    <string name="GOOGLE_API_KEY">AIzaSyD0zMv-hiTjP4V0eyUMRhIqemuJKN-cWnk</string>
+
 
     <string-array name="areaCodes">
         <item>Area code</item>
