@@ -113,15 +113,15 @@ class CustomerNewOrder : AppCompatActivity() {
         setContentView(R.layout.activity_customer_new_order)
         errorMessage = findViewById(R.id.errorMassage)
 
-        validateAddressWithVolley(this,"הרב הרצוג 19, עכו, ישראל", R.string.GOOGLE_API_KEY.toString()) { latLng ->
+        validateAddressWithVolley(this,"גורדון 8, קרית ים, ישראל", getString(R.string.GOOGLE_API_KEY)) { latLng ->
             if (latLng != null) {
                 // Address is valid and from Israel, perform your desired action using the latitude and longitude
                 val latitude = latLng.first
                 val longitude = latLng.second
-                Log.e("address validated","Address is valid and from Israel. Latitude: $latitude, Longitude: $longitude")
+                Log.d("Address validated successfully","Address is valid and from Israel. Latitude: $latitude, Longitude: $longitude")
             } else {
                 // Address is not valid, not from Israel, or cannot be geocoded, handle accordingly
-                Log.e("addrres","Address is not valid or not from Israel.")
+                Log.e("Address validation gone wrong...","Address is not valid or not from Israel.")
             }
         }
 
@@ -365,9 +365,6 @@ class CustomerNewOrder : AppCompatActivity() {
 
     }
 
-
-
-
     fun validateAddressWithVolley(
         context: Context,
         addressToValidate: String,
@@ -375,8 +372,8 @@ class CustomerNewOrder : AppCompatActivity() {
         callback: (Pair<Double, Double>?) -> Unit
     ) {
         val baseUrl = "https://maps.googleapis.com/maps/api/geocode/json"
-        val url = "$baseUrl?address=${addressToValidate}&key=$apiKey"
-
+        val url = "${baseUrl}?address=${addressToValidate}&key=${apiKey}"
+        Log.d("The final URL", "The URL: $url")
         val requestQueue: RequestQueue = Volley.newRequestQueue(context.applicationContext)
         val request = JsonObjectRequest(Request.Method.GET, url, null,
             Response.Listener { response ->
