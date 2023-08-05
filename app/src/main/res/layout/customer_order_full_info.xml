@@ -21,7 +21,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/firstColumn"
+            android:id="@+id/name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </LinearLayout>
@@ -41,7 +41,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/secondColumn"
+            android:id="@+id/phone"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -61,7 +61,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/thirdColumn"
+            android:id="@+id/email"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -81,7 +81,47 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/fourthColumn"
+            android:id="@+id/orderStatus"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_marginEnd="10dp"
+            android:text="Pickup Address:"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/pickupAddress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="start"
+            android:layout_marginEnd="10dp"
+            android:text="Delivery Address:"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/deliveryAddress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -101,7 +141,7 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/fifthColumn"
+            android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>

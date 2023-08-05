@@ -4,13 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Manager">
+    tools:context=".activities.manager.Manager">
 
     <LinearLayout
+        android:id="@+id/infoTab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="start"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:padding="10dp">
 
         <ImageView
             android:layout_width="60dp"
@@ -35,11 +37,20 @@
             android:textSize="20sp" />
     </LinearLayout>
 
-
     <ListView
-        android:id="@+id/managerListView"
+        android:id="@+id/couriersListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:layout_below="@+id/infoTab"
+        android:layout_above="@+id/nav"
+        android:visibility="gone"/>
+
+    <TextView
+        android:id="@+id/emptyListMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:visibility="gone"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"

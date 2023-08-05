@@ -1,25 +1,35 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.activities.courier
 
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-class Manager : AppCompatActivity() {
+class CourierListView : AppCompatActivity() {
 
+    lateinit var shrd: SharedPreferences
+    lateinit var navigationView: BottomNavigationView
+    lateinit var firstName: TextView
+    lateinit var lastName: TextView
+
+    val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
+
+    /* Top Right corner logout button */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.logout_search_menu, menu)
         return true
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout -> {
@@ -28,11 +38,11 @@ class Manager : AppCompatActivity() {
                 builder.setMessage("Are you sure you wish to logout?")
                 builder.setIcon(R.drawable.baseline_close_24)
                 builder.setPositiveButton("YES") { dialogInterface, i ->
-                    Toast.makeText(this@Manager, "in logout", Toast.LENGTH_SHORT).show()
+                    val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
                     val editor: SharedPreferences.Editor = shrd.edit()
                     editor.clear()
                     editor.apply()
-                    startActivity(Intent(this, Login::class.java))
+                    startActivity(Intent(this@CourierListView, Login::class.java))
                     finish()
                 }
                 builder.setNegativeButton("NO") { dialogInterface, _ ->
@@ -44,45 +54,39 @@ class Manager : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-    lateinit var shrd: SharedPreferences
-    lateinit var firstName: TextView
-    lateinit var lastName: TextView
-    lateinit var menu: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_manager)
-        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+        setContentView(R.layout.activity_courier_list_view)
+        val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
         firstName = findViewById(R.id.firstName)
         lastName = findViewById(R.id.lastName)
-        menu = findViewById(R.id.nav)
-
         firstName.text = shrd.getString("firstName", "")
         lastName.text = shrd.getString("lastName", "")
 
-        menu.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.addEmployee -> {
-                    startActivity(Intent(this,AddEmployee::class.java))
+        navigationView = findViewById(R.id.nav)
+        navigationView.setOnItemSelectedListener {
+            when(it.itemId){
+                R.id.listView ->{
                     true
                 }
-
-                R.id.courierList -> {
-
+                R.id.mapView ->{
+                    startActivity(Intent(this@CourierListView, CourierMapView::class.java))
+                    finish()
                     true
                 }
-
-                R.id.reports -> {
-
-                    true
-                }
-
                 else -> false
             }
             true
         }
+        navigationView.selectedItemId = R.id.listView
 
-
-
+        if(ContextCompat.checkSelfPermission(this.applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            )
+        }
     }
 }

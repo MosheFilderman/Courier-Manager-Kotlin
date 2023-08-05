@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.activities.manager
 
 import android.content.Intent
 import android.content.SharedPreferences
@@ -10,6 +10,10 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
+import com.example.couriermanagerkotlin.DBUtilities
+import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.Validations
 
 class AddEmployee : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
@@ -51,8 +55,18 @@ class AddEmployee : AppCompatActivity() {
     }
 
     fun addEmployee(view: View) {
-        if(Validations.isEmpty(firstName) && Validations.isEmpty(lastName) && Validations.isEmpty(email) && Validations.checkPhoneLength(phone) )
-         DBUtilities.registerEmployee(this@AddEmployee,firstName.text.toString().trim(),lastName.text.toString().trim(),email.text.toString().trim(),phone.text.toString().trim(),radioButton.text.toString())
+        if(Validations.isEmpty(firstName) && Validations.isEmpty(lastName) && Validations.isEmpty(
+                email
+            ) && Validations.checkPhoneLength(phone)
+        )
+            DBUtilities.registerEmployee(
+                this@AddEmployee,
+                firstName.text.toString().trim(),
+                lastName.text.toString().trim(),
+                email.text.toString().trim(),
+                phone.text.toString().trim(),
+                radioButton.text.toString()
+            )
 
     }
 

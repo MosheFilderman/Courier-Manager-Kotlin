@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.listViewAdapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,13 +6,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.example.couriermanagerkotlin.Order
+import com.example.couriermanagerkotlin.R
 
-class OrderListView(context: Context, orders: ArrayList<Order>): BaseAdapter() {
-
+class OrdersAdapter(context: Context, orders: ArrayList<Order>): BaseAdapter() {
 
     var myContext = context
     var orders = orders
-
 
     init {
         this.myContext = context
@@ -20,19 +20,19 @@ class OrderListView(context: Context, orders: ArrayList<Order>): BaseAdapter() {
     }
 
     override fun getCount(): Int {
-        return orders.size
+        return this.orders.size
     }
 
-    override fun getItem(p0: Int): Any {
-        return orders[p0]
+    override fun getItem(position: Int): Any {
+        return orders[position]
     }
 
-    override fun getItemId(p0: Int): Long {
-        return p0.toLong()
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        var view = LayoutInflater.from(myContext).inflate(R.layout.list_view,parent,false)
+        val view = LayoutInflater.from(myContext).inflate(R.layout.customer_order_row,parent,false)
         var contactName: TextView? = null
         var contactPhone: TextView? = null
         var contactEmail : TextView? = null

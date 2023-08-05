@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.activities.customer
 
 import android.content.Context
 import android.content.Intent
@@ -12,18 +12,25 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.couriermanagerkotlin.DBUtilities.Companion.cancelOrder
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.DBUtilities.Companion.orders
+import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.Order
+import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 
 class CustomerOrderList : AppCompatActivity() {
+
     lateinit var shrd: SharedPreferences
-    lateinit var emptyListMsg: TextView
-    lateinit var orderList: ListView
-    lateinit var menu: BottomNavigationView
     lateinit var firstName: TextView
     lateinit var lastName: TextView
+    lateinit var orderList: ListView
+    lateinit var emptyListMsg: TextView
+    lateinit var menu: BottomNavigationView
     lateinit var search: SearchView
     var searchOrderList = ArrayList<Order>()
 
@@ -44,7 +51,7 @@ class CustomerOrderList : AppCompatActivity() {
                     val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
                     val editor: SharedPreferences.Editor = shrd.edit()
                     editor.clear()
-                    editor.commit()
+                    editor.apply()
                     startActivity(Intent(this@CustomerOrderList, Login::class.java))
                     finish()
                 }
@@ -61,60 +68,18 @@ class CustomerOrderList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_order_list)
-        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+
         firstName = findViewById(R.id.firstName)
         lastName = findViewById(R.id.lastName)
+
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
         firstName.text = shrd.getString("firstName", "")
         lastName.text = shrd.getString("lastName", "")
+
         search = findViewById(R.id.search)
+        orderList = findViewById(R.id.orderList)
         emptyListMsg = findViewById(R.id.emptyListMsg)
         menu = findViewById(R.id.nav)
-
-        orderList = findViewById(R.id.orderList)
-        // Click on order open dialog with all the order details
-        orderList.setOnItemClickListener { parent, view, position, id ->
-            val builder = AlertDialog.Builder(this)
-            val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.order_full_info, null)
-            orderList.visibility = View.VISIBLE
-
-            builder.setView(dialogLayout)
-
-            val name: TextView = dialogLayout.findViewById(R.id.firstColumn)
-            val phone: TextView = dialogLayout.findViewById(R.id.secondColumn)
-            val email: TextView = dialogLayout.findViewById(R.id.thirdColumn)
-            val status: TextView = dialogLayout.findViewById(R.id.fourthColumn)
-            val pickupAddress: TextView = dialogLayout.findViewById(R.id.fifthColumn)
-            val deliveryAddress: TextView = dialogLayout.findViewById(R.id.sixthColumn)
-            val comment: TextView = dialogLayout.findViewById(R.id.seventhColumn)
-            val strPickupAddress: String = orders[position].pickupCity + "," + orders[position].pickupStreet + " " + orders[position].deliveryBuild
-            val strDeliveryAddress: String = "${orders[position].deliveryCity}, ${orders[position].deliveryStreet} ${orders[position].deliveryBuild}"
-            val orderId = orders[position].orderId
-            name.text = orders[position].name
-            phone.text = orders[position].phone
-            email.text = orders[position].email
-            status.text = orders[position].status.name
-            pickupAddress.text = strPickupAddress
-            deliveryAddress.text = strDeliveryAddress
-            comment.text = orders[position].comment
-
-            builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                DBUtilities.cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
-                orders.removeAt(position)
-                if(orders.isEmpty()) {
-                    emptyListMsg.visibility = View.VISIBLE
-                    emptyListMsg.text = "Your order list still empty"
-                } else {
-                    orderList.visibility = View.VISIBLE
-                    orderList.adapter = OrderListView(this, orders)
-                }
-            }
-
-            builder.setNegativeButton("Close") { dialogInterface, i ->
-                dialogInterface.dismiss()
-            }
-            builder.show()
-        }
 
         menu.setOnItemSelectedListener {
             when (it.itemId) {
@@ -134,10 +99,52 @@ class CustomerOrderList : AppCompatActivity() {
         }
         menu.selectedItemId = R.id.orderList
 
+        // Click on order open dialog with all the order details
+        orderList.setOnItemClickListener { parent, view, position, id ->
+            val builder = AlertDialog.Builder(this)
+            val inflater = layoutInflater
+            val dialogLayout = inflater.inflate(R.layout.customer_order_full_info, null)
+            orderList.visibility = View.VISIBLE
+
+            builder.setView(dialogLayout)
+
+            val name: TextView = dialogLayout.findViewById(R.id.name)
+            val phone: TextView = dialogLayout.findViewById(R.id.phone)
+            val email: TextView = dialogLayout.findViewById(R.id.email)
+            val status: TextView = dialogLayout.findViewById(R.id.orderStatus)
+            val pickupAddress: TextView = dialogLayout.findViewById(R.id.pickupAddress)
+            val deliveryAddress: TextView = dialogLayout.findViewById(R.id.deliveryAddress)
+            val comment: TextView = dialogLayout.findViewById(R.id.comment)
+
+            val strPickupAddress: String = orders[position].pickupCity + "," + orders[position].pickupStreet + " " + orders[position].deliveryBuild
+            val strDeliveryAddress: String = "${orders[position].deliveryCity}, ${orders[position].deliveryStreet} ${orders[position].deliveryBuild}"
+
+            val orderId = orders[position].orderId
+
+            name.text = orders[position].name
+            phone.text = orders[position].phone
+            email.text = orders[position].email
+            status.text = orders[position].status.name
+            pickupAddress.text = strPickupAddress
+            deliveryAddress.text = strDeliveryAddress
+            comment.text = orders[position].comment
+
+
+            builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
+                cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
+                orders.removeAt(position)
+                isListEmpty(orders, emptyListMsg, orderList)
+            }
+
+            builder.setNegativeButton("Close") { dialogInterface, i ->
+                dialogInterface.dismiss()
+            }
+            builder.show()
+        }
+
         //MUHAMAD
         getCustomerOrders(this@CustomerOrderList, orderList, emptyListMsg, shrd.getString("email","none").toString())
-
-        orderList.adapter = OrderListView(this, orders)
+        isListEmpty(orders, emptyListMsg, orderList)
 
         search.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
@@ -152,9 +159,19 @@ class CustomerOrderList : AppCompatActivity() {
                             searchOrderList.add(tmpOrder)
                         }
                     }
-                    orderList.adapter = OrderListView(this@CustomerOrderList, searchOrderList)
+                    orderList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
                     return false
                 }
             })
+    }
+
+    private fun isListEmpty(list: ArrayList<Order>, emptyListMsg: TextView, listView: ListView) {
+        if(list.isEmpty()) {
+            emptyListMsg.visibility = View.VISIBLE
+            emptyListMsg.text = getString(R.string.customer_empty_order_list)
+        } else {
+            listView.visibility = View.VISIBLE
+            listView.adapter = OrdersAdapter(this, list)
+        }
     }
 }

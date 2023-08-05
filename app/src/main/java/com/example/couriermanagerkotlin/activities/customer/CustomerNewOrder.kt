@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.activities.customer
 
 import android.content.Context
 import android.content.Intent
@@ -17,16 +17,12 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.android.volley.Request
-import com.android.volley.RequestQueue
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
+import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
-import java.io.IOException
-import java.util.UUID
 import com.example.couriermanagerkotlin.GoogleUtilities.Companion.validateAddressWithVolley
-import com.example.couriermanagerkotlin.DBUtilities.Companion.createOrder
+import com.example.couriermanagerkotlin.GoogleUtilities.Companion.coordinates
+import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.R
 
 class CustomerNewOrder : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
@@ -52,15 +48,16 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageWeight: EditText
     lateinit var errorMessage: TextView
     lateinit var comment: EditText
+
 //      private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
 
 
-    /* String objects of the spinners */
+    /* String objects of the spinners and autofill */
     lateinit var strAreaCode: String
-    lateinit var strDeliveryCity: String
-    var strDeliveryStreet: String? = null
     lateinit var strPickupCity: String
     var strPickupStreet: String? = null
+    lateinit var strDeliveryCity: String
+    var strDeliveryStreet: String? = null
 
 
     /* Menu toolbar */
@@ -199,7 +196,7 @@ class CustomerNewOrder : AppCompatActivity() {
                     val arrayAdapter = ArrayAdapter(
                         this@CustomerNewOrder,
                         android.R.layout.simple_list_item_1,
-                        DBUtilities.streets
+                        streets
                     )
                     deliveryStreet.setAdapter(arrayAdapter)
 
@@ -258,7 +255,7 @@ class CustomerNewOrder : AppCompatActivity() {
                     val arrayAdapter = ArrayAdapter(
                         this@CustomerNewOrder,
                         android.R.layout.simple_list_item_1,
-                        DBUtilities.streets
+                        streets
                     )
                     pickupStreet.setAdapter(arrayAdapter)
 
@@ -299,69 +296,74 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     fun newOrder(view: View) {
+
         if (strDeliveryStreet.isNullOrEmpty() || strPickupStreet.isNullOrEmpty()) {
             deliveryStreet.error = "Must choose street from the option's."
             return
         }
-        val pickupAddress = "${strPickupStreet} ${pickupBuild}, ${strPickupCity}, IL"
-        val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild}, ${strDeliveryCity}, IL"
+        /* Concatenating all the address field into one line */
+        val pickupAddress = "${strPickupStreet} ${pickupBuild.text}, ${strPickupCity}"
+        val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild.text}, ${strDeliveryCity}"
 
-        if (Validations.checkOrderMeasures(
-                packageHeight,
-                packageWidth,
-                packageLength,
-                packageWeight
-            ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
-                contEmail
-            ) && Validations.isEmpty(contPhoneNumber)
-            && addressValidation(this.applicationContext, pickupAddress)
-            && addressValidation(this.applicationContext, deliveryAddress)
-        ) {
-            Toast.makeText(this, "All fields filled correctly.", Toast.LENGTH_SHORT).show()
-            val orderToAdd = Order(
-                UUID.randomUUID().toString(),
-                contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim(),
-                "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
-                contEmail.text.toString().trim(),
-                eStatus.NEW,
-                strPickupCity,
-                strPickupStreet!!,
-                pickupBuild.text.toString().trim(),
-                strDeliveryCity,
-                strDeliveryStreet!!,
-                deliveryBuild.text.toString().trim(),
-                comment.text.toString().trim()
-            )
-            createOrder(
-                this@CustomerNewOrder,
-                orderToAdd,
-                shrd.getString("email", "none").toString(),
-                errorMessage
-            )
-            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
+//        if (Validations.checkOrderMeasures(
+//                packageHeight,
+//                packageWidth,
+//                packageLength,
+//                packageWeight
+//            ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
+//                contEmail
+//            ) && Validations.isEmpty(contPhoneNumber)
+//        ) {
+//            Toast.makeText(this, "All fields filled correctly.", Toast.LENGTH_SHORT).show()
+
+            validateAddressWithVolley(this.applicationContext, pickupAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
+
+            validateAddressWithVolley(this.applicationContext, deliveryAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
+
+//            errorMessage.text = "$coordinates"
+
+            runOnUiThread {
+                processCoordinates(coordinates)
+            }
+
+//            val orderToAdd = Order(
+//                UUID.randomUUID().toString(),
+//                contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim(),
+//                "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
+//                contEmail.text.toString().trim(),
+//                eStatus.NEW,
+//                strPickupCity,
+//                strPickupStreet!!,
+//                pickupBuild.text.toString().trim(),
+//                strDeliveryCity,
+//                strDeliveryStreet!!,
+//                deliveryBuild.text.toString().trim(),
+//                comment.text.toString().trim()
+//            )
+
+//            createOrder(
+//                this@CustomerNewOrder,
+//                orderToAdd,
+//                "" + coordinates[0],
+//                "" + coordinates[1],
+//                "" + coordinates[2],
+//                "" + coordinates[3],
+//                shrd.getString("email", "none").toString(),
+//                errorMessage
+//            )
+//            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
             Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
             errorMessage.visibility = View.VISIBLE
-            finish()
-        } else {
-            Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
-        }
+//            finish()
+//        } else {
+//            Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
+//        }
     }
 
-    fun addressValidation(context: Context, addressToValidate: String): Boolean {
-        var result = false
-
-        validateAddressWithVolley(this,addressToValidate, getString(R.string.GOOGLE_API_KEY)) { latLng ->
-            if (latLng != null) {
-                // Address is valid and from Israel, perform your desired action using the latitude and longitude
-                val latitude = latLng.first
-                val longitude = latLng.second
-                Log.d("Address validated successfully","Address is valid and from Israel. Latitude: $latitude, Longitude: $longitude")
-                result = true
-            } else {
-                // Address is not valid, not from Israel, or cannot be geocoded, handle accordingly
-                Log.e("Address validation gone wrong...","Address is not valid or not from Israel.")
-            }
-        }
-        return result
+    private fun processCoordinates(coordinates: ArrayList<Double>) {
+        // This function is called after both pickup and delivery addresses have been validated
+        // Here, you can process the coordinates ArrayList as needed and update the UI with the appropriate data
+        Log.i("Coordinates Array from activity", "$coordinates")
+        errorMessage.text = "$coordinates"
     }
 }

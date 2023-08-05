@@ -3,6 +3,9 @@
 
     <string name="GOOGLE_API_KEY">AIzaSyD0zMv-hiTjP4V0eyUMRhIqemuJKN-cWnk</string>
 
+    <string name="courier_empty_shipment_list">No deliveries have been assigned to this courier</string>
+
+    <string name="customer_empty_order_list">Your order list still empty</string>
 
     <string-array name="areaCodes">
         <item>Area code</item>

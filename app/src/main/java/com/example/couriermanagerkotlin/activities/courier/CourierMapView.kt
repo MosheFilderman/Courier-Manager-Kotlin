@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.activities.courier
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -10,6 +10,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.R
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest

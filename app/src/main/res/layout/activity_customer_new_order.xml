@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/newOrderBackground"
-    tools:context=".CustomerNewOrder">
+    tools:context=".activities.customer.CustomerNewOrder">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="3dp"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
             android:layout_marginBottom="7dp"
             android:hint="First Name" />
 
@@ -47,7 +47,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:padding="3dp"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+            android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
             android:layout_marginBottom="7dp"
             android:hint="Last Name" />
 
