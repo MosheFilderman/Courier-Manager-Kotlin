@@ -1,6 +1,8 @@
 package com.example.couriermanagerkotlin
 
 import android.content.Context
+import android.location.Location
+import android.os.SystemClock
 import android.util.Log
 import android.view.View
 import android.widget.TextView
@@ -10,6 +12,18 @@ import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.android.gms.maps.model.LatLng
+import org.json.JSONException
+import org.json.JSONObject
+import java.lang.Math.atan2
+import java.lang.Math.cos
+import java.lang.Math.sin
+import java.lang.Math.sqrt
+import kotlin.math.pow
+import com.google.maps.DirectionsApi
+import com.google.maps.GeoApiContext
+import com.google.maps.model.TravelMode
+
 
 class GoogleUtilities {
 
@@ -65,5 +79,41 @@ class GoogleUtilities {
             }
             requestQueue.add(request)
         }
+
+        data class Location(val latitude: Double, val longitude: Double)
+
+        data class DistanceAndDuration(val distance: Int, val duration: Int, val pickupLocation: Location, val deliveryLocation: Location)
+
+        fun calculateDistanceDurationAndCoordinates(apiKey: String, pickupAddress: String, deliveryAddress: String): DistanceAndDuration? {
+            val context = GeoApiContext.Builder()
+                .apiKey(apiKey)
+                .build()
+
+            try {
+                val directionsResult = DirectionsApi.newRequest(context)
+                    .mode(TravelMode.DRIVING)
+                    .origin(pickupAddress)
+                    .destination(deliveryAddress)
+                    .await()
+
+                if (directionsResult.routes.isNotEmpty()) {
+                    val route = directionsResult.routes[0].legs[0]
+                    val distanceMeters = route.distance.inMeters.toInt()
+                    val durationSeconds = route.duration.inSeconds.toInt()
+
+                    val pickupLocation = Location(route.startLocation.lat, route.startLocation.lng)
+                    val deliveryLocation = Location(route.endLocation.lat, route.endLocation.lng)
+
+                    return DistanceAndDuration(distanceMeters, durationSeconds, pickupLocation, deliveryLocation)
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+
+            return null
+        }
+
     }
+
+
 }
