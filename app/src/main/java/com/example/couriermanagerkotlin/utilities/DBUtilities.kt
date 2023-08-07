@@ -10,6 +10,10 @@ import android.widget.Toast
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
+import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
+import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
+import com.example.couriermanagerkotlin.objects.Shipment
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -20,6 +24,7 @@ class DBUtilities {
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
         var couriers = ArrayList<Courier>()
+        var shipments = ArrayList<Shipment>()
 
         fun registerUser(
             context: Context,
@@ -50,7 +55,6 @@ class DBUtilities {
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
         }
-
 
         fun registerEmployee(
             context: Context,
@@ -168,7 +172,6 @@ class DBUtilities {
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (!response.toString().trim().equals("empty")) {
-                        orderList.visibility = View.VISIBLE
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
@@ -192,6 +195,8 @@ class DBUtilities {
                             )
                             orders.add(tmpOrder)
                         }
+                        orderList.visibility = View.VISIBLE
+                        orderList.adapter = OrdersAdapter(context, orders)
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
                         emptyListMsg.text = "Your order list still empty"
@@ -299,7 +304,6 @@ class DBUtilities {
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (!response.toString().trim().equals("empty")) {
-                        courierList.visibility = View.VISIBLE
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
@@ -315,19 +319,15 @@ class DBUtilities {
                             )
                             couriers.add(tmpCourier)
                         }
+                        courierList.visibility = View.VISIBLE
+                        courierList.adapter = CouriersAdapter(context, couriers)
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
                         emptyListMsg.text = "All the courier's left..."
                     }
-
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
-//                    override fun getParams(): Map<String, String> {
-//                        val params: MutableMap<String, String> = HashMap()
-//                        params["email"] = email
-//                        return params
-//                    }
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
@@ -336,38 +336,46 @@ class DBUtilities {
         fun getShipmentsByCourier(
             context: Context,
             email: String,
-            shipmentListView: ListView,
+            shipmentList: ListView,
             emptyListMsg: TextView
         ) {
             val url: String = "http://${ipv4Address}/courier_project/getCourierShipment.php"
-            orders.clear()
+            shipments.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (!response.toString().trim().equals("empty")) {
-                        shipmentListView.visibility = View.VISIBLE
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
-                        val jsonArrayOrders = jsonResponse.getJSONArray("orders")
+                        val jsonArrayOrders = jsonResponse.getJSONArray("shipments")
 
                         for (i in 0 until jsonArrayOrders.length()) {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
-                            val tmpOrder = Order(
+                            val tmpShipment = Shipment(
                                 jsonInner.get("order_id").toString(),
-                                jsonInner.get("contactName").toString(),
-                                jsonInner.get("contactPhone").toString(),
-                                jsonInner.get("contactEmail").toString(),
-                                eStatus.findStatus(jsonInner.get("eStatus").toString()),
+                                jsonInner.get("pickupFirstName").toString(),
+                                jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupPhone").toString(),
+                                jsonInner.get("pickupEmail").toString(),
                                 jsonInner.get("pickupCity").toString(),
                                 jsonInner.get("pickupStreet").toString(),
                                 jsonInner.get("pickupBuild").toString(),
+                                jsonInner.get("deliveryName").toString(),
+                                jsonInner.get("deliveryPhone").toString(),
+                                jsonInner.get("deliveryEmail").toString(),
                                 jsonInner.get("deliveryCity").toString(),
                                 jsonInner.get("deliveryStreet").toString(),
                                 jsonInner.get("deliveryBuild").toString(),
+                                eStatus.findStatus(jsonInner.get("orderStatus").toString()),
                                 jsonInner.get("comment").toString()
                             )
-                            orders.add(tmpOrder)
+                            shipments.add(tmpShipment)
                         }
+                        shipmentList.visibility = View.VISIBLE
+                        shipmentList.adapter = ShipmentsAdapter(context, shipments)
+                    } else {
+                        emptyListMsg.visibility = View.VISIBLE
+                        emptyListMsg.text = "No deliveries have been assigned to this courier"
                     }
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
@@ -377,6 +385,23 @@ class DBUtilities {
                         params["email"] = email
                         return params
                     }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun assignOrders(context: Context) {
+            val url: String = "http://${ipv4Address}/courier_project/assignOrderToCourier.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    if (response.toString().trim().equals("successfuly")) {
+                        Toast.makeText(context, "All orders assigned successfuly", Toast.LENGTH_SHORT).show()
+                    } else {
+                        Toast.makeText(context, "Something went wrong...", Toast.LENGTH_SHORT).show()
+                    }
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)

@@ -7,17 +7,15 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.couriermanagerkotlin.DBUtilities.Companion.orders
+import com.example.couriermanagerkotlin.DBUtilities.Companion.assignOrders
+import com.example.couriermanagerkotlin.DBUtilities.Companion.couriers
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getAllCouriers
 import com.example.couriermanagerkotlin.Login
-import com.example.couriermanagerkotlin.Order
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class Manager : AppCompatActivity() {
@@ -29,16 +27,25 @@ class Manager : AppCompatActivity() {
     lateinit var emptyListMsg: TextView
     lateinit var menu: BottomNavigationView
 
-    /* Alert dialog views list */
-    lateinit var shipmentListView: ListView
-
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.logout_search_menu, menu)
+        menuInflater.inflate(R.menu.manager_menu, menu)
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
+            R.id.addEmployee -> {
+                startActivity(Intent(this@Manager, AddEmployee::class.java))
+            }
+            R.id.assignOrders -> {
+                assignOrders(this@Manager)
+            }
+            R.id.reports -> {
+
+            }
+            R.id.settings -> {
+
+            }
             R.id.logout -> {
                 val builder = AlertDialog.Builder(this)
                 builder.setTitle("Exit")
@@ -75,57 +82,13 @@ class Manager : AppCompatActivity() {
 
         courierList = findViewById(R.id.couriersListView)
         emptyListMsg = findViewById(R.id.emptyListMsg)
-        menu = findViewById(R.id.nav)
-
-        menu.setOnItemSelectedListener {
-            when (it.itemId) {
-                R.id.courierList -> {
-                    true
-                }
-
-                R.id.addEmployee -> {
-                    startActivity(Intent(this, AddEmployee::class.java))
-                    true
-                }
-
-                R.id.reports -> {
-
-                    true
-                }
-                else -> false
-            }
-            true
-        }
-        menu.selectedItemId = R.id.courierList
 
         courierList.setOnItemClickListener { parent, view, position, id ->
-
-            if(!isListEmpty(orders, emptyListMsg, shipmentListView)) {
-                shipmentListView.setOnItemClickListener { parent, view, position, id ->
-                    val shipmentListBuilder = AlertDialog.Builder(this)
-                    val shipmentListInflater = layoutInflater
-                    val shipmentListDialogLayout = shipmentListInflater.inflate(R.layout.courier_shipment_info, null)
-
-                    shipmentListBuilder.setView(shipmentListDialogLayout)
-
-
-                }
-            }
+            intent = Intent(this@Manager, ShipmentsByCourier::class.java)
+            intent.putExtra("chosenCourier", couriers[position])
+            startActivity(intent)
         }
 
         getAllCouriers(this@Manager, courierList, emptyListMsg)
-        isListEmpty(orders, emptyListMsg, shipmentListView)
-    }
-
-    private fun isListEmpty(list: ArrayList<Order>, emptyListMsg: TextView, listView: ListView): Boolean {
-        return if(list.isEmpty()) {
-                    emptyListMsg.visibility = View.VISIBLE
-                    emptyListMsg.text = getString(R.string.courier_empty_shipment_list)
-                    true
-                } else {
-                    listView.visibility = View.VISIBLE
-                    listView.adapter = OrdersAdapter(this, list)
-                    false
-                }
     }
 }

@@ -6,51 +6,54 @@
     android:layout_height="match_parent"
     tools:context=".activities.courier.CourierListView">
 
-    <LinearLayout
-        android:id="@+id/viewPort"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/nav"
-        android:gravity="top"
-        android:orientation="vertical"
-        android:padding="10dp">
+        <LinearLayout
+            android:id="@+id/infoTab"
+            android:gravity="top"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="start"
-        android:orientation="horizontal">
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/person_user_icon" />
 
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/person_user_icon" />
+            <TextView
+                android:id="@+id/firstName"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:layout_marginEnd="10dp"
+                android:gravity="center"
+                android:textSize="20sp" />
 
-        <TextView
-            android:id="@+id/firstName"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/lastName"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:text=""
-            android:textSize="20sp" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/lastName"
+                android:layout_width="wrap_content"
+                android:layout_height="60dp"
+                android:gravity="center"
+                android:text=""
+                android:textSize="20sp" />
+        </LinearLayout>
 
     <ListView
-        android:id="@+id/listViewOrders"
+        android:id="@+id/shipmentListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"/>
+        android:layout_below="@+id/infoTab"
+        android:layout_above="@id/nav"
+        android:gravity="start"
+        />
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/emptyListMsg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/infoTab"
+        android:layout_above="@id/nav"
+        android:gravity="center"
+        android:visibility="gone" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
