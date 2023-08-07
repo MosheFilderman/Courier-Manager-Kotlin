@@ -305,20 +305,20 @@ class CustomerNewOrder : AppCompatActivity() {
         val pickupAddress = "${strPickupStreet} ${pickupBuild.text}, ${strPickupCity}"
         val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild.text}, ${strDeliveryCity}"
 
-//        if (Validations.checkOrderMeasures(
-//                packageHeight,
-//                packageWidth,
-//                packageLength,
-//                packageWeight
-//            ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
-//                contEmail
-//            ) && Validations.isEmpty(contPhoneNumber)
-//        ) {
-//            Toast.makeText(this, "All fields filled correctly.", Toast.LENGTH_SHORT).show()
+        if (Validations.checkOrderMeasures(
+                packageHeight,
+                packageWidth,
+                packageLength,
+                packageWeight
+            ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
+                contEmail
+            ) && Validations.isEmpty(contPhoneNumber)
+        ) {
+            Toast.makeText(this, "All fields have been filled in correctly, creating your order", Toast.LENGTH_SHORT).show()
 
-            validateAddressWithVolley(this.applicationContext, pickupAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
-
-            validateAddressWithVolley(this.applicationContext, deliveryAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
+//            validateAddressWithVolley(this.applicationContext, pickupAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
+//
+//            validateAddressWithVolley(this.applicationContext, deliveryAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
 
 //            errorMessage.text = "$coordinates"
 
@@ -326,38 +326,32 @@ class CustomerNewOrder : AppCompatActivity() {
                 processCoordinates(coordinates)
             }
 
-//            val orderToAdd = Order(
-//                UUID.randomUUID().toString(),
-//                contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim(),
-//                "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
-//                contEmail.text.toString().trim(),
-//                eStatus.NEW,
-//                strPickupCity,
-//                strPickupStreet!!,
-//                pickupBuild.text.toString().trim(),
-//                strDeliveryCity,
-//                strDeliveryStreet!!,
-//                deliveryBuild.text.toString().trim(),
-//                comment.text.toString().trim()
-//            )
+            val orderToAdd = Order(
+                UUID.randomUUID().toString(),
+                contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim(),
+                "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
+                contEmail.text.toString().trim(),
+                eStatus.NEW,
+                strPickupCity,
+                strPickupStreet!!,
+                pickupBuild.text.toString().trim(),
+                strDeliveryCity,
+                strDeliveryStreet!!,
+                deliveryBuild.text.toString().trim(),
+                comment.text.toString().trim()
+            )
 
 //            createOrder(
 //                this@CustomerNewOrder,
 //                orderToAdd,
-//                "" + coordinates[0],
-//                "" + coordinates[1],
-//                "" + coordinates[2],
-//                "" + coordinates[3],
-//                shrd.getString("email", "none").toString(),
-//                errorMessage
 //            )
 //            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
             Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
             errorMessage.visibility = View.VISIBLE
 //            finish()
-//        } else {
-//            Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
-//        }
+        } else {
+            Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun processCoordinates(coordinates: ArrayList<Double>) {
@@ -367,3 +361,19 @@ class CustomerNewOrder : AppCompatActivity() {
         errorMessage.text = "$coordinates"
     }
 }
+
+
+//val pickupAddress = "1600 Amphitheatre Parkway, Mountain View, CA"
+//val deliveryAddress = "1 Infinite Loop, Cupertino, CA"
+//val apiKey = "YOUR_GOOGLE_MAPS_API_KEY"
+//
+//val result = calculateDistanceDurationAndCoordinates(apiKey, pickupAddress, deliveryAddress)
+//
+//if (result != null) {
+//    println("Distance: ${result.distance} meters")
+//    println("Duration: ${result.duration} seconds")
+//    println("Pickup Location: (${result.pickupLocation.latitude}, ${result.pickupLocation.longitude})")
+//    println("Delivery Location: (${result.deliveryLocation.latitude}, ${result.deliveryLocation.longitude})")
+//} else {
+//    println("Error: Unable to calculate distance and time.")
+//}
