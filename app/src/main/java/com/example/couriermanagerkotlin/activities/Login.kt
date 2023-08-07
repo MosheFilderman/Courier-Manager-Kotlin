@@ -18,6 +18,7 @@ import androidx.core.content.ContextCompat
 import com.example.couriermanagerkotlin.activities.courier.CourierListView
 import com.example.couriermanagerkotlin.activities.customer.CustomerOrderList
 import com.example.couriermanagerkotlin.activities.manager.Manager
+import com.example.couriermanagerkotlin.DBUtilities.Companion.login
 
 class Login : AppCompatActivity() {
 
@@ -146,7 +147,7 @@ class Login : AppCompatActivity() {
             )
         }
         if (Validations.isEmpty(email) && Validations.isEmpty(phone)) {
-            DBUtilities.login(
+            login(
                 this@Login,
                 email.text.toString().trim(),
                 phone.text.toString().trim(),

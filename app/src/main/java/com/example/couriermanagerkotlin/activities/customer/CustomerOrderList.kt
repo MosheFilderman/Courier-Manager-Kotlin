@@ -28,7 +28,7 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
     lateinit var firstName: TextView
     lateinit var lastName: TextView
-    lateinit var orderList: ListView
+    lateinit var ordersList: ListView
     lateinit var emptyListMsg: TextView
     lateinit var menu: BottomNavigationView
     lateinit var search: SearchView
@@ -36,7 +36,7 @@ class CustomerOrderList : AppCompatActivity() {
 
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.logout_search_menu, menu)
+        menuInflater.inflate(R.menu.logout_menu, menu)
         return true
     }
 
@@ -77,7 +77,7 @@ class CustomerOrderList : AppCompatActivity() {
         lastName.text = shrd.getString("lastName", "")
 
         search = findViewById(R.id.search)
-        orderList = findViewById(R.id.orderList)
+        ordersList = findViewById(R.id.orderList)
         emptyListMsg = findViewById(R.id.emptyListMsg)
         menu = findViewById(R.id.nav)
 
@@ -86,7 +86,7 @@ class CustomerOrderList : AppCompatActivity() {
                 R.id.newOrder -> {
                     startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
                     emptyListMsg.visibility = View.GONE
-                    orderList.visibility = View.GONE
+                    ordersList.visibility = View.GONE
                     true
                 }
 
@@ -100,11 +100,11 @@ class CustomerOrderList : AppCompatActivity() {
         menu.selectedItemId = R.id.orderList
 
         // Click on order open dialog with all the order details
-        orderList.setOnItemClickListener { parent, view, position, id ->
+        ordersList.setOnItemClickListener { parent, view, position, id ->
             val builder = AlertDialog.Builder(this)
             val inflater = layoutInflater
             val dialogLayout = inflater.inflate(R.layout.customer_order_full_info, null)
-            orderList.visibility = View.VISIBLE
+            ordersList.visibility = View.VISIBLE
 
             builder.setView(dialogLayout)
 
@@ -133,7 +133,13 @@ class CustomerOrderList : AppCompatActivity() {
             builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
                 cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
                 orders.removeAt(position)
-                isListEmpty(orders, emptyListMsg, orderList)
+                if(orders.isEmpty()) {
+                    emptyListMsg.visibility = View.VISIBLE
+                    emptyListMsg.text = getString(R.string.customer_empty_order_list)
+                } else {
+                    ordersList.visibility = View.VISIBLE
+                    ordersList.adapter = OrdersAdapter(this, orders)
+                }
             }
 
             builder.setNegativeButton("Close") { dialogInterface, i ->
@@ -143,8 +149,8 @@ class CustomerOrderList : AppCompatActivity() {
         }
 
         //MUHAMAD
-        getCustomerOrders(this@CustomerOrderList, orderList, emptyListMsg, shrd.getString("email","none").toString())
-        isListEmpty(orders, emptyListMsg, orderList)
+        getCustomerOrders(this@CustomerOrderList, ordersList, emptyListMsg, shrd.getString("email","none").toString())
+        isListEmpty(orders, emptyListMsg, ordersList)
 
         search.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
@@ -159,7 +165,7 @@ class CustomerOrderList : AppCompatActivity() {
                             searchOrderList.add(tmpOrder)
                         }
                     }
-                    orderList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
+                    ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
                     return false
                 }
             })

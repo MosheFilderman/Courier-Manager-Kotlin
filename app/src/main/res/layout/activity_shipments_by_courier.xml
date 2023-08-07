@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.manager.Manager">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    tools:context=".activities.manager.ShipmentsByCourier">
 
     <LinearLayout
         android:id="@+id/infoTab"
-        android:gravity="start"
+        android:gravity="top"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -38,25 +38,17 @@
     </LinearLayout>
 
     <ListView
-        android:id="@+id/couriersListView"
+        android:id="@+id/shipmentListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/infoTab"
-        android:visibility="gone"/>
+        android:layout_below="@+id/infoTab"/>
 
     <TextView
         android:id="@+id/emptyListMsg"
+        android:gravity="center"
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/infoTab"
-        android:gravity="center"
-        android:visibility="gone"/>
-
-<!--    <com.google.android.material.bottomnavigation.BottomNavigationView-->
-<!--        android:id="@+id/nav"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:layout_alignParentBottom="true"-->
-<!--        app:menu="@menu/manager_menu" />-->
+        android:layout_below="@+id/infoTab"/>
 
 </RelativeLayout>

@@ -5,10 +5,15 @@
     <item
         android:id="@+id/listView"
         android:icon="@drawable/baseline_list_24"
-        android:title="list View"/>
+        android:title="Shipments"/>
     <item
         android:id="@+id/mapView"
         android:icon="@drawable/baseline_map_24"
-        android:title="Map View"/>
+        android:title="Map"/>
+
+    <item
+        android:id="@+id/calculateRoute"
+        android:icon="@drawable/baseline_play_arrow_24"
+        android:title="Start Deliver"/>
 
 </menu>
