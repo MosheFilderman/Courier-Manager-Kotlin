@@ -50,11 +50,13 @@ class CourierMapView : AppCompatActivity() {
                     finish()
                     true
                 }
-
                 R.id.mapView -> {
                     true
                 }
-
+                R.id.calculateRoute -> {
+                    // Add the function which calculate the route
+                    true
+                }
                 else -> false
             }
             true
@@ -126,7 +128,7 @@ class CourierMapView : AppCompatActivity() {
 
     /* Menu toolbar */
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.logout_search_menu, menu)
+        menuInflater.inflate(R.menu.logout_menu, menu)
         return true
     }
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

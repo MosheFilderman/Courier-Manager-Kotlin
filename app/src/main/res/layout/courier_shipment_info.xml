@@ -94,7 +94,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/fifthColumn"
+                android:id="@+id/pickupAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -129,7 +129,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/firstColumn"
+                android:id="@+id/deliveryName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -149,7 +149,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/secondColumn"
+                android:id="@+id/deliveryPhone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -169,7 +169,7 @@
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/thirdColumn"
+                android:id="@+id/deliveryEmail"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -189,7 +189,7 @@
                 android:textStyle="bold"/>
 
             <TextView
-                android:id="@+id/sixthColumn"
+                android:id="@+id/deliveryAddress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
         </LinearLayout>
@@ -211,7 +211,7 @@
             android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/fourthColumn"
+            android:id="@+id/orderStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
@@ -231,7 +231,7 @@
             android:textStyle="bold"/>
 
         <TextView
-            android:id="@+id/seventhColumn"
+            android:id="@+id/comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
     </LinearLayout>
