@@ -22,7 +22,12 @@ import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
 import com.example.couriermanagerkotlin.GoogleUtilities.Companion.validateAddressWithVolley
 import com.example.couriermanagerkotlin.GoogleUtilities.Companion.coordinates
 import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.Order
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.Validations.Companion.checkOrderMeasures
+import com.example.couriermanagerkotlin.Validations.Companion.isEmpty
+import com.example.couriermanagerkotlin.eStatus
+import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
@@ -305,14 +310,14 @@ class CustomerNewOrder : AppCompatActivity() {
         val pickupAddress = "${strPickupStreet} ${pickupBuild.text}, ${strPickupCity}"
         val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild.text}, ${strDeliveryCity}"
 
-        if (Validations.checkOrderMeasures(
+        if (checkOrderMeasures(
                 packageHeight,
                 packageWidth,
                 packageLength,
                 packageWeight
-            ) && Validations.isEmpty(contFirstName) && Validations.isEmpty(contLastName) && Validations.isEmpty(
+            ) && isEmpty(contFirstName) && isEmpty(contLastName) && isEmpty(
                 contEmail
-            ) && Validations.isEmpty(contPhoneNumber)
+            ) && isEmpty(contPhoneNumber)
         ) {
             Toast.makeText(this, "All fields have been filled in correctly, creating your order", Toast.LENGTH_SHORT).show()
 

@@ -133,13 +133,7 @@ class CustomerOrderList : AppCompatActivity() {
             builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
                 cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
                 orders.removeAt(position)
-                if(orders.isEmpty()) {
-                    emptyListMsg.visibility = View.VISIBLE
-                    emptyListMsg.text = getString(R.string.customer_empty_order_list)
-                } else {
-                    ordersList.visibility = View.VISIBLE
-                    ordersList.adapter = OrdersAdapter(this, orders)
-                }
+                isListEmpty(orders, emptyListMsg, ordersList)
             }
 
             builder.setNegativeButton("Close") { dialogInterface, i ->
@@ -150,7 +144,6 @@ class CustomerOrderList : AppCompatActivity() {
 
         //MUHAMAD
         getCustomerOrders(this@CustomerOrderList, ordersList, emptyListMsg, shrd.getString("email","none").toString())
-        isListEmpty(orders, emptyListMsg, ordersList)
 
         search.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {

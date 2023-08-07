@@ -32,14 +32,9 @@ class ShipmentsAdapter(context: Context, shipments: ArrayList<Shipment>): BaseAd
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view = LayoutInflater.from(myContext).inflate(R.layout.courier_shipment_info,parent,false)
-        var pickupName: TextView? = null
-        var pickupPhone: TextView? = null
-        var pickupEmail: TextView? = null
+        val view = LayoutInflater.from(myContext).inflate(R.layout.courier_shipment_row,parent,false)
+        var orderId: TextView? = null
         var pickupAddress: TextView? = null
-        var deliveryName: TextView? = null
-        var deliveryPhone: TextView? = null
-        var deliveryEmail: TextView? = null
         var deliveryAddress: TextView? = null
         var status: TextView? = null
         var comment: TextView? = null
@@ -48,24 +43,14 @@ class ShipmentsAdapter(context: Context, shipments: ArrayList<Shipment>): BaseAd
         val fullPickupAddress: String = "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
         val fullDeliveryAddress: String = "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
 
-        pickupName = view.findViewById(R.id.pickupName)
-        pickupPhone = view.findViewById(R.id.pickupPhone)
-        pickupEmail = view.findViewById(R.id.pickupEmail)
+        orderId = view.findViewById(R.id.orderId)
         pickupAddress = view.findViewById(R.id.pickupAddress)
-        deliveryName = view.findViewById(R.id.deliveryName)
-        deliveryPhone = view.findViewById(R.id.deliveryPhone)
-        deliveryEmail = view.findViewById(R.id.deliveryEmail)
         deliveryAddress = view.findViewById(R.id.deliveryAddress)
         status = view.findViewById(R.id.orderStatus)
         comment = view.findViewById(R.id.comment)
 
-        pickupName.text = strPickupName
-        pickupPhone.text = shipments[position].pickupPhone
-        pickupEmail.text = shipments[position].pickupEmail
+        orderId.text = shipments[position].orderId
         pickupAddress.text = fullPickupAddress
-        deliveryName.text = shipments[position].deliveryName
-        deliveryPhone.text = shipments[position].deliveryPhone
-        deliveryEmail.text = shipments[position].deliveryEmail
         deliveryAddress.text = fullDeliveryAddress
         status.text = shipments[position].status.name
         comment.text = shipments[position].comment

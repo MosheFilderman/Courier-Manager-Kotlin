@@ -3,4 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="newOrderBackground">#ECEBEB</color>
+    <color name="order_or_shipment_inner">#99D0BCFF</color>
+    <color name="order_or_shipment_border">#996750A4</color>
+
 </resources>

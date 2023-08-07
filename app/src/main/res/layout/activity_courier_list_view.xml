@@ -43,8 +43,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/infoTab"
         android:layout_above="@id/nav"
-        android:gravity="start"
-        />
+        android:gravity="start"/>
 
     <TextView
         android:id="@+id/emptyListMsg"

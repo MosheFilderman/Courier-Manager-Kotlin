@@ -21,5 +21,17 @@ enum class eStatus {
             }
             return result
         }
+
+        fun setToNext(currentStatus: eStatus) : eStatus {
+            var result: eStatus = UNKNOWN
+
+            when (currentStatus) {
+                SCHEDULED -> result = COLLECTED
+                COLLECTED -> result = DELIVERED
+                else -> currentStatus
+            }
+
+            return result
+        }
     }
 }

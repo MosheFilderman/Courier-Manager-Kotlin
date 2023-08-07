@@ -18,7 +18,7 @@ class Shipment(
     val deliveryCity: String,
     val deliveryStreet: String,
     val deliveryBuild: String,
-    val status: eStatus,
+    var status: eStatus,
     val comment: String
     ) : Serializable {
 }
