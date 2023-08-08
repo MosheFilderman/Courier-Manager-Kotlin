@@ -39,7 +39,6 @@ class ShipmentsAdapter(context: Context, shipments: ArrayList<Shipment>): BaseAd
         var status: TextView? = null
         var comment: TextView? = null
 
-        val strPickupName = "${shipments[position].pickupFirstName} ${shipments[position].pickupLastName}"
         val fullPickupAddress: String = "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
         val fullDeliveryAddress: String = "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
 

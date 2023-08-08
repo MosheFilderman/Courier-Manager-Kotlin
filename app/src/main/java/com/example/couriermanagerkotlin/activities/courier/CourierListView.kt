@@ -6,18 +6,22 @@ import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.DBUtilities.Companion.shipments
+import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
+import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class CourierListView : AppCompatActivity() {
@@ -147,7 +151,11 @@ class CourierListView : AppCompatActivity() {
             builder.setPositiveButton("Change Status") { dialogInterface, i ->
                 shipments[position].status = setToNext(shipments[position].status)
                 status.text = shipments[position].status.name
-                // Add the DBUtil appropriate update fun
+                updateOrderStatus(this@CourierListView, shipments[position].orderId, shipments[position].status)
+                Toast.makeText(this@CourierListView, "We working on update your order", Toast.LENGTH_SHORT).show()
+                Thread.sleep(1000)
+                getShipmentsByCourier(this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg)
+                println(shipments)
             }
 
             builder.setNeutralButton("Cancel") { dialogInterface, i ->

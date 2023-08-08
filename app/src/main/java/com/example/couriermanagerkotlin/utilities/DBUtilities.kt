@@ -142,7 +142,7 @@ class DBUtilities {
             orderId: String,
             status: eStatus
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/deleteOrder.php"
+            val url: String = "http://${ipv4Address}/courier_project/updateOrderStatus.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
@@ -340,6 +340,7 @@ class DBUtilities {
             emptyListMsg: TextView
         ) {
             val url: String = "http://${ipv4Address}/courier_project/getCourierShipment.php"
+            println("In get shipment by courier")
             shipments.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -395,13 +396,42 @@ class DBUtilities {
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (response.toString().trim().equals("successfuly")) {
-                        Toast.makeText(context, "All orders assigned successfuly", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            context,
+                            "All orders assigned successfuly",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } else {
-                        Toast.makeText(context, "Something went wrong...", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(context, "Something went wrong...", Toast.LENGTH_SHORT)
+                            .show()
                     }
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun updateOrderStatus(
+            context: Context,
+            orderId: String,
+            status: eStatus
+        ) {
+            Log.i("Shipments from update order", shipments.toString())
+            val url: String = "http://${ipv4Address}/courier_project/updateOrderStatus.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["orderId"] = orderId
+                        params["status"] = status.name
+                        return params
+                    }
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)

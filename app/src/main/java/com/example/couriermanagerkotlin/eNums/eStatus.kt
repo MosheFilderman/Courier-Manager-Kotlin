@@ -23,14 +23,12 @@ enum class eStatus {
         }
 
         fun setToNext(currentStatus: eStatus) : eStatus {
-            var result: eStatus = UNKNOWN
 
-            when (currentStatus) {
-                SCHEDULED -> result = COLLECTED
-                COLLECTED -> result = DELIVERED
+            val result: eStatus = when (currentStatus) {
+                SCHEDULED -> COLLECTED
+                COLLECTED -> DELIVERED
                 else -> currentStatus
             }
-
             return result
         }
     }
