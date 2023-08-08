@@ -122,16 +122,16 @@ class CourierListView : AppCompatActivity() {
             val fullPickupAddress: String = "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
             val fullDeliveryAddress: String = "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
 
-            pickupName = view.findViewById(R.id.pickupName)
-            pickupPhone = view.findViewById(R.id.pickupPhone)
-            pickupEmail = view.findViewById(R.id.pickupEmail)
-            pickupAddress = view.findViewById(R.id.pickupAddress)
-            deliveryName = view.findViewById(R.id.deliveryName)
-            deliveryPhone = view.findViewById(R.id.deliveryPhone)
-            deliveryEmail = view.findViewById(R.id.deliveryEmail)
-            deliveryAddress = view.findViewById(R.id.deliveryAddress)
-            status = view.findViewById(R.id.orderStatus)
-            comment = view.findViewById(R.id.comment)
+            pickupName = dialogLayout.findViewById(R.id.pickupName)
+            pickupPhone = dialogLayout.findViewById(R.id.pickupPhone)
+            pickupEmail = dialogLayout.findViewById(R.id.pickupEmail)
+            pickupAddress = dialogLayout.findViewById(R.id.pickupAddress)
+            deliveryName = dialogLayout.findViewById(R.id.deliveryName)
+            deliveryPhone = dialogLayout.findViewById(R.id.deliveryPhone)
+            deliveryEmail = dialogLayout.findViewById(R.id.deliveryEmail)
+            deliveryAddress = dialogLayout.findViewById(R.id.deliveryAddress)
+            status = dialogLayout.findViewById(R.id.orderStatus)
+            comment = dialogLayout.findViewById(R.id.comment)
 
             pickupName.text = strPickupName
             pickupPhone.text = shipments[position].pickupPhone

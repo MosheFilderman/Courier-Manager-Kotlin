@@ -52,7 +52,6 @@ class Manager : AppCompatActivity() {
                 builder.setMessage("Are you sure you wish to logout?")
                 builder.setIcon(R.drawable.baseline_close_24)
                 builder.setPositiveButton("YES") { dialogInterface, i ->
-                    Toast.makeText(this@Manager, "in logout", Toast.LENGTH_SHORT).show()
                     val editor: SharedPreferences.Editor = shrd.edit()
                     editor.clear()
                     editor.apply()
