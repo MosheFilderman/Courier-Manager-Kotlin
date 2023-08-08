@@ -18,11 +18,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.couriermanagerkotlin.DBUtilities
+import com.example.couriermanagerkotlin.DBUtilities.Companion.createOrder
 import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
-import com.example.couriermanagerkotlin.GoogleUtilities.Companion.validateAddressWithVolley
 import com.example.couriermanagerkotlin.GoogleUtilities.Companion.coordinates
 import com.example.couriermanagerkotlin.Login
-import com.example.couriermanagerkotlin.Order
+import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.Validations.Companion.checkOrderMeasures
 import com.example.couriermanagerkotlin.Validations.Companion.isEmpty
@@ -307,8 +307,8 @@ class CustomerNewOrder : AppCompatActivity() {
             return
         }
         /* Concatenating all the address field into one line */
-        val pickupAddress = "${strPickupStreet} ${pickupBuild.text}, ${strPickupCity}"
-        val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild.text}, ${strDeliveryCity}"
+//        val pickupAddress = "${strPickupStreet} ${pickupBuild.text}, ${strPickupCity}"
+//        val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild.text}, ${strDeliveryCity}"
 
         if (checkOrderMeasures(
                 packageHeight,
@@ -320,16 +320,6 @@ class CustomerNewOrder : AppCompatActivity() {
             ) && isEmpty(contPhoneNumber)
         ) {
             Toast.makeText(this, "All fields have been filled in correctly, creating your order", Toast.LENGTH_SHORT).show()
-
-//            validateAddressWithVolley(this.applicationContext, pickupAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
-//
-//            validateAddressWithVolley(this.applicationContext, deliveryAddress, getString(R.string.GOOGLE_API_KEY), errorMessage)
-
-//            errorMessage.text = "$coordinates"
-
-            runOnUiThread {
-                processCoordinates(coordinates)
-            }
 
             val orderToAdd = Order(
                 UUID.randomUUID().toString(),
@@ -346,14 +336,11 @@ class CustomerNewOrder : AppCompatActivity() {
                 comment.text.toString().trim()
             )
 
-//            createOrder(
-//                this@CustomerNewOrder,
-//                orderToAdd,
-//            )
-//            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
+            createOrder(this@CustomerNewOrder, orderToAdd, shrd.getString("email", "none").toString(), errorMessage)
+            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
             Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
             errorMessage.visibility = View.VISIBLE
-//            finish()
+            finish()
         } else {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }

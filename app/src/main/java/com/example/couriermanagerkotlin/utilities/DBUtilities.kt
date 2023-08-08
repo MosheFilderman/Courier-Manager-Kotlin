@@ -13,6 +13,7 @@ import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
+import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.objects.Shipment
 import org.json.JSONArray
 import org.json.JSONObject
@@ -136,31 +137,6 @@ class DBUtilities {
 
         }
 
-
-        fun cancelOrder(
-            context: Context,
-            orderId: String,
-            status: eStatus
-        ) {
-            val url: String = "http://${ipv4Address}/courier_project/updateOrderStatus.php"
-            val stringRequest: StringRequest =
-                object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
-                }, Response.ErrorListener { error ->
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-                }) {
-                    override fun getParams(): Map<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["orderId"] = orderId
-                        params["status"] = status.name
-                        return params
-                    }
-                }
-            val requestQueue = Volley.newRequestQueue(context)
-            requestQueue.add(stringRequest)
-        }
-
-
         fun getCustomerOrders(
             context: Context,
             orderList: ListView,
@@ -240,13 +216,9 @@ class DBUtilities {
                         params["pickupCity"] = order.pickupCity
                         params["pickupStreet"] = order.pickupStreet
                         params["pickupBuild"] = order.pickupBuild
-//                        params["pickupLat"] = pickupLat
-//                        params["pickupLng"] = pickupLng
                         params["deliveryCity"] = order.deliveryCity
                         params["deliveryStreet"] = order.deliveryStreet
                         params["deliveryBuild"] = order.deliveryBuild
-//                        params["deliveryLat"] = deliveryLat
-//                        params["deliveryLng"] = deliveryLng
                         params["comment"] = order.comment
 
                         return params

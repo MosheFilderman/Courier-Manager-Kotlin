@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.example.couriermanagerkotlin.Order
+import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
 
 class OrdersAdapter(context: Context, orders: ArrayList<Order>): BaseAdapter() {

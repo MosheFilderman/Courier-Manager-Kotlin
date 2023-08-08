@@ -12,11 +12,11 @@ import android.widget.SearchView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import com.example.couriermanagerkotlin.DBUtilities.Companion.cancelOrder
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.DBUtilities.Companion.orders
+import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
-import com.example.couriermanagerkotlin.Order
+import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
@@ -129,11 +129,12 @@ class CustomerOrderList : AppCompatActivity() {
             deliveryAddress.text = strDeliveryAddress
             comment.text = orders[position].comment
 
-
-            builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                cancelOrder(this@CustomerOrderList, orderId, eStatus.CANCELLED)
-                orders.removeAt(position)
-                isListEmpty(orders, emptyListMsg, ordersList)
+            if(orders[position].status.name.equals("NEW")) {
+                builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
+                    updateOrderStatus(this@CustomerOrderList, orderId, eStatus.CANCELLED)
+                    orders.removeAt(position)
+                    isListEmpty(orders, emptyListMsg, ordersList)
+                }
             }
 
             builder.setNegativeButton("Close") { dialogInterface, i ->
@@ -142,7 +143,6 @@ class CustomerOrderList : AppCompatActivity() {
             builder.show()
         }
 
-        //MUHAMAD
         getCustomerOrders(this@CustomerOrderList, ordersList, emptyListMsg, shrd.getString("email","none").toString())
 
         search.setOnQueryTextListener(
