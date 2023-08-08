@@ -39,11 +39,11 @@ class OrdersAdapter(context: Context, orders: ArrayList<Order>): BaseAdapter() {
         var status: TextView? = null
         var comment: TextView?= null
 
-        contactName = view.findViewById(R.id.firstColumn)
-        contactPhone = view.findViewById(R.id.secondColumn)
-        contactEmail= view.findViewById(R.id.thirdColumn)
-        status = view.findViewById(R.id.fourthColumn)
-        comment = view.findViewById(R.id.fifthColumn)
+        contactName = view.findViewById(R.id.name)
+        contactPhone = view.findViewById(R.id.phone)
+        contactEmail= view.findViewById(R.id.email)
+        status = view.findViewById(R.id.orderStatus)
+        comment = view.findViewById(R.id.comment)
 
         contactName.text = orders[position].name
         contactPhone.text = orders[position].phone

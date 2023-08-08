@@ -22,7 +22,11 @@ import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
 import com.example.couriermanagerkotlin.GoogleUtilities.Companion.validateAddressWithVolley
 import com.example.couriermanagerkotlin.GoogleUtilities.Companion.coordinates
 import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.Order
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.Validations
+import com.example.couriermanagerkotlin.eStatus
+import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
     lateinit var shrd: SharedPreferences
