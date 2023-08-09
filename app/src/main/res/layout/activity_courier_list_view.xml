@@ -53,6 +53,11 @@
         android:layout_above="@id/nav"
         android:gravity="center"
         android:visibility="gone" />
+    <Button
+        android:id="@+id/route"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onShowRouteButtonClick"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav"
