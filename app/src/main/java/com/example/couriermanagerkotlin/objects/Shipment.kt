@@ -3,7 +3,7 @@ package com.example.couriermanagerkotlin.objects
 import com.example.couriermanagerkotlin.eStatus
 import java.io.Serializable
 
-class Shipment(
+data class Shipment(
     val orderId: String,
     val pickupFirstName: String,
     val pickupLastName: String,

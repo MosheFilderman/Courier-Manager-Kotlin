@@ -13,7 +13,7 @@ import android.widget.TextView
 import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.Validations
+import com.example.couriermanagerkotlin.utilities.Validations
 
 class AddEmployee : AppCompatActivity() {
     lateinit var shrd: SharedPreferences

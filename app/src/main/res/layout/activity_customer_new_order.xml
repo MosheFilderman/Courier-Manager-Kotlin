@@ -22,305 +22,379 @@
             android:textSize="25sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Customer Details"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <EditText
-            android:id="@+id/contFirstName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="3dp"
-            android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
-            android:layout_marginBottom="7dp"
-            android:hint="First Name" />
-
-        <EditText
-            android:id="@+id/contLastName"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="3dp"
-            android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
-            android:layout_marginBottom="7dp"
-            android:hint="Last Name" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <Spinner
-                android:id="@+id/spinnerAreaCode"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-                android:padding="3dp"
-                android:layout_marginBottom="7dp"
-                android:layout_marginEnd="10dp" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Customer Details"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/contPhoneNumber"
+                android:id="@+id/contFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="3dp"
                 android:layout_marginBottom="7dp"
-                android:hint="Phone number"
-                android:inputType="number" />
-        </LinearLayout>
+                android:background="@color/white"
+                android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
+                android:hint="First Name"
+                android:padding="3dp" />
 
-        <EditText
-            android:id="@+id/contEmail"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="3dp"
-            android:layout_marginBottom="7dp"
-            android:hint="Email"
-            android:inputType="textEmailAddress" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Delivery Address"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+            <EditText
+                android:id="@+id/contLastName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:background="@color/white"
+                android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
+                android:hint="Last Name"
+                android:padding="3dp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:gravity="start"
                 android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="City: "/>
 
                 <Spinner
-                    android:id="@+id/deliveryCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:id="@+id/spinnerAreaCode"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
                     android:background="@color/white"
-                    android:padding="3dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                    android:padding="3dp" />
 
                 <TextView
+                    android:gravity="center"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Street: "/>
-
-                <AutoCompleteTextView
-                    android:id="@+id/deliveryStreet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
-                    android:layout_margin="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:hint="Enter street name"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Building: "/>
+                    android:layout_height="match_parent"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:text=" - "
+                    android:textStyle="bold" />
 
                 <EditText
-                    android:id="@+id/deliveryBuild"
+                    android:id="@+id/contPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"
-                    android:padding="3dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:hint="building"
-                    android:inputType="number" />
-
+                    android:hint="Phone number"
+                    android:inputType="number"
+                    android:padding="3dp" />
             </LinearLayout>
+
+            <EditText
+                android:id="@+id/contEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="7dp"
+                android:background="@color/white"
+                android:hint="Email"
+                android:inputType="textEmailAddress"
+                android:padding="3dp" />
         </LinearLayout>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Pickup Address"
-            android:textSize="18sp"
-            android:textStyle="bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
-            <LinearLayout
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="City: "/>
-
-                <Spinner
-                    android:id="@+id/pickupCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Street: "/>
-
-                <AutoCompleteTextView
-                    android:id="@+id/pickupStreet"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:hint="Enter street name" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Building: "/>
-
-                <EditText
-                    android:id="@+id/pickupBuild"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
-                    android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:hint="building"
-                    android:inputType="number" />
-
-            </LinearLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:padding="5dp"
-            android:text="Package Measure's"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical">
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Pickup Address"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/packageHeight"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
                     android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:hint="Height(cm)"
-                    android:inputType="number" />
+                    android:gravity="start"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/packageWidth"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="City: " />
+
+                    <Spinner
+                        android:id="@+id/pickupCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:padding="3dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
                     android:layout_marginBottom="7dp"
-                    android:hint="Width(cm)"
-                    android:inputType="number" />
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Street: " />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/pickupStreet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:hint="Enter street name"
+                        android:padding="3dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Building: " />
+
+                    <EditText
+                        android:id="@+id/pickupBuild"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:hint="building"
+                        android:inputType="number"
+                        android:padding="3dp" />
+                </LinearLayout>
             </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Delivery Address"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
-                <EditText
-                    android:id="@+id/packageLength"
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
                     android:layout_marginBottom="7dp"
-                    android:layout_marginEnd="10dp"
-                    android:hint="Length(cm)"
-                    android:inputType="number" />
+                    android:gravity="start"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/packageWeight"
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="City: " />
+
+                    <Spinner
+                        android:id="@+id/deliveryCity"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:padding="3dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:padding="3dp"
                     android:layout_marginBottom="7dp"
-                    android:hint="Weight(kg)"
-                    android:inputType="number" />
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Street: " />
+
+                    <AutoCompleteTextView
+                        android:id="@+id/deliveryStreet"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:hint="Enter street name"
+                        android:padding="3dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Building: " />
+
+                    <EditText
+                        android:id="@+id/deliveryBuild"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:hint="building"
+                        android:inputType="number"
+                        android:padding="3dp" />
+
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="5dp"
+                android:text="Package Measure's"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:padding="3dp"
+                        android:text="Package Height(cm):" />
+
+                    <EditText
+                        android:id="@+id/packageHeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:inputType="number"
+                        android:padding="3dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:padding="3dp"
+                        android:text="Package Width(cm):" />
+
+                    <EditText
+                        android:id="@+id/packageWidth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:inputType="number"
+                        android:padding="3dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:padding="3dp"
+                        android:text="Package Length(cm):" />
+
+                    <EditText
+                        android:id="@+id/packageLength"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:inputType="number"
+                        android:padding="3dp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="7dp"
+                    android:gravity="start"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="7dp"
+                        android:padding="3dp"
+                        android:text="Package Weight(cm):" />
+
+                    <EditText
+                        android:id="@+id/packageWeight"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@color/white"
+                        android:inputType="number"
+                        android:padding="3dp" />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
@@ -329,16 +403,15 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:background="@color/white"
-            android:padding="3dp"
             android:hint="Comment to the courier"
-            android:inputType="text" />
+            android:inputType="text"
+            android:padding="3dp" />
 
         <TextView
             android:id="@+id/errorMassage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:textSize="16sp"
-           android:text="" />
+            android:textSize="16sp" />
 
         <Button
             android:layout_width="wrap_content"
