@@ -23,12 +23,14 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.234"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
         var couriers = ArrayList<Courier>()
         var shipments = ArrayList<Shipment>()
+        var pickupAddresses = ArrayList<String>()
+        var deliveryAddresses = ArrayList<String>()
 
         fun registerUser(
             context: Context,
@@ -348,6 +350,8 @@ class DBUtilities {
                         }
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
+                        getPickupAddresses()
+                        getDeliveryAddresses()
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
                         emptyListMsg.text = "No deliveries have been assigned to this courier"
@@ -396,6 +400,7 @@ class DBUtilities {
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
@@ -496,6 +501,26 @@ class DBUtilities {
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
         }
+
+
+        fun getPickupAddresses(){
+            for (ship in shipments){
+                if (ship.status.equals(eStatus.SCHEDULED)){
+                    pickupAddresses.add(ship.pickupStreet+" "+ship.pickupBuild+" "+ship.pickupCity)
+
+                }
+            }
+        }
+
+        fun getDeliveryAddresses(){
+            for (ship in shipments){
+                if (ship.status.equals(eStatus.COLLECTED)){
+                    pickupAddresses.remove(ship.pickupStreet+" "+ship.pickupBuild+" "+ship.pickupCity)
+                    pickupAddresses.add(ship.deliveryStreet+" "+ship.deliveryBuild+" "+ship.deliveryCity)
+                }
+            }
+        }
+
         /* End of companion object */
     }
 }
