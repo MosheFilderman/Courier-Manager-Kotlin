@@ -11,23 +11,37 @@
     android:padding="5dp"
     tools:context=".activities.manager.Manager">
 
-    <ListView
-        android:id="@+id/couriersListView"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/infoTab"
-        android:padding="5dp"
-        android:visibility="gone"
-        android:divider="@drawable/custom_divider"
-        android:dividerHeight="5dp"/>
+        android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/emptyListMsg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/infoTab"
-        android:gravity="center"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/pageTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Courier's List"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <ListView
+            android:id="@+id/couriersListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/pageTitle"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:divider="@drawable/custom_divider"
+            android:dividerHeight="5dp"/>
+
+        <TextView
+            android:id="@+id/emptyListMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/pageTitle"
+            android:gravity="center"
+            android:visibility="gone"/>
+    </RelativeLayout>
 
     <com.google.android.material.navigation.NavigationView
         android:id="@+id/nav_view"

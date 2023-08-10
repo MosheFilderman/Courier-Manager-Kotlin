@@ -40,9 +40,13 @@
     <ListView
         android:id="@+id/shipmentListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/infoTab"
-        android:padding="5dp"/>
+        android:gravity="start"
+        android:padding="5dp"
+        android:visibility="gone"
+        android:divider="@drawable/custom_divider"
+        android:dividerHeight="5dp" />
 
     <TextView
         android:id="@+id/emptyListMsg"

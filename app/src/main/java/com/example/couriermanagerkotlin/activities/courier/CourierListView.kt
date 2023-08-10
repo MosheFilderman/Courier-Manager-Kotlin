@@ -16,20 +16,27 @@ import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.activities.manager.AddEmployee
+import com.example.couriermanagerkotlin.activities.manager.AppSettings
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
+import com.example.couriermanagerkotlin.utilities.GoogleUtilities
+import com.example.couriermanagerkotlin.utilities.GoogleUtilities.Companion.waypoints
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
@@ -37,89 +44,106 @@ import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 import com.google.maps.android.PolyUtil
 
 
 class CourierListView : AppCompatActivity() {
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var userFullName: TextView
+    private lateinit var userEmail: TextView
 
     lateinit var shrd: SharedPreferences
     lateinit var firstName: TextView
     lateinit var lastName: TextView
     lateinit var shipmentsList: ListView
     lateinit var emptyListMsg: TextView
-    lateinit var navigationView: BottomNavigationView
-    lateinit var mapView: MapView
 
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
-
-    /* Top Right corner logout button */
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.logout_menu, menu)
-        return true
-    }
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout -> {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Exit")
-                builder.setMessage("Are you sure you wish to logout?")
-                builder.setIcon(R.drawable.baseline_close_24)
-                builder.setPositiveButton("YES") { dialogInterface, i ->
-                    val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
-                    val editor: SharedPreferences.Editor = shrd.edit()
-                    editor.clear()
-                    editor.apply()
-                    startActivity(Intent(this@CourierListView, Login::class.java))
-                    finish()
-                }
-                builder.setNegativeButton("NO") { dialogInterface, _ ->
-                    dialogInterface.dismiss()
-                }
-                val alertDialog = builder.create()
-                alertDialog.show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_courier_list_view)
+
         Places.initialize(applicationContext, getString(R.string.GOOGLE_API_KEY))
-        firstName = findViewById(R.id.firstName)
-        lastName = findViewById(R.id.lastName)
+
+        val addresses = listOf("הקיבוצים 70 חיפה", "בר אילן 7 חיפה", "גורדון 4 קרית מוצקין")
         shipmentsList = findViewById(R.id.shipmentListView)
         emptyListMsg = findViewById(R.id.emptyListMsg)
 
+        drawerLayout = findViewById(R.id.drawerLayout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val headerView = navView.getHeaderView(0)
 
-        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
-        firstName.text = shrd.getString("firstName", "Not")
-        lastName.text = shrd.getString("lastName", "Signed!")
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-        navigationView = findViewById(R.id.nav)
-        navigationView.setOnItemSelectedListener {
-            when(it.itemId){
-                R.id.listView ->{
-                    true
-                }
-                R.id.mapView ->{
-                    startActivity(Intent(this@CourierListView, CourierMapView::class.java))
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.listView -> {
+                    startActivity(Intent(this@CourierListView, CourierListView::class.java))
                     finish()
                     true
                 }
+
                 R.id.calculateRoute -> {
-                    // Add the function which calculate the route
+                    launchNavigation(addresses)
                     true
                 }
+
+                R.id.logout -> {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Exit")
+                    builder.setMessage("Are you sure you wish to logout?")
+                    builder.setIcon(R.drawable.baseline_close_24)
+                    builder.setPositiveButton("YES") { dialogInterface, i ->
+                        val editor: SharedPreferences.Editor = shrd.edit()
+                        editor.clear()
+                        editor.apply()
+                        startActivity(Intent(this, Login::class.java))
+                        finish()
+                    }
+                    builder.setNegativeButton("NO") { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                    }
+                    val alertDialog = builder.create()
+                    alertDialog.show()
+                    true
+                }
+
                 else -> false
             }
-            true
         }
-        navigationView.selectedItemId = R.id.listView
+
+        userFullName = headerView.findViewById(R.id.userFullName)
+        userEmail = headerView.findViewById(R.id.userEmail)
+
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+        val strUserFullName =
+            "${shrd.getString("firstName", "Not")} ${shrd.getString("lastName", "Signed !")}"
+        userFullName.text = strUserFullName
+        userEmail.text = shrd.getString("email", "courierManager@courierManager")
 
         // Check if there's permission to use location, if isn't request the permission
-        if(ContextCompat.checkSelfPermission(this.applicationContext, android.Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION)
+        if (ContextCompat.checkSelfPermission(
+                this.applicationContext,
+                android.Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_DENIED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION
+            )
         }
 
         shipmentsList.setOnItemClickListener { parent, view, position, id ->
@@ -140,9 +164,12 @@ class CourierListView : AppCompatActivity() {
             var status: TextView? = null
             var comment: TextView? = null
 
-            val strPickupName = "${shipments[position].pickupFirstName} ${shipments[position].pickupLastName}"
-            val fullPickupAddress: String = "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
-            val fullDeliveryAddress: String = "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
+            val strPickupName =
+                "${shipments[position].pickupFirstName} ${shipments[position].pickupLastName}"
+            val fullPickupAddress: String =
+                "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
+            val fullDeliveryAddress: String =
+                "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
 
             pickupName = dialogLayout.findViewById(R.id.pickupName)
             pickupPhone = dialogLayout.findViewById(R.id.pickupPhone)
@@ -169,10 +196,23 @@ class CourierListView : AppCompatActivity() {
             builder.setPositiveButton("Change Status") { dialogInterface, i ->
                 shipments[position].status = setToNext(shipments[position].status)
                 status.text = shipments[position].status.name
-                updateOrderStatus(this@CourierListView, shipments[position].orderId, shipments[position].status)
-                Toast.makeText(this@CourierListView, "We working on update your order", Toast.LENGTH_SHORT).show()
+                updateOrderStatus(
+                    this@CourierListView,
+                    shipments[position].orderId,
+                    shipments[position].status
+                )
+                Toast.makeText(
+                    this@CourierListView,
+                    "We working on update your order",
+                    Toast.LENGTH_SHORT
+                ).show()
                 Thread.sleep(1000)
-                getShipmentsByCourier(this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg)
+                getShipmentsByCourier(
+                    this,
+                    shrd.getString("email", "none").toString(),
+                    shipmentsList,
+                    emptyListMsg
+                )
             }
 
             builder.setNeutralButton("Cancel") { dialogInterface, i ->
@@ -181,71 +221,59 @@ class CourierListView : AppCompatActivity() {
             builder.show()
         }
 
-        getShipmentsByCourier(this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg)
-
+        getShipmentsByCourier(
+            this,
+            shrd.getString("email", "none").toString(),
+            shipmentsList,
+            emptyListMsg
+        )
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
 
+    private fun launchNavigation(addresses: List<String>) {
+        waypoints.clear()
 
-//    fun showShortestRouteOnGoogleMaps(addresses: List<String>, context: Context) {
-//        if (addresses.size < 2) {
-//            return
-//        }
-//
-//        val geocoder = Geocoder(context)
-//        val waypoints = mutableListOf<LatLng>()
-//
-//        for (address in addresses) {
-//            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
-//            if (results != null && results.isNotEmpty()) {
-//                val location = results[0]
-//                val latLng = LatLng(location.latitude, location.longitude)
-//                waypoints.add(latLng)
-//            }
-//        }
-//        Log.e("lanlng",waypoints.toString())
-//        if (waypoints.size < 2) {
-//
-//            return
-//        }
-//
-//        val apiKey = R.string.GOOGLE_API_KEY
-//        val origin = "origin=${waypoints[0].latitude},${waypoints[0].longitude}"
-//        val destination = "destination=${waypoints.last().latitude},${waypoints.last().longitude}"
-//        val waypointsParam = waypoints.subList(1, waypoints.size - 1)
-//            .joinToString(separator = "|") { "via:${it.latitude},${it.longitude}" }
-//        val waypointsStr = if (waypointsParam.isNotEmpty()) "waypoints=$waypointsParam" else ""
-//
-//        val urlStr = "https://maps.googleapis.com/maps/api/directions/json?$origin&$destination&$waypointsStr&key=${getString(apiKey)}"
-//
-//
-//        val queue = Volley.newRequestQueue(context)
-//        val request = JsonObjectRequest(
-//            Request.Method.GET, urlStr, null,
-//            Response.Listener { response ->
-//                Log.e("response",response.toString())
-//                val routes = response.getJSONArray("routes")
-//                if (routes != null && routes.length() > 0) {
-//                    val route = routes.getJSONObject(0)
-//                    val overviewPolyline = route.getJSONObject("overview_polyline")
-//                    val encodedPolyline = overviewPolyline.getString("points")
-//                    val waypointsStr = waypoints.joinToString(separator = "|") { "${it.latitude},${it.longitude}" }
-//                    val intentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${waypoints.last().latitude},${waypoints.last().longitude}&waypoints=$waypointsStr")
-//
-//                    val intent = Intent(Intent.ACTION_VIEW, intentUri)
-//                    intent.setPackage("com.google.android.apps.maps")
-//                    context.startActivity(intent)
-//                }
-//            },
-//            Response.ErrorListener { error ->
-//                error.printStackTrace()
-//            }
-//        )
-//
-//        queue.add(request)
-//    }
+        if (addresses.size < 2) {
+            Toast.makeText(this@CourierListView, "Not enough addresses", Toast.LENGTH_SHORT).show()
+            return
+        }
 
+        val geocoder = Geocoder(this@CourierListView)
 
+        for (address in addresses) {
+            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
+            if (results != null && results.isNotEmpty()) {
+                val location = results[0]
+                Log.i("street geocoder", location.toString())
+                val latLng = LatLng(location.latitude, location.longitude)
+                Log.i("Lat Lng",latLng.toString())
+                waypoints.add(latLng)
+            }
+        }
+
+        if (waypoints.size < 2) {
+            Toast.makeText(this@CourierListView, "Not enough way points", Toast.LENGTH_SHORT).show()
+            return
+        }
+        Toast.makeText(this@CourierListView, "before if.", Toast.LENGTH_SHORT).show()
+        if (waypoints.size > 0) {
+            Toast.makeText(this@CourierListView, "true", Toast.LENGTH_SHORT).show()
+            val intentUri = Uri.parse("google.navigation:q=${waypoints.last().latitude},${waypoints.last().longitude}")
+            val intent = Intent(Intent.ACTION_VIEW, intentUri)
+            intent.setPackage("com.google.android.apps.maps") // Use the package name of Google Maps
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                Toast.makeText(this@CourierListView, "Google Maps app not installed.", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
 }
 
 
