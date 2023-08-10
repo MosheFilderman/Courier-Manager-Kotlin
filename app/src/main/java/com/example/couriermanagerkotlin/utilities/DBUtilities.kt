@@ -21,7 +21,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.234"
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
         var couriers = ArrayList<Courier>()

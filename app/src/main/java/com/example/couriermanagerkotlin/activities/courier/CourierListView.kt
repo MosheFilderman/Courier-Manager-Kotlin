@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -29,10 +30,14 @@ import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.LatLngBounds
+import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.maps.android.PolyUtil
 
 
 class CourierListView : AppCompatActivity() {
@@ -183,69 +188,64 @@ class CourierListView : AppCompatActivity() {
 
 
 
-    fun showShortestRouteOnGoogleMaps(addresses: List<String>, context: Context) {
-        if (addresses.size < 2) {
-            return
-        }
+//    fun showShortestRouteOnGoogleMaps(addresses: List<String>, context: Context) {
+//        if (addresses.size < 2) {
+//            return
+//        }
+//
+//        val geocoder = Geocoder(context)
+//        val waypoints = mutableListOf<LatLng>()
+//
+//        for (address in addresses) {
+//            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
+//            if (results != null && results.isNotEmpty()) {
+//                val location = results[0]
+//                val latLng = LatLng(location.latitude, location.longitude)
+//                waypoints.add(latLng)
+//            }
+//        }
+//        Log.e("lanlng",waypoints.toString())
+//        if (waypoints.size < 2) {
+//
+//            return
+//        }
+//
+//        val apiKey = R.string.GOOGLE_API_KEY
+//        val origin = "origin=${waypoints[0].latitude},${waypoints[0].longitude}"
+//        val destination = "destination=${waypoints.last().latitude},${waypoints.last().longitude}"
+//        val waypointsParam = waypoints.subList(1, waypoints.size - 1)
+//            .joinToString(separator = "|") { "via:${it.latitude},${it.longitude}" }
+//        val waypointsStr = if (waypointsParam.isNotEmpty()) "waypoints=$waypointsParam" else ""
+//
+//        val urlStr = "https://maps.googleapis.com/maps/api/directions/json?$origin&$destination&$waypointsStr&key=${getString(apiKey)}"
+//
+//
+//        val queue = Volley.newRequestQueue(context)
+//        val request = JsonObjectRequest(
+//            Request.Method.GET, urlStr, null,
+//            Response.Listener { response ->
+//                Log.e("response",response.toString())
+//                val routes = response.getJSONArray("routes")
+//                if (routes != null && routes.length() > 0) {
+//                    val route = routes.getJSONObject(0)
+//                    val overviewPolyline = route.getJSONObject("overview_polyline")
+//                    val encodedPolyline = overviewPolyline.getString("points")
+//                    val waypointsStr = waypoints.joinToString(separator = "|") { "${it.latitude},${it.longitude}" }
+//                    val intentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${waypoints.last().latitude},${waypoints.last().longitude}&waypoints=$waypointsStr")
+//
+//                    val intent = Intent(Intent.ACTION_VIEW, intentUri)
+//                    intent.setPackage("com.google.android.apps.maps")
+//                    context.startActivity(intent)
+//                }
+//            },
+//            Response.ErrorListener { error ->
+//                error.printStackTrace()
+//            }
+//        )
+//
+//        queue.add(request)
+//    }
 
-        val geocoder = Geocoder(context)
-        val waypoints = mutableListOf<LatLng>()
-
-        for (address in addresses) {
-            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
-            if (results != null && results.isNotEmpty()) {
-                val location = results[0]
-                val latLng = LatLng(location.latitude, location.longitude)
-                waypoints.add(latLng)
-            }
-        }
-        Log.e("lanlng",waypoints.toString())
-        if (waypoints.size < 2) {
-
-            return
-        }
-
-        val apiKey = R.string.GOOGLE_API_KEY
-        val origin = "origin=${waypoints[0].latitude},${waypoints[0].longitude}"
-        val destination = "destination=${waypoints.last().latitude},${waypoints.last().longitude}"
-        val waypointsParam = waypoints.subList(1, waypoints.size - 1)
-            .joinToString(separator = "|") { "via:${it.latitude},${it.longitude}" }
-        val waypointsStr = if (waypointsParam.isNotEmpty()) "waypoints=$waypointsParam" else ""
-
-        val urlStr = "https://maps.googleapis.com/maps/api/directions/json?$origin&$destination&$waypointsStr&key=${getString(apiKey)}"
-
-
-        val queue = Volley.newRequestQueue(context)
-        val request = JsonObjectRequest(
-            Request.Method.GET, urlStr, null,
-            Response.Listener { response ->
-                Log.e("response",response.toString())
-                val routes = response.getJSONArray("routes")
-                if (routes != null && routes.length() > 0) {
-                    val route = routes.getJSONObject(0)
-                    val overviewPolyline = route.getJSONObject("overview_polyline")
-                    val encodedPolyline = overviewPolyline.getString("points")
-                    val waypointsStr = waypoints.joinToString(separator = "|") { "${it.latitude},${it.longitude}" }
-                    val intentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&destination=${waypoints.last().latitude},${waypoints.last().longitude}&waypoints=$waypointsStr")
-
-                    val intent = Intent(Intent.ACTION_VIEW, intentUri)
-                    intent.setPackage("com.google.android.apps.maps")
-                    context.startActivity(intent)
-                }
-            },
-            Response.ErrorListener { error ->
-                error.printStackTrace()
-            }
-        )
-
-        queue.add(request)
-    }
-
-    fun onShowRouteButtonClick(view: View) {
-        val addresses = listOf("הקיבוצים 70 חיפה", "בר אילן 7 חיפה", "גורדון 4 קרית מוצקין")
-
-        showShortestRouteOnGoogleMaps(addresses,this@CourierListView)
-    }
 
 }
 
