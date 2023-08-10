@@ -10,7 +10,7 @@
     <!-- View border color and width -->
     <stroke
         android:width="4dp"
-        android:color="@color/order_or_shipment_border" >
+        android:color="@color/courier_manager_dark_purple" >
     </stroke>
 
     <!-- The radius makes the corners rounded -->

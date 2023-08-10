@@ -23,9 +23,6 @@
         android:theme="@style/Theme.CourierManagerKotlin"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
-        <activity
-            android:name=".activities.manager.AppSettings"
-            android:exported="false" />
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -72,6 +69,10 @@
             android:parentActivityName=".activities.manager.Manager" />
         <activity
             android:name=".activities.manager.AddEmployee"
+            android:exported="false"
+            android:parentActivityName=".activities.manager.Manager" />
+        <activity
+            android:name=".activities.manager.AppSettings"
             android:exported="false"
             android:parentActivityName=".activities.manager.Manager" />
     </application>

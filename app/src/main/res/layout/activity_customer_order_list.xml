@@ -1,53 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawerLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="top"
     android:orientation="vertical"
     tools:context=".activities.customer.CustomerOrderList">
 
-    <LinearLayout
-        android:id="@+id/infoTab"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="top"
-        android:orientation="vertical"
-        android:padding="10dp">
-
+        android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/infoTab"
             android:gravity="start"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="60dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="10dp"
-                android:src="@drawable/person_user_icon" />
-
-            <TextView
-                android:id="@+id/firstName"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_marginEnd="10dp"
-                android:gravity="center"
-                android:textSize="20sp" />
-
-            <TextView
-                android:id="@+id/lastName"
-                android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:gravity="center"
-                android:textSize="20sp" />
-        </LinearLayout>
-
-        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:padding="10dp">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -61,36 +32,38 @@
             <SearchView
                 android:id="@+id/search"
                 android:layout_width="match_parent"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 app:closeIcon="@drawable/baseline_clear_24"
                 app:queryHint="Search..."
                 app:searchIcon="@drawable/baseline_search_24" />
         </LinearLayout>
-    </LinearLayout>
 
-    <ListView
-        android:id="@+id/orderList"
-        android:layout_width="match_parent"
+        <ListView
+            android:id="@+id/orderList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/infoTab"
+            android:gravity="start"
+            android:padding="10dp"
+            android:visibility="gone"
+            android:divider="@drawable/custom_divider"
+            android:dividerHeight="5dp" />
+
+        <TextView
+            android:id="@+id/emptyListMsg"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/infoTab"
+            android:gravity="center"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+    <com.google.android.material.navigation.NavigationView
+        android:id="@+id/nav_view"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_below="@+id/infoTab"
-        android:layout_above="@+id/nav"
         android:layout_gravity="start"
-        android:visibility="gone"/>
-
-    <TextView
-        android:id="@+id/emptyListMsg"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/infoTab"
-        android:layout_above="@+id/nav"
-        android:gravity="center"
-        android:visibility="gone"/>
-
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        app:headerLayout="@layout/nav_header"
         app:menu="@menu/customer_menu" />
 
-</RelativeLayout>
+</androidx.drawerlayout.widget.DrawerLayout>

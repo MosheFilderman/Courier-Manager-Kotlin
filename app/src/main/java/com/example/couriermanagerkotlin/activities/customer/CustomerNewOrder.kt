@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -17,15 +16,15 @@ import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.createOrder
+import com.example.couriermanagerkotlin.DBUtilities.Companion.getMeasures
+import com.example.couriermanagerkotlin.DBUtilities.Companion.getStreetByCity
 import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
-import com.example.couriermanagerkotlin.GoogleUtilities.Companion.coordinates
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.Validations.Companion.checkOrderMeasures
-import com.example.couriermanagerkotlin.Validations.Companion.isEmpty
+import com.example.couriermanagerkotlin.utilities.Validations.Companion.checkOrderMeasures
+import com.example.couriermanagerkotlin.utilities.Validations.Companion.isEmpty
 import com.example.couriermanagerkotlin.eStatus
 import java.util.UUID
 
@@ -64,64 +63,14 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var strDeliveryCity: String
     var strDeliveryStreet: String? = null
 
-
-    /* Menu toolbar */
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.customer_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.newOrder -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT)
-                .show()
-
-            R.id.orderList -> {
-                startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
-                finish()
-
-            }
-
-            R.id.logout -> {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Exit")
-                builder.setMessage("Are you sure you wish to logout?")
-                builder.setIcon(R.drawable.baseline_close_24)
-                builder.setPositiveButton("YES") { dialogInterface, _ ->
-                    val editor: SharedPreferences.Editor = shrd.edit()
-                    editor.clear()
-                    editor.apply()
-                    startActivity(Intent(this@CustomerNewOrder, Login::class.java))
-                    finish()
-                }
-                builder.setNegativeButton("NO") { dialogInterface, _ ->
-                    dialogInterface.dismiss()
-                }
-                val alertDialog = builder.create()
-                alertDialog.show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)
         errorMessage = findViewById(R.id.errorMassage)
 
-//        val validator = AddressValidator(this)
-//        val validatedAddress: Address? = validator.validateAddress("השיירה 11 חיפה")
-//        val apiKey = R.string.GOOGLE_API_KEY
-//        if (validatedAddress != null) {
-//            errorMessage.text =validatedAddress.toString()
-//        }
-//        try {
-//            val geoApiContext = GeoApiContext.Builder().apiKey(apiKey.toString()).build()
-//            // Rest of your code using the geoApiContext
-//        } catch (e: Exception) {
-//            e.printStackTrace()
-//       }
-////           val geoApiContext: GeoApiContext = GeoApiContext.Builder().apiKey(R.string.GOOGLE_API_KEY.toString()).build()
+        /* Get Shared Preference */
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+
 
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
@@ -151,8 +100,9 @@ class CustomerNewOrder : AppCompatActivity() {
 
         comment = findViewById(R.id.comment)
 
-        /* Get Shared Preference */
-        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+
+        /* Get the current valid measures from Database */
+        getMeasures(this@CustomerNewOrder, packageHeight, packageWidth, packageLength, packageWeight)
 
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
@@ -195,7 +145,7 @@ class CustomerNewOrder : AppCompatActivity() {
             ) {
                 if (parent != null) {
                     strDeliveryCity = parent.getItemAtPosition(position).toString()
-                    DBUtilities.getStreetByCity(this@CustomerNewOrder, strDeliveryCity)
+                    getStreetByCity(this@CustomerNewOrder, strDeliveryCity)
 
                     /* Reassign the autocomplete values */
                     val arrayAdapter = ArrayAdapter(
@@ -231,8 +181,6 @@ class CustomerNewOrder : AppCompatActivity() {
         deliveryStreet.threshold = 1
 
         deliveryStreet.setOnItemClickListener { parent, view, position, id ->
-
-
             Toast.makeText(
                 this@CustomerNewOrder,
                 parent.getItemAtPosition(position).toString(),
@@ -254,7 +202,7 @@ class CustomerNewOrder : AppCompatActivity() {
             ) {
                 if (parent != null) {
                     strPickupCity = parent.getItemAtPosition(position).toString()
-                    DBUtilities.getStreetByCity(this@CustomerNewOrder, strPickupCity)
+                    getStreetByCity(this@CustomerNewOrder, strPickupCity)
 
                     /* Reassign the autocomplete values */
                     val arrayAdapter = ArrayAdapter(
@@ -290,8 +238,6 @@ class CustomerNewOrder : AppCompatActivity() {
         pickupStreet.threshold = 1
 
         pickupStreet.setOnItemClickListener { parent, view, position, id ->
-
-
             Toast.makeText(
                 this@CustomerNewOrder,
                 parent.getItemAtPosition(position).toString(),
@@ -301,8 +247,11 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     fun newOrder(view: View) {
-
-        if (strDeliveryStreet.isNullOrEmpty() || strPickupStreet.isNullOrEmpty()) {
+        if (strPickupStreet.isNullOrEmpty()) {
+            pickupStreet.error = "Must choose street from the option's."
+            return
+        }
+        if (strDeliveryStreet.isNullOrEmpty()) {
             deliveryStreet.error = "Must choose street from the option's."
             return
         }
@@ -319,7 +268,11 @@ class CustomerNewOrder : AppCompatActivity() {
                 contEmail
             ) && isEmpty(contPhoneNumber)
         ) {
-            Toast.makeText(this, "All fields have been filled in correctly, creating your order", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                this,
+                "All fields have been filled in correctly, creating your order",
+                Toast.LENGTH_SHORT
+            ).show()
 
             val orderToAdd = Order(
                 UUID.randomUUID().toString(),
@@ -336,21 +289,20 @@ class CustomerNewOrder : AppCompatActivity() {
                 comment.text.toString().trim()
             )
 
-            createOrder(this@CustomerNewOrder, orderToAdd, shrd.getString("email", "none").toString(), errorMessage)
-            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
-            Toast.makeText(this, "New order created.", Toast.LENGTH_SHORT).show()
+            createOrder(
+                this@CustomerNewOrder,
+                orderToAdd,
+                shrd.getString("email", "none").toString(),
+                errorMessage
+            )
+
+            Toast.makeText(this, "New order created", Toast.LENGTH_SHORT).show()
             errorMessage.visibility = View.VISIBLE
+            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
             finish()
         } else {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
-    }
-
-    private fun processCoordinates(coordinates: ArrayList<Double>) {
-        // This function is called after both pickup and delivery addresses have been validated
-        // Here, you can process the coordinates ArrayList as needed and update the UI with the appropriate data
-        Log.i("Coordinates Array from activity", "$coordinates")
-        errorMessage.text = "$coordinates"
     }
 }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -13,6 +14,7 @@ import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
+import com.example.couriermanagerkotlin.objects.Measures
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.objects.Shipment
 import org.json.JSONArray
@@ -21,7 +23,8 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.100.102.234"
+        const val ipv4Address: String = "10.0.0.7"
+        var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
         var couriers = ArrayList<Courier>()
@@ -312,7 +315,6 @@ class DBUtilities {
             emptyListMsg: TextView
         ) {
             val url: String = "http://${ipv4Address}/courier_project/getCourierShipment.php"
-            println("In get shipment by courier")
             shipments.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -390,7 +392,6 @@ class DBUtilities {
             orderId: String,
             status: eStatus
         ) {
-            Log.i("Shipments from update order", shipments.toString())
             val url: String = "http://${ipv4Address}/courier_project/updateOrderStatus.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -404,6 +405,93 @@ class DBUtilities {
                         params["status"] = status.name
                         return params
                     }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun setMeasures(
+            context: Context
+        ) {
+            val url: String = "http://${ipv4Address}/courier_project/setMeasures.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["height"] = measures.height.toString()
+                        params["width"] = measures.width.toString()
+                        params["length"] = measures.length.toString()
+                        params["weight"] = measures.weight.toString()
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun getMeasures(context: Context) {
+
+            val url: String = "http://${ipv4Address}/courier_project/getMeasures.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+
+                    println(response)
+
+                    val strRes = response.toString()
+                    val jsonArray = JSONArray(strRes)
+                    val jsonResponse = jsonArray.getJSONObject(0)
+                    val jsonArrayOrders = jsonResponse.getJSONArray("measures")
+                    val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(0)
+
+                    measures.height = jsonInner.get("height").toString().toInt()
+                    measures.width = jsonInner.get("width").toString().toInt()
+                    measures.length = jsonInner.get("length").toString().toInt()
+                    measures.weight = jsonInner.get("weight").toString().toInt()
+
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun getMeasures(
+            context: Context,
+            height: EditText,
+            width: EditText,
+            length: EditText,
+            weight: EditText
+        ) {
+            val url: String = "http://${ipv4Address}/courier_project/getMeasures.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+
+                    println(response)
+
+                    val strRes = response.toString()
+                    val jsonArray = JSONArray(strRes)
+                    val jsonResponse = jsonArray.getJSONObject(0)
+                    val jsonArrayOrders = jsonResponse.getJSONArray("measures")
+                    val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(0)
+
+                    measures.height = jsonInner.get("height").toString().toInt()
+                    measures.width = jsonInner.get("width").toString().toInt()
+                    measures.length = jsonInner.get("length").toString().toInt()
+                    measures.weight = jsonInner.get("weight").toString().toInt()
+
+                    height.hint = "up to ${measures.height}cm"
+                    width.hint = "up to ${measures.width}cm"
+                    length.hint = "up to ${measures.length}cm"
+                    weight.hint = "up to ${measures.weight}kg"
+
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)

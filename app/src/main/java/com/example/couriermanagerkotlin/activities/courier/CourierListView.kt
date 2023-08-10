@@ -173,7 +173,6 @@ class CourierListView : AppCompatActivity() {
                 Toast.makeText(this@CourierListView, "We working on update your order", Toast.LENGTH_SHORT).show()
                 Thread.sleep(1000)
                 getShipmentsByCourier(this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg)
-                println(shipments)
             }
 
             builder.setNeutralButton("Cancel") { dialogInterface, i ->
