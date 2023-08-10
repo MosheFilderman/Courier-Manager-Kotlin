@@ -10,20 +10,30 @@ import android.view.View
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.TextView
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.drawerlayout.widget.DrawerLayout
+import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.DBUtilities.Companion.orders
 import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.activities.manager.AddEmployee
+import com.example.couriermanagerkotlin.activities.manager.AppSettings
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.navigation.NavigationView
 
 
 class CustomerOrderList : AppCompatActivity() {
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var toggle: ActionBarDrawerToggle
+    private lateinit var userFullName: TextView
+    private lateinit var userEmail: TextView
 
     lateinit var shrd: SharedPreferences
     lateinit var firstName: TextView
@@ -34,55 +44,27 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var search: SearchView
     var searchOrderList = ArrayList<Order>()
 
-
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.logout_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.logout -> {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Exit")
-                builder.setMessage("Are you sure you wish to logout?")
-                builder.setIcon(R.drawable.baseline_close_24)
-                builder.setPositiveButton("YES") { dialogInterface, _ ->
-                    val shrd: SharedPreferences = getSharedPreferences("shola", Context.MODE_PRIVATE)
-                    val editor: SharedPreferences.Editor = shrd.edit()
-                    editor.clear()
-                    editor.apply()
-                    startActivity(Intent(this@CustomerOrderList, Login::class.java))
-                    finish()
-                }
-                builder.setNegativeButton("NO") { dialogInterface, _ ->
-                    dialogInterface.dismiss()
-                }
-                val alertDialog = builder.create()
-                alertDialog.show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_order_list)
 
-        firstName = findViewById(R.id.firstName)
-        lastName = findViewById(R.id.lastName)
+        drawerLayout = findViewById(R.id.drawerLayout)
+        val navView: NavigationView = findViewById(R.id.nav_view)
+        val headerView = navView.getHeaderView(0)
 
-        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
-        firstName.text = shrd.getString("firstName", "")
-        lastName.text = shrd.getString("lastName", "")
+        toggle = ActionBarDrawerToggle(
+            this,
+            drawerLayout,
+            R.string.navigation_drawer_open,
+            R.string.navigation_drawer_close
+        )
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-        search = findViewById(R.id.search)
-        ordersList = findViewById(R.id.orderList)
-        emptyListMsg = findViewById(R.id.emptyListMsg)
-        menu = findViewById(R.id.nav)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        menu.setOnItemSelectedListener {
-            when (it.itemId) {
+        navView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
                 R.id.newOrder -> {
                     startActivity(Intent(this@CustomerOrderList, CustomerNewOrder::class.java))
                     emptyListMsg.visibility = View.GONE
@@ -93,11 +75,45 @@ class CustomerOrderList : AppCompatActivity() {
                 R.id.orderList -> {
                     true
                 }
+
+                R.id.logout -> {
+                    val builder = AlertDialog.Builder(this)
+                    builder.setTitle("Exit")
+                    builder.setMessage("Are you sure you wish to logout?")
+                    builder.setIcon(R.drawable.baseline_close_24)
+                    builder.setPositiveButton("YES") { dialogInterface, _ ->
+                        val shrd: SharedPreferences =
+                            getSharedPreferences("shola", Context.MODE_PRIVATE)
+                        val editor: SharedPreferences.Editor = shrd.edit()
+                        editor.clear()
+                        editor.apply()
+                        startActivity(Intent(this@CustomerOrderList, Login::class.java))
+                        finish()
+                    }
+                    builder.setNegativeButton("NO") { dialogInterface, _ ->
+                        dialogInterface.dismiss()
+                    }
+                    val alertDialog = builder.create()
+                    alertDialog.show()
+                    true
+                }
+
                 else -> false
             }
-            true
         }
-        menu.selectedItemId = R.id.orderList
+
+        userFullName = headerView.findViewById(R.id.userFullName)
+        userEmail = headerView.findViewById(R.id.userEmail)
+
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+        val strUserFullName =
+            "${shrd.getString("firstName", "Not")} ${shrd.getString("lastName", "Signed !")}"
+        userFullName.text = strUserFullName
+        userEmail.text = shrd.getString("email", "courierManager@courierManager")
+
+        search = findViewById(R.id.search)
+        ordersList = findViewById(R.id.orderList)
+        emptyListMsg = findViewById(R.id.emptyListMsg)
 
         // Click on order open dialog with all the order details
         ordersList.setOnItemClickListener { parent, view, position, id ->
@@ -116,8 +132,10 @@ class CustomerOrderList : AppCompatActivity() {
             val deliveryAddress: TextView = dialogLayout.findViewById(R.id.deliveryAddress)
             val comment: TextView = dialogLayout.findViewById(R.id.comment)
 
-            val strPickupAddress: String = orders[position].pickupCity + "," + orders[position].pickupStreet + " " + orders[position].deliveryBuild
-            val strDeliveryAddress: String = "${orders[position].deliveryCity}, ${orders[position].deliveryStreet} ${orders[position].deliveryBuild}"
+            val strPickupAddress: String =
+                orders[position].pickupCity + "," + orders[position].pickupStreet + " " + orders[position].deliveryBuild
+            val strDeliveryAddress: String =
+                "${orders[position].deliveryCity}, ${orders[position].deliveryStreet} ${orders[position].deliveryBuild}"
 
             val orderId = orders[position].orderId
 
@@ -129,7 +147,7 @@ class CustomerOrderList : AppCompatActivity() {
             deliveryAddress.text = strDeliveryAddress
             comment.text = orders[position].comment
 
-            if(orders[position].status.name.equals("NEW")) {
+            if (orders[position].status.name.equals("NEW")) {
                 builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
                     updateOrderStatus(this@CustomerOrderList, orderId, eStatus.CANCELLED)
                     orders.removeAt(position)
@@ -143,7 +161,12 @@ class CustomerOrderList : AppCompatActivity() {
             builder.show()
         }
 
-        getCustomerOrders(this@CustomerOrderList, ordersList, emptyListMsg, shrd.getString("email","none").toString())
+        getCustomerOrders(
+            this@CustomerOrderList,
+            ordersList,
+            emptyListMsg,
+            shrd.getString("email", "none").toString()
+        )
 
         search.setOnQueryTextListener(
             object : SearchView.OnQueryTextListener {
@@ -164,8 +187,15 @@ class CustomerOrderList : AppCompatActivity() {
             })
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (toggle.onOptionsItemSelected(item)) {
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun isListEmpty(list: ArrayList<Order>, emptyListMsg: TextView, listView: ListView) {
-        if(list.isEmpty()) {
+        if (list.isEmpty()) {
             emptyListMsg.visibility = View.VISIBLE
             emptyListMsg.text = getString(R.string.customer_empty_order_list)
         } else {

@@ -63,46 +63,6 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var strDeliveryCity: String
     var strDeliveryStreet: String? = null
 
-
-    /* Menu toolbar */
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.customer_menu, menu)
-        return true
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when (item.itemId) {
-            R.id.newOrder -> Toast.makeText(this, "You already at this page!", Toast.LENGTH_SHORT)
-                .show()
-
-            R.id.orderList -> {
-                startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
-                finish()
-
-            }
-
-            R.id.logout -> {
-                val builder = AlertDialog.Builder(this)
-                builder.setTitle("Exit")
-                builder.setMessage("Are you sure you wish to logout?")
-                builder.setIcon(R.drawable.baseline_close_24)
-                builder.setPositiveButton("YES") { dialogInterface, _ ->
-                    val editor: SharedPreferences.Editor = shrd.edit()
-                    editor.clear()
-                    editor.apply()
-                    startActivity(Intent(this@CustomerNewOrder, Login::class.java))
-                    finish()
-                }
-                builder.setNegativeButton("NO") { dialogInterface, _ ->
-                    dialogInterface.dismiss()
-                }
-                val alertDialog = builder.create()
-                alertDialog.show()
-            }
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_new_order)

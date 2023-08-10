@@ -4,40 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
+    android:gravity="top"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:padding="5dp"
     tools:context=".activities.manager.Manager">
-
-    <LinearLayout
-        android:id="@+id/infoTab"
-        android:gravity="start"
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="10dp">
-
-        <ImageView
-            android:layout_width="60dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
-            android:src="@drawable/person_user_icon" />
-
-        <TextView
-            android:id="@+id/firstName"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:layout_marginEnd="10dp"
-            android:gravity="center"
-            android:textSize="20sp" />
-
-        <TextView
-            android:id="@+id/lastName"
-            android:layout_width="wrap_content"
-            android:layout_height="60dp"
-            android:gravity="center"
-            android:text=""
-            android:textSize="20sp" />
-    </LinearLayout>
 
     <ListView
         android:id="@+id/couriersListView"
@@ -45,7 +17,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/infoTab"
         android:padding="5dp"
-        android:visibility="gone"/>
+        android:visibility="gone"
+        android:divider="@drawable/custom_divider"
+        android:dividerHeight="5dp"/>
 
     <TextView
         android:id="@+id/emptyListMsg"
