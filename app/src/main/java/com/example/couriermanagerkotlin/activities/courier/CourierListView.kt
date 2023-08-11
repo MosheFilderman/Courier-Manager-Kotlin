@@ -4,15 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Color
-import android.location.Address
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
-import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
@@ -21,13 +15,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import androidx.core.view.iterator
 import androidx.drawerlayout.widget.DrawerLayout
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.deliveryAddresses
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.DBUtilities.Companion.pickupAddresses
@@ -35,21 +23,9 @@ import com.example.couriermanagerkotlin.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.activities.manager.AddEmployee
-import com.example.couriermanagerkotlin.activities.manager.AppSettings
-import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
-import com.example.couriermanagerkotlin.utilities.GoogleUtilities
-import com.example.couriermanagerkotlin.utilities.GoogleUtilities.Companion.waypoints
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.maps.android.PolyUtil
 
 
 class CourierListView : AppCompatActivity() {
@@ -266,6 +242,7 @@ class CourierListView : AppCompatActivity() {
 //            if (results != null && results.isNotEmpty()) {
 //                val location = results[0]
 //                Log.i("street geocoder", location.toString())
+
 //                val latLng = LatLng(location.latitude, location.longitude)
 //                Log.i("Lat Lng",latLng.toString())
 //                waypoints.add(latLng)
