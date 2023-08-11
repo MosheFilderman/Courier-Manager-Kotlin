@@ -20,7 +20,7 @@
 
         <ImageButton
             android:id="@+id/exportToPdf"
-            android:background="@drawable/baseline_print_24"
+            android:background="@drawable/baseline_picture_as_pdf_24"
             android:layout_width="32dp"
             android:layout_height="32dp"
             android:layout_alignParentEnd="true"/>

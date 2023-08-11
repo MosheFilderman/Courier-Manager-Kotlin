@@ -6,7 +6,6 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
-import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -33,6 +32,8 @@ import com.google.android.material.navigation.NavigationView
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class CustomerOrderList : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -153,8 +154,6 @@ class CustomerOrderList : AppCompatActivity() {
             comment.text = selectedOrder.comment
 
             exportToPdf.setOnClickListener {
-                Toast.makeText(this@CustomerOrderList, "Clicked export to PDF", Toast.LENGTH_SHORT)
-                    .show()
                 createAndOpenPdf(selectedOrder)
             }
 
@@ -245,19 +244,31 @@ class CustomerOrderList : AppCompatActivity() {
     }
 
     private fun createAndOpenPdf(order: Order) {
-        val pdfFile = createPdfFile(this@CustomerOrderList, "order.pdf")
+        // Get the current time
+        val currentTime = LocalDateTime.now()
+        // Define a format for displaying the time
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd_HH:mm:ss")
+        // Format and print the current time
+        val formattedTime = currentTime.format(formatter)
+
+        val pdfFile = createPdfFile(this@CustomerOrderList, "Order_ID:${order.orderId.substring(0,8)}_${formattedTime}.pdf")
         if (pdfFile != null) {
             try {
                 val pdfDocument = PdfDocument()
-                val pageInfo = PdfDocument.PageInfo.Builder(300, 600, 1).create()
+                val pageInfo = PdfDocument.PageInfo.Builder(400, 300, 1).create()
                 val page = pdfDocument.startPage(pageInfo)
                 if (page != null) {
                     val canvas = page.canvas
                     val paint = Paint()
                     paint.color = Color.BLACK
                     canvas.drawText("Order ID: ${order.orderId}", 40f, 50f, paint)
-                    canvas.drawText("Customer: ${order.name}", 40f, 80f, paint)
-                    canvas.drawText("Phone: ${order.phone}", 40f, 110f, paint)
+                    canvas.drawText("Contact name: ${order.name}", 40f, 80f, paint)
+                    canvas.drawText("Contact phone: ${order.phone}", 40f, 110f, paint)
+                    canvas.drawText("Contact email: ${order.email}", 40f, 140f, paint)
+                    canvas.drawText("Pickup Address: ${order.pickupStreet} ${order.pickupBuild}, ${order.pickupCity}", 40f, 170f, paint)
+                    canvas.drawText("Delivery Address: ${order.deliveryStreet} ${order.deliveryBuild}, ${order.deliveryCity}", 40f, 200f, paint)
+                    paint.color = Color.RED
+                    canvas.drawText("Comment's: ${order.comment}", 40f, 230f, paint)
                     pdfDocument.finishPage(page)
                     pdfDocument.writeTo(FileOutputStream(pdfFile))
                     pdfDocument.close()
