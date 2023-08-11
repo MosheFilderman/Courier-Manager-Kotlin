@@ -28,7 +28,6 @@ import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
 import com.example.couriermanagerkotlin.objects.Shipment
-import com.example.couriermanagerkotlin.utilities.GoogleUtilities.Companion.waypoints
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.navigation.NavigationView
 
@@ -289,6 +288,7 @@ class CourierListView : AppCompatActivity() {
 //            if (results != null && results.isNotEmpty()) {
 //                val location = results[0]
 //                Log.i("street geocoder", location.toString())
+
 //                val latLng = LatLng(location.latitude, location.longitude)
 //                Log.i("Lat Lng",latLng.toString())
 //                waypoints.add(latLng)
