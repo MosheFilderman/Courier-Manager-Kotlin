@@ -3,31 +3,36 @@ package com.example.couriermanagerkotlin.activities.customer
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.FileProvider
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.DBUtilities.Companion.orders
 import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.activities.manager.AddEmployee
-import com.example.couriermanagerkotlin.activities.manager.AppSettings
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
 
 class CustomerOrderList : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -40,7 +45,6 @@ class CustomerOrderList : AppCompatActivity() {
     lateinit var lastName: TextView
     lateinit var ordersList: ListView
     lateinit var emptyListMsg: TextView
-    lateinit var menu: BottomNavigationView
     lateinit var search: SearchView
     var searchOrderList = ArrayList<Order>()
 
@@ -62,7 +66,7 @@ class CustomerOrderList : AppCompatActivity() {
         toggle.syncState()
 
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        // Attach behavior to each menu item
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.newOrder -> {
@@ -111,7 +115,6 @@ class CustomerOrderList : AppCompatActivity() {
         userFullName.text = strUserFullName
         userEmail.text = shrd.getString("email", "courierManager@courierManager")
 
-        search = findViewById(R.id.search)
         ordersList = findViewById(R.id.orderList)
         emptyListMsg = findViewById(R.id.emptyListMsg)
 
@@ -120,10 +123,13 @@ class CustomerOrderList : AppCompatActivity() {
             val builder = AlertDialog.Builder(this)
             val inflater = layoutInflater
             val dialogLayout = inflater.inflate(R.layout.customer_order_full_info, null)
+            val selectedOrder = orders[position]
             ordersList.visibility = View.VISIBLE
 
             builder.setView(dialogLayout)
 
+            val exportToPdf: ImageButton = dialogLayout.findViewById(R.id.exportToPdf)
+            val orderId: TextView = dialogLayout.findViewById(R.id.orderId)
             val name: TextView = dialogLayout.findViewById(R.id.name)
             val phone: TextView = dialogLayout.findViewById(R.id.phone)
             val email: TextView = dialogLayout.findViewById(R.id.email)
@@ -133,23 +139,32 @@ class CustomerOrderList : AppCompatActivity() {
             val comment: TextView = dialogLayout.findViewById(R.id.comment)
 
             val strPickupAddress: String =
-                orders[position].pickupCity + "," + orders[position].pickupStreet + " " + orders[position].deliveryBuild
+                selectedOrder.pickupCity + "," + selectedOrder.pickupStreet + " " + selectedOrder.deliveryBuild
             val strDeliveryAddress: String =
-                "${orders[position].deliveryCity}, ${orders[position].deliveryStreet} ${orders[position].deliveryBuild}"
+                "${selectedOrder.deliveryCity}, ${selectedOrder.deliveryStreet} ${selectedOrder.deliveryBuild}"
 
-            val orderId = orders[position].orderId
-
-            name.text = orders[position].name
-            phone.text = orders[position].phone
-            email.text = orders[position].email
-            status.text = orders[position].status.name
+            orderId.text = selectedOrder.orderId
+            name.text = selectedOrder.name
+            phone.text = selectedOrder.phone
+            email.text = selectedOrder.email
+            status.text = selectedOrder.status.name
             pickupAddress.text = strPickupAddress
             deliveryAddress.text = strDeliveryAddress
-            comment.text = orders[position].comment
+            comment.text = selectedOrder.comment
 
-            if (orders[position].status.name.equals("NEW")) {
+            exportToPdf.setOnClickListener {
+                Toast.makeText(this@CustomerOrderList, "Clicked export to PDF", Toast.LENGTH_SHORT)
+                    .show()
+                createAndOpenPdf(selectedOrder)
+            }
+
+            if (selectedOrder.status.name.equals("NEW")) {
                 builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                    updateOrderStatus(this@CustomerOrderList, orderId, eStatus.CANCELLED)
+                    updateOrderStatus(
+                        this@CustomerOrderList,
+                        selectedOrder.orderId,
+                        eStatus.CANCELLED
+                    )
                     orders.removeAt(position)
                     isListEmpty(orders, emptyListMsg, ordersList)
                 }
@@ -167,30 +182,55 @@ class CustomerOrderList : AppCompatActivity() {
             emptyListMsg,
             shrd.getString("email", "none").toString()
         )
+    }
 
-        search.setOnQueryTextListener(
-            object : SearchView.OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    return false
-                }
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
 
-                override fun onQueryTextChange(p0: String?): Boolean {
-                    searchOrderList.clear()
-                    for (tmpOrder in orders) {
-                        if (tmpOrder.email.lowercase().startsWith(p0!!.lowercase())) {
-                            searchOrderList.add(tmpOrder)
-                        }
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem?.actionView as SearchView
+
+        // Set up search view listener
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                searchOrderList.clear()
+                for (tmpOrder in orders) {
+                    if (tmpOrder.email.lowercase()
+                            .contains(p0!!.lowercase()) or tmpOrder.phone.lowercase()
+                            .contains(p0!!.lowercase())
+                    ) {
+                        searchOrderList.add(tmpOrder)
                     }
-                    ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
-                    return false
                 }
-            })
+                ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
+                return false
+            }
+        })
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
+
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle home button press
+                if (!search.isIconified) {
+                    search.isIconified = true
+                } else {
+                    // Handle other home navigation logic here
+                }
+                return true
+            }
+        }
+
         return super.onOptionsItemSelected(item)
     }
 
@@ -202,5 +242,50 @@ class CustomerOrderList : AppCompatActivity() {
             listView.visibility = View.VISIBLE
             listView.adapter = OrdersAdapter(this, list)
         }
+    }
+
+    private fun createAndOpenPdf(order: Order) {
+        val pdfFile = createPdfFile(this@CustomerOrderList, "order.pdf")
+        if (pdfFile != null) {
+            try {
+                val pdfDocument = PdfDocument()
+                val pageInfo = PdfDocument.PageInfo.Builder(300, 600, 1).create()
+                val page = pdfDocument.startPage(pageInfo)
+                if (page != null) {
+                    val canvas = page.canvas
+                    val paint = Paint()
+                    paint.color = Color.BLACK
+                    canvas.drawText("Order ID: ${order.orderId}", 40f, 50f, paint)
+                    canvas.drawText("Customer: ${order.name}", 40f, 80f, paint)
+                    canvas.drawText("Phone: ${order.phone}", 40f, 110f, paint)
+                    pdfDocument.finishPage(page)
+                    pdfDocument.writeTo(FileOutputStream(pdfFile))
+                    pdfDocument.close()
+                    openPdfFile(this@CustomerOrderList, pdfFile)
+                }
+            } catch (e: IOException) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    private fun createPdfFile(context: Context, filename: String): File? {
+        val filePath = context.getExternalFilesDir(null)?.absolutePath
+        if (filePath != null) {
+            val directory = File(filePath)
+            if (!directory.exists()) {
+                directory.mkdirs()
+            }
+            return File(directory, filename)
+        }
+        return null
+    }
+
+    private fun openPdfFile(context: Context, file: File) {
+        val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
+        val intent = Intent(Intent.ACTION_VIEW)
+        intent.setDataAndType(uri, "application/pdf")
+        intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
+        context.startActivity(intent)
     }
 }
