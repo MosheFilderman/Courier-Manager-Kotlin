@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
@@ -12,8 +11,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.ListView
+import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -22,30 +21,20 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import com.android.volley.Request
-import com.android.volley.Response
-import com.android.volley.toolbox.JsonObjectRequest
-import com.android.volley.toolbox.Volley
-import com.example.couriermanagerkotlin.DBUtilities
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.activities.manager.AddEmployee
-import com.example.couriermanagerkotlin.activities.manager.AppSettings
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
-import com.example.couriermanagerkotlin.utilities.GoogleUtilities
+import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
+import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
+import com.example.couriermanagerkotlin.objects.Order
+import com.example.couriermanagerkotlin.objects.Shipment
 import com.example.couriermanagerkotlin.utilities.GoogleUtilities.Companion.waypoints
-import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.LatLngBounds
-import com.google.android.gms.maps.model.PolylineOptions
 import com.google.android.libraries.places.api.Places
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
-import com.google.maps.android.PolyUtil
 
 
 class CourierListView : AppCompatActivity() {
@@ -59,6 +48,8 @@ class CourierListView : AppCompatActivity() {
     lateinit var lastName: TextView
     lateinit var shipmentsList: ListView
     lateinit var emptyListMsg: TextView
+    lateinit var search: SearchView
+    var searchShipmentList = ArrayList<Shipment>()
 
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
 
@@ -229,10 +220,57 @@ class CourierListView : AppCompatActivity() {
         )
     }
 
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        menuInflater.inflate(R.menu.search_menu, menu)
+
+        val searchItem = menu.findItem(R.id.search)
+        val searchView = searchItem?.actionView as SearchView
+
+        // Set up search view listener
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return false
+            }
+
+            override fun onQueryTextChange(p0: String?): Boolean {
+                searchShipmentList.clear()
+                for (tmpShipment in shipments) {
+                    if (tmpShipment.pickupEmail.lowercase().contains(p0!!.lowercase())
+                        ||
+                        tmpShipment.deliveryEmail.lowercase().contains(p0!!.lowercase())
+                        ||
+                        tmpShipment.pickupPhone.lowercase().contains(p0!!.lowercase())
+                        ||
+                        tmpShipment.deliveryPhone.lowercase().contains(p0!!.lowercase())
+                    ) {
+                        searchShipmentList.add(tmpShipment)
+                    }
+                }
+                shipmentsList.adapter = ShipmentsAdapter(this@CourierListView, searchShipmentList)
+                return false
+            }
+        })
+
+        return super.onCreateOptionsMenu(menu)
+    }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
             return true
         }
+
+        when (item.itemId) {
+            android.R.id.home -> {
+                // Handle home button press
+                if (!search.isIconified) {
+                    search.isIconified = true
+                } else {
+                    // Handle other home navigation logic here
+                }
+                return true
+            }
+        }
+
         return super.onOptionsItemSelected(item)
     }
 

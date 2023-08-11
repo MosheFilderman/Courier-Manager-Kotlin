@@ -144,7 +144,7 @@ class CustomerOrderList : AppCompatActivity() {
             val strDeliveryAddress: String =
                 "${selectedOrder.deliveryCity}, ${selectedOrder.deliveryStreet} ${selectedOrder.deliveryBuild}"
 
-            orderId.text = selectedOrder.orderId
+            orderId.text = selectedOrder.orderId.substring(0,8)
             name.text = selectedOrder.name
             phone.text = selectedOrder.phone
             email.text = selectedOrder.email
