@@ -4,11 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
@@ -21,18 +18,17 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.example.couriermanagerkotlin.DBUtilities.Companion.deliveryAddresses
 import com.example.couriermanagerkotlin.DBUtilities.Companion.getShipmentsByCourier
+import com.example.couriermanagerkotlin.DBUtilities.Companion.pickupAddresses
 import com.example.couriermanagerkotlin.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
-import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
-import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.objects.Shipment
 import com.example.couriermanagerkotlin.utilities.GoogleUtilities.Companion.waypoints
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.navigation.NavigationView
 
@@ -87,7 +83,11 @@ class CourierListView : AppCompatActivity() {
                 }
 
                 R.id.calculateRoute -> {
-                    launchNavigation(addresses)
+                    if (pickupAddresses.size > 0){
+                        launchNavigation(pickupAddresses)
+                    }else{
+                        launchNavigation(deliveryAddresses)
+                    }
                     true
                 }
 
@@ -274,44 +274,66 @@ class CourierListView : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun launchNavigation(addresses: List<String>) {
-        waypoints.clear()
-
-        if (addresses.size < 2) {
-            Toast.makeText(this@CourierListView, "Not enough addresses", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val geocoder = Geocoder(this@CourierListView)
-
-        for (address in addresses) {
-            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
-            if (results != null && results.isNotEmpty()) {
-                val location = results[0]
-                Log.i("street geocoder", location.toString())
-                val latLng = LatLng(location.latitude, location.longitude)
-                Log.i("Lat Lng",latLng.toString())
-                waypoints.add(latLng)
-            }
-        }
-
-        if (waypoints.size < 2) {
-            Toast.makeText(this@CourierListView, "Not enough way points", Toast.LENGTH_SHORT).show()
-            return
-        }
-        Toast.makeText(this@CourierListView, "before if.", Toast.LENGTH_SHORT).show()
-        if (waypoints.size > 0) {
-            Toast.makeText(this@CourierListView, "true", Toast.LENGTH_SHORT).show()
-            val intentUri = Uri.parse("google.navigation:q=${waypoints.last().latitude},${waypoints.last().longitude}")
-            val intent = Intent(Intent.ACTION_VIEW, intentUri)
-            intent.setPackage("com.google.android.apps.maps") // Use the package name of Google Maps
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            } else {
-                Toast.makeText(this@CourierListView, "Google Maps app not installed.", Toast.LENGTH_SHORT).show()
-            }
-        }
+//    private fun launchNavigation(addresses: ArrayList<String>) {
+//        waypoints.clear()
+//
+//        if (addresses.size < 2) {
+//            Toast.makeText(this@CourierListView, "Not enough addresses", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//
+//        val geocoder = Geocoder(this@CourierListView)
+//
+//        for (address in addresses) {
+//            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
+//            if (results != null && results.isNotEmpty()) {
+//                val location = results[0]
+//                Log.i("street geocoder", location.toString())
+//                val latLng = LatLng(location.latitude, location.longitude)
+//                Log.i("Lat Lng",latLng.toString())
+//                waypoints.add(latLng)
+//            }
+//        }
+//
+//        if (waypoints.size < 2) {
+//            Toast.makeText(this@CourierListView, "Not enough way points", Toast.LENGTH_SHORT).show()
+//            return
+//        }
+//        Toast.makeText(this@CourierListView, "before if.", Toast.LENGTH_SHORT).show()
+//        if (waypoints.size > 0) {
+//            Toast.makeText(this@CourierListView, "true", Toast.LENGTH_SHORT).show()
+//            val intentUri = Uri.parse("google.navigation:q=${waypoints.last().latitude},${waypoints.last().longitude}")
+//            val intent = Intent(Intent.ACTION_VIEW, intentUri)
+//            intent.setPackage("com.google.android.apps.maps") // Use the package name of Google Maps
+//            if (intent.resolveActivity(packageManager) != null) {
+//                startActivity(intent)
+//            } else {
+//                Toast.makeText(this@CourierListView, "Google Maps app not installed.", Toast.LENGTH_SHORT).show()
+//            }
+//        }
+//    }
+private fun launchNavigation(addresses: ArrayList<String>) {
+    if (addresses.size < 2) {
+        Toast.makeText(this, "Not enough valid addresses for navigation.", Toast.LENGTH_SHORT).show()
+        return
     }
+
+    val apiKey = getString(R.string.GOOGLE_API_KEY)
+    val origin = addresses.first()
+    val destination = addresses.last()
+    val waypoints = addresses.subList(1, addresses.size - 1).joinToString("|")
+
+    val intentUri = Uri.parse("https://www.google.com/maps/dir/?api=1&origin=$origin&destination=$destination&waypoints=$waypoints&key=$apiKey")
+    val intent = Intent(Intent.ACTION_VIEW, intentUri)
+
+    if (intent.resolveActivity(packageManager) != null) {
+        startActivity(intent)
+    } else {
+        Toast.makeText(this, "Google Maps app not installed.", Toast.LENGTH_SHORT).show()
+    }
+
+}
+
 }
 
 
