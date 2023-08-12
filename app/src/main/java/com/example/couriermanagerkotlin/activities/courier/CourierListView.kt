@@ -8,11 +8,8 @@ import android.location.Address
 import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
-<<<<<<< HEAD
 import android.view.Menu
-=======
 import android.util.Log
->>>>>>> route_improvments
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.SearchView
@@ -35,13 +32,12 @@ import com.example.couriermanagerkotlin.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
-<<<<<<< HEAD
+
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
 import com.example.couriermanagerkotlin.objects.Shipment
-=======
+
 import com.example.couriermanagerkotlin.utilities.GoogleUtilities.Companion.waypoints
 import com.google.android.gms.maps.model.LatLng
->>>>>>> route_improvments
 import com.google.android.libraries.places.api.Places
 import com.google.android.material.navigation.NavigationView
 import org.json.JSONObject
