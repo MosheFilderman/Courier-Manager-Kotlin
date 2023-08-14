@@ -18,7 +18,7 @@ import androidx.core.content.ContextCompat
 import com.example.couriermanagerkotlin.activities.courier.CourierListView
 import com.example.couriermanagerkotlin.activities.customer.CustomerOrderList
 import com.example.couriermanagerkotlin.activities.manager.Manager
-import com.example.couriermanagerkotlin.DBUtilities.Companion.login
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.login
 import com.example.couriermanagerkotlin.utilities.Validations
 
 class Login : AppCompatActivity() {

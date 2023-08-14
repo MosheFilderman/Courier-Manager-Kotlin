@@ -7,7 +7,7 @@ import android.view.View
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import com.example.couriermanagerkotlin.DBUtilities.Companion.registerUser
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.registerUser
 import com.example.couriermanagerkotlin.utilities.Validations
 
 class Registration : AppCompatActivity() {

@@ -10,7 +10,7 @@ import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
-import com.example.couriermanagerkotlin.DBUtilities
+import com.example.couriermanagerkotlin.utilities.DBUtilities
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.utilities.Validations

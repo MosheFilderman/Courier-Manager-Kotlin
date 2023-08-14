@@ -6,8 +6,8 @@ import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.example.couriermanagerkotlin.Courier
-import com.example.couriermanagerkotlin.DBUtilities.Companion.getShipmentsByCourier
-import com.example.couriermanagerkotlin.DBUtilities.Companion.shipments
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.R
 
 class ShipmentsByCourier : AppCompatActivity() {

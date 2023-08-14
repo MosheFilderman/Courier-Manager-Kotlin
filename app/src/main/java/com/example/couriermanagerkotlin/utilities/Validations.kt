@@ -1,7 +1,7 @@
 package com.example.couriermanagerkotlin.utilities
 
 import android.widget.EditText
-import com.example.couriermanagerkotlin.DBUtilities.Companion.measures
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.measures
 
 open class Validations {
     companion object {

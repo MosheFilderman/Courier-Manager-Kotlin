@@ -8,7 +8,6 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="5dp"
     tools:context=".activities.manager.Manager">
 
     <RelativeLayout
@@ -17,9 +16,10 @@
 
         <TextView
             android:id="@+id/pageTitle"
+            android:gravity="center"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
+            android:padding="5dp"
             android:text="Courier's List"
             android:textSize="25sp"
             android:textStyle="bold"/>

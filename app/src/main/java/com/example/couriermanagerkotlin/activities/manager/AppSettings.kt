@@ -5,9 +5,9 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.EditText
-import com.example.couriermanagerkotlin.DBUtilities.Companion.measures
-import com.example.couriermanagerkotlin.DBUtilities.Companion.getMeasures
-import com.example.couriermanagerkotlin.DBUtilities.Companion.setMeasures
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.measures
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getMeasures
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.setMeasures
 import com.example.couriermanagerkotlin.R
 
 class AppSettings : AppCompatActivity() {

@@ -5,8 +5,6 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -15,12 +13,10 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import com.example.couriermanagerkotlin.DBUtilities.Companion.createOrder
-import com.example.couriermanagerkotlin.DBUtilities.Companion.getMeasures
-import com.example.couriermanagerkotlin.DBUtilities.Companion.getStreetByCity
-import com.example.couriermanagerkotlin.DBUtilities.Companion.streets
-import com.example.couriermanagerkotlin.Login
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.createOrder
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getMeasures
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getStreetByCity
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.streets
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.checkOrderMeasures

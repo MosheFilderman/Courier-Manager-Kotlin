@@ -5,19 +5,15 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.text.Layout
-import android.view.Menu
 import android.view.MenuItem
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.couriermanagerkotlin.DBUtilities.Companion.assignOrders
-import com.example.couriermanagerkotlin.DBUtilities.Companion.couriers
-import com.example.couriermanagerkotlin.DBUtilities.Companion.getAllCouriers
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.assignOrdersToCouriers
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.couriers
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCouriers
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -63,7 +59,7 @@ class Manager : AppCompatActivity() {
                 }
 
                 R.id.assignOrders -> {
-                    assignOrders(this@Manager)
+                    assignOrdersToCouriers(this@Manager)
                     true
                 }
 
@@ -125,5 +121,17 @@ class Manager : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun showPopupWindow(information: String) {
+        val builder = AlertDialog.Builder(this@Manager)
+        builder.setTitle("Orders assigned")
+        builder.setMessage(information)
+        builder.setIcon(R.drawable.baseline_info_24)
+        builder.setNegativeButton("CLOSE") { dialogInterface, _ ->
+            dialogInterface.dismiss()
+        }
+        val alertDialog = builder.create()
+        alertDialog.show()
     }
 }

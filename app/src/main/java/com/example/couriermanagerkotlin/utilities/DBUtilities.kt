@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.utilities
 
 import android.content.Context
 import android.content.SharedPreferences
@@ -8,9 +8,14 @@ import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.example.couriermanagerkotlin.Courier
+import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.eRole
+import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
@@ -23,7 +28,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.100.102.234"
+        const val ipv4Address: String = "10.0.0.7"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -39,7 +44,7 @@ class DBUtilities {
             email: String,
             phone: String
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/registration.php"
+            val url: String = "http://$ipv4Address/courier_project/registration.php"
             val stringRequest: StringRequest = object : StringRequest(
                 Method.POST, url,
                 Response.Listener { response ->
@@ -70,7 +75,7 @@ class DBUtilities {
             phone: String,
             eRole: String
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/registration.php"
+            val url: String = "http://$ipv4Address/courier_project/registration.php"
             val stringRequest: StringRequest = object : StringRequest(
                 Method.POST, url,
                 Response.Listener { response ->
@@ -100,7 +105,7 @@ class DBUtilities {
             phone: String,
             shrd: SharedPreferences
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/login.php"
+            val url: String = "http://$ipv4Address/courier_project/login.php"
 
             val stringRequest: StringRequest = object : StringRequest(Method.POST, url,
                 Response.Listener { response ->
@@ -148,7 +153,7 @@ class DBUtilities {
             emptyListMsg: TextView,
             email: String
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/getCustomerOrders.php"
+            val url: String = "http://$ipv4Address/courier_project/getCustomerOrders.php"
             orders.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -202,7 +207,7 @@ class DBUtilities {
             userEmail: String,
             errorMassage: TextView
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/newOrder.php"
+            val url: String = "http://$ipv4Address/courier_project/newOrder.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     errorMassage.text = response
@@ -238,7 +243,7 @@ class DBUtilities {
             context: Context,
             city: String
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/getStreetByCity.php"
+            val url: String = "http://$ipv4Address/courier_project/getStreetByCity.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (!response.toString().trim().equals("error")) {
@@ -276,7 +281,7 @@ class DBUtilities {
             courierList: ListView,
             emptyListMsg: TextView
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/getAllCouriers.php"
+            val url: String = "http://$ipv4Address/courier_project/getAllCouriers.php"
             couriers.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -316,7 +321,7 @@ class DBUtilities {
             shipmentList: ListView,
             emptyListMsg: TextView
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/getCourierShipment.php"
+            val url: String = "http://$ipv4Address/courier_project/getCourierShipment.php"
             shipments.clear()
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
@@ -369,34 +374,12 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-        fun assignOrders(context: Context) {
-            val url: String = "http://${ipv4Address}/courier_project/assignOrderToCourier.php"
-            val stringRequest: StringRequest =
-                object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    if (response.toString().trim().equals("successfuly")) {
-                        Toast.makeText(
-                            context,
-                            "All orders assigned successfuly",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } else {
-                        Toast.makeText(context, "Something went wrong...", Toast.LENGTH_SHORT)
-                            .show()
-                    }
-                }, Response.ErrorListener { error ->
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-                }) {
-                }
-            val requestQueue = Volley.newRequestQueue(context)
-            requestQueue.add(stringRequest)
-        }
-
         fun updateOrderStatus(
             context: Context,
             orderId: String,
             status: eStatus
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/updateOrderStatus.php"
+            val url: String = "http://$ipv4Address/courier_project/updateOrderStatus.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
@@ -418,7 +401,7 @@ class DBUtilities {
         fun setMeasures(
             context: Context
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/setMeasures.php"
+            val url: String = "http://$ipv4Address/courier_project/setMeasures.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
@@ -438,9 +421,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-        fun getMeasures(context: Context) {
-
-            val url: String = "http://${ipv4Address}/courier_project/getMeasures.php"
+        fun getMeasures(
+            context: Context
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/getMeasures.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
 
@@ -472,7 +456,7 @@ class DBUtilities {
             length: EditText,
             weight: EditText
         ) {
-            val url: String = "http://${ipv4Address}/courier_project/getMeasures.php"
+            val url: String = "http://$ipv4Address/courier_project/getMeasures.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
 
@@ -502,23 +486,53 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-
-        fun getPickupAddresses(){
-            for (ship in shipments){
-                if (ship.status.equals(eStatus.SCHEDULED)){
-                    pickupAddresses.add(ship.pickupStreet+" "+ship.pickupBuild+" "+ship.pickupCity)
+        fun getPickupAddresses() {
+            for (ship in shipments) {
+                if (ship.status.equals(eStatus.SCHEDULED)) {
+                    pickupAddresses.add(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
 
                 }
             }
         }
 
-        fun getDeliveryAddresses(){
-            for (ship in shipments){
-                if (ship.status.equals(eStatus.COLLECTED)){
-                    pickupAddresses.remove(ship.pickupStreet+" "+ship.pickupBuild+" "+ship.pickupCity)
-                    pickupAddresses.add(ship.deliveryStreet+" "+ship.deliveryBuild+" "+ship.deliveryCity)
+        fun getDeliveryAddresses() {
+            for (ship in shipments) {
+                if (ship.status.equals(eStatus.COLLECTED)) {
+                    pickupAddresses.remove(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
+                    pickupAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
                 }
             }
+        }
+
+        fun assignOrdersToCouriers(
+            context: Context
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/assignOrderToCourier.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                    Log.i("Assigned successfully", response.toString())
+                    showPopupWindow(context, response.toString())
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    Log.e("Assign failed", error.toString())
+                    showPopupWindow(context, error.toString())
+                }) {
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun showPopupWindow(context: Context, information: String) {
+            val builder = AlertDialog.Builder(context)
+            builder.setTitle("Assignment result")
+            builder.setMessage(information)
+            builder.setIcon(R.drawable.baseline_info_24)
+            builder.setNegativeButton("CLOSE") { dialogInterface, _ ->
+                dialogInterface.dismiss()
+            }
+            val alertDialog = builder.create()
+            alertDialog.show()
         }
 
         /* End of companion object */
