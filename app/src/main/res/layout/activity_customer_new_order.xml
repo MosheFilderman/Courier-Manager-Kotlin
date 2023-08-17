@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/newOrderBackground"
+    android:background="@color/app_background"
     tools:context=".activities.customer.CustomerNewOrder">
 
     <LinearLayout
@@ -11,184 +11,240 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="20dp">
-
-        <TextView
-            android:id="@+id/newOrderTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="New Order"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <TextView
+                android:id="@+id/newOrderTitle"
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="New Order"
+                android:textColor="@color/black"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Customer Details"
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+        </LinearLayout>
 
-            <EditText
-                android:id="@+id/contFirstName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:background="@color/white"
-                android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
-                android:hint="First Name"
-                android:padding="3dp" />
-
-            <EditText
-                android:id="@+id/contLastName"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:background="@color/white"
-                android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
-                android:hint="Last Name"
-                android:padding="3dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/section_shape"
+            android:gravity="start"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="First name: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/contFirstName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_view_shape"
+                    android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
+                    android:padding="3dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last name: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/contLastName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_view_shape"
+                    android:digits="אבגדהוזחטיכךלמםנןסעפףצץקרשת"
+                    android:padding="3dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:gravity="start"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:padding="5dp">
 
                 <Spinner
                     android:id="@+id/spinnerAreaCode"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:background="@color/white"
+                    android:background="@drawable/input_view_shape"
                     android:padding="3dp" />
 
                 <TextView
-                    android:gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginEnd="5dp"
+                    android:gravity="center"
                     android:text=" - "
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <EditText
                     android:id="@+id/contPhoneNumber"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
+                    android:background="@drawable/input_view_shape"
                     android:hint="Phone number"
                     android:inputType="number"
                     android:padding="3dp" />
             </LinearLayout>
 
-            <EditText
-                android:id="@+id/contEmail"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="7dp"
-                android:background="@color/white"
-                android:hint="Email"
-                android:inputType="textEmailAddress"
-                android:padding="3dp" />
-        </LinearLayout>
+                android:padding="5dp">
 
+                <EditText
+                    android:id="@+id/contEmail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/input_view_shape"
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:padding="3dp" />
+            </LinearLayout>
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:gravity="center">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Pickup Address"
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/section_shape"
+            android:gravity="start"
+            android:orientation="vertical"
+            android:padding="10dp">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="City: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+                <Spinner
+                    android:id="@+id/pickupCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:padding="3dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="City: " />
+            </LinearLayout>
 
-                    <Spinner
-                        android:id="@+id/pickupCity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:padding="3dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Street: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                <LinearLayout
+                <AutoCompleteTextView
+                    android:id="@+id/pickupStreet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:padding="3dp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Street: " />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                    <AutoCompleteTextView
-                        android:id="@+id/pickupStreet"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:hint="Enter street name"
-                        android:padding="3dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Building: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                </LinearLayout>
-
-                <LinearLayout
+                <EditText
+                    android:id="@+id/pickupBuild"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Building: " />
-
-                    <EditText
-                        android:id="@+id/pickupBuild"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:hint="building"
-                        android:inputType="number"
-                        android:padding="3dp" />
-                </LinearLayout>
+                    android:background="@drawable/input_view_shape"
+                    android:inputType="number"
+                    android:padding="3dp" />
             </LinearLayout>
         </LinearLayout>
 
@@ -196,216 +252,268 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:orientation="vertical">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Delivery Address"
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/section_shape"
+            android:gravity="start"
+            android:orientation="vertical"
+            android:padding="10dp">
+
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="City: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+                <Spinner
+                    android:id="@+id/deliveryCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:padding="3dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="City: " />
+            </LinearLayout>
 
-                    <Spinner
-                        android:id="@+id/deliveryCity"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:padding="3dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Street: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                <LinearLayout
+                <AutoCompleteTextView
+                    android:id="@+id/deliveryStreet"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:padding="3dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Street: " />
+            </LinearLayout>
 
-                    <AutoCompleteTextView
-                        android:id="@+id/deliveryStreet"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:hint="Enter street name"
-                        android:padding="3dp" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Building: "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/deliveryBuild"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:inputType="number"
+                    android:padding="3dp" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Building: " />
-
-                    <EditText
-                        android:id="@+id/deliveryBuild"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:hint="building"
-                        android:inputType="number"
-                        android:padding="3dp" />
-
-                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="10dp">
+            android:gravity="center">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:padding="5dp"
                 android:text="Package Measure's"
-                android:textSize="18sp"
+                android:textColor="@color/black"
+                android:textSize="20sp"
                 android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/section_shape"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                <LinearLayout
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="Package Height(cm):"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
+
+                <EditText
+                    android:id="@+id/packageHeight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:inputType="number"
+                    android:padding="3dp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
-                        android:padding="3dp"
-                        android:text="Package Height(cm):" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                    <EditText
-                        android:id="@+id/packageHeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:inputType="number"
-                        android:padding="3dp" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="Package Width(cm): "
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/packageWidth"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:inputType="number"
+                    android:padding="3dp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
-                        android:padding="3dp"
-                        android:text="Package Width(cm):" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                    <EditText
-                        android:id="@+id/packageWidth"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:inputType="number"
-                        android:padding="3dp" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="Package Length(cm):"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/packageLength"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
+                    android:background="@drawable/input_view_shape"
+                    android:inputType="number"
+                    android:padding="3dp" />
+            </LinearLayout>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
-                        android:padding="3dp"
-                        android:text="Package Length(cm):" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:orientation="horizontal"
+                android:padding="5dp">
 
-                    <EditText
-                        android:id="@+id/packageLength"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:inputType="number"
-                        android:padding="3dp" />
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="3dp"
+                    android:text="Package Weight(cm):"
+                    android:textColor="@color/black"
+                    android:textSize="18sp"
+                    android:textStyle="italic" />
 
-                <LinearLayout
+                <EditText
+                    android:id="@+id/packageWeight"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="7dp"
-                    android:gravity="start"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="7dp"
-                        android:padding="3dp"
-                        android:text="Package Weight(cm):" />
-
-                    <EditText
-                        android:id="@+id/packageWeight"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:background="@color/white"
-                        android:inputType="number"
-                        android:padding="3dp" />
-                </LinearLayout>
+                    android:background="@drawable/input_view_shape"
+                    android:inputType="number"
+                    android:padding="3dp" />
             </LinearLayout>
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/comment"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:background="@color/white"
-            android:hint="Comment to the courier"
-            android:inputType="text"
-            android:padding="3dp" />
+            android:layout_height="wrap_content"
+            android:gravity="center">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="Comment's:"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/section_shape"
+            android:orientation="vertical"
+            android:padding="10dp">
+
+            <EditText
+                android:id="@+id/comment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_view_shape"
+                android:hint="Enter comments here..."
+                android:inputType="text"
+                android:padding="3dp"
+                android:textAlignment="textStart" />
+        </LinearLayout>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:onClick="newOrder"
+            android:text="Submit order" />
 
         <TextView
             android:id="@+id/errorMassage"
@@ -413,12 +521,6 @@
             android:layout_height="match_parent"
             android:textSize="16sp" />
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:onClick="newOrder"
-            android:text="submit order" />
 
     </LinearLayout>
 </ScrollView>

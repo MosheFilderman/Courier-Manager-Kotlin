@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/app_background"
     android:orientation="vertical"
     tools:context=".activities.manager.ShipmentsByCourier">
 
     <LinearLayout
-        android:id="@+id/infoTab"
-        android:gravity="top"
-        android:orientation="horizontal"
+        android:id="@+id/titleSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/side_nav_header"
+        android:gravity="top"
+        android:orientation="horizontal"
         android:padding="10dp">
 
         <ImageView
@@ -26,34 +28,38 @@
             android:layout_height="60dp"
             android:layout_marginEnd="10dp"
             android:gravity="center"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
 
         <TextView
             android:id="@+id/lastName"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:gravity="center"
-            android:text=""
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="@color/black" />
     </LinearLayout>
 
     <ListView
         android:id="@+id/shipmentListView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/infoTab"
-        android:gravity="start"
-        android:padding="5dp"
-        android:visibility="gone"
+        android:layout_below="@+id/titleSection"
         android:divider="@drawable/custom_divider"
-        android:dividerHeight="5dp" />
+        android:dividerHeight="5dp"
+        android:gravity="start"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:visibility="gone" />
 
     <TextView
         android:id="@+id/emptyListMsg"
-        android:gravity="center"
-        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/infoTab"/>
+        android:layout_below="@+id/titleSection"
+        android:gravity="center"
+        android:visibility="gone" />
 
 </RelativeLayout>

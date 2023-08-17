@@ -6,6 +6,7 @@
     android:id="@+id/drawerLayout"
     android:gravity="top"
     android:orientation="vertical"
+    android:background="@color/app_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.courier.CourierListView">
@@ -13,22 +14,31 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:padding="5dp">
+        android:padding="8dp">
 
-        <TextView
-            android:id="@+id/pageTitle"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+        <LinearLayout
+            android:id="@+id/titleSection"
             android:gravity="center"
-            android:text="Shipment's List"
-            android:textSize="25sp"
-            android:textStyle="bold" />
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/pageTitle"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Shipment's List"
+                android:textSize="25sp"
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
+        </LinearLayout>
 
         <ListView
             android:id="@+id/shipmentListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/pageTitle"
+            android:layout_below="@+id/titleSection"
             android:gravity="start"
             android:padding="5dp"
             android:visibility="gone"
@@ -39,7 +49,7 @@
             android:id="@+id/emptyListMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/pageTitle"
+            android:layout_below="@+id/titleSection"
             android:gravity="center"
             android:visibility="gone" />
 

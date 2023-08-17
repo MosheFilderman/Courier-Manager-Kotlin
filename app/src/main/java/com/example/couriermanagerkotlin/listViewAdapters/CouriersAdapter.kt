@@ -6,10 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
-import com.example.couriermanagerkotlin.Courier
+import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.R
 
-class CouriersAdapter(context: Context, couriers: ArrayList<Courier>): BaseAdapter()  {
+class CouriersAdapter(context: Context, couriers: ArrayList<User>): BaseAdapter()  {
 
     var myContext = context
     var couriers = couriers

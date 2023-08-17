@@ -6,6 +6,7 @@
     android:id="@+id/drawerLayout"
     android:gravity="top"
     android:orientation="vertical"
+    android:background="@color/app_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.manager.Manager">
@@ -22,7 +23,8 @@
             android:padding="5dp"
             android:text="Courier's List"
             android:textSize="25sp"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
 
         <ListView
             android:id="@+id/couriersListView"

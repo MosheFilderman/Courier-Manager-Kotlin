@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.drawerlayout.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/drawerLayout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:gravity="top"
     android:orientation="vertical"
+    android:background="@color/app_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".activities.customer.CustomerOrderList">
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp">
 
         <LinearLayout
-            android:id="@+id/infoTab"
+            android:id="@+id/titleSection"
             android:gravity="center"
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="10dp">
+            android:layout_height="wrap_content">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -27,25 +30,27 @@
                 android:gravity="center"
                 android:text="Your Order's"
                 android:textSize="25sp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:textColor="@color/black"/>
         </LinearLayout>
 
         <ListView
             android:id="@+id/orderList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/infoTab"
+            android:layout_below="@+id/titleSection"
             android:divider="@drawable/custom_divider"
             android:dividerHeight="5dp"
             android:gravity="start"
-            android:padding="10dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/emptyListMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/infoTab"
+            android:layout_below="@+id/titleSection"
             android:gravity="center"
             android:visibility="gone" />
     </RelativeLayout>

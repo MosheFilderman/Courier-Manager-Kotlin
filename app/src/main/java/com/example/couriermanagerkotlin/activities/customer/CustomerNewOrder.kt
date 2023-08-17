@@ -67,7 +67,6 @@ class CustomerNewOrder : AppCompatActivity() {
         /* Get Shared Preference */
         shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
 
-
         /* Contact full name */
         contFirstName = findViewById(R.id.contFirstName)
         contLastName = findViewById(R.id.contLastName)
@@ -251,9 +250,6 @@ class CustomerNewOrder : AppCompatActivity() {
             deliveryStreet.error = "Must choose street from the option's."
             return
         }
-        /* Concatenating all the address field into one line */
-//        val pickupAddress = "${strPickupStreet} ${pickupBuild.text}, ${strPickupCity}"
-//        val deliveryAddress = "${strDeliveryStreet} ${deliveryBuild.text}, ${strDeliveryCity}"
 
         if (checkOrderMeasures(
                 packageHeight,

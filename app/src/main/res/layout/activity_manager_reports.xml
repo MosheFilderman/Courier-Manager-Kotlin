@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:gravity="top"
+    android:orientation="vertical"
+    android:background="@color/app_background"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.manager.ManagerReports">
+
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Report's"
+            android:textSize="25sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reportsByCustomer"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/section_shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:text="Reports By Customer"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <Spinner
+            android:id="@+id/spinnerReportByCustomer"
+            android:background="@drawable/input_view_shape"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:hint="Enter customer name"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/reportsByCourier"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/section_shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Reports By Courier"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <Spinner
+            android:id="@+id/spinnerReportByCourier"
+            android:background="@drawable/input_view_shape"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"
+            android:hint="Enter courier name"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/generalReports"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:background="@drawable/section_shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_margin="10dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Reports By Courier"
+            android:textStyle="bold"
+            android:textSize="20sp"
+            android:textColor="@color/black"/>
+
+        <Spinner
+            android:id="@+id/spinnerGeneralReports"
+            android:background="@drawable/input_view_shape"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="3dp"/>
+    </LinearLayout>
+</LinearLayout>

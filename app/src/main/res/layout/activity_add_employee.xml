@@ -2,84 +2,144 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/viewContainer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/app_background"
     android:gravity="center"
-    android:orientation="horizontal"
+    android:orientation="vertical"
+    android:padding="10dp"
     tools:context=".activities.manager.AddEmployee">
 
     <LinearLayout
-
+        android:id="@+id/titleSection"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center"
-        android:orientation="vertical"
-        android:padding="20dp">
-
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="NEW EMPLOYEE"
-            android:textSize="20sp"/>
+            android:padding="5dp"
+            android:text="ADD EMPLOYEE"
+            android:textColor="@color/black"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/section_shape"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:padding="15dp">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="First name: "
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="italic" />
+
+            <EditText
                 android:id="@+id/firstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/input_view_shape"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                android:hint="First Name" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:padding="3dp" />
+        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Last name: "
+                android:textColor="@color/black"
+                android:textSize="18sp"
+                android:textStyle="italic" />
+
+            <EditText
                 android:id="@+id/lastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/input_view_shape"
                 android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-                android:hint="Last Name" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:padding="3dp" />
+        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
+            <EditText
                 android:id="@+id/email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Email"
-                android:inputType="textEmailAddress" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="@drawable/input_view_shape"
+                android:hint="E-mail Address"
+                android:inputType="textEmailAddress"
+                android:padding="3dp" />
+        </LinearLayout>
 
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:gravity="start"
+            android:orientation="horizontal"
+            android:padding="10dp">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/phone"
+            <Spinner
+                android:id="@+id/spinnerAreaCode"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:background="@drawable/input_view_shape"
+                android:padding="3dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:gravity="center"
+                android:text=" - "
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/phoneNumber"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Phone"
-                android:inputType="number" />
-        </com.google.android.material.textfield.TextInputLayout>
+                android:background="@drawable/input_view_shape"
+                android:inputType="number"
+                android:padding="3dp" />
+        </LinearLayout>
 
         <RadioGroup
-            android:gravity="center"
             android:id="@+id/radioGroup"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:orientation="horizontal">
 
             <RadioButton
@@ -88,7 +148,9 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:onClick="checkRadioButton"
-                android:text="MANAGER"
+                android:padding="5dp"
+                android:text="COURIER"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
 
             <RadioButton
@@ -96,24 +158,25 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="checkRadioButton"
-                android:text="COURIER"
+                android:padding="5dp"
+                android:text="MANAGER"
+                android:textColor="@color/black"
                 android:textSize="18sp" />
         </RadioGroup>
-
-
-        <Button
-            android:id="@+id/addNewEmployee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="addEmployee"
-            android:text="Add Employee" />
-
-        <TextView
-            android:id="@+id/errorMassage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-
     </LinearLayout>
 
+    <Button
+        android:id="@+id/addNewEmployee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="addEmployee"
+        android:text="Add Employee" />
+
+    <TextView
+        android:id="@+id/errorMassage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/alert_red"
+        android:visibility="gone" />
 
 </LinearLayout>

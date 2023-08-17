@@ -16,6 +16,7 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.couriers
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCouriers
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCustomers
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
@@ -64,6 +65,7 @@ class Manager : AppCompatActivity() {
                 }
 
                 R.id.reports -> {
+                    startActivity(Intent(this@Manager, ManagerReports::class.java))
                     true
                 }
 
@@ -114,6 +116,7 @@ class Manager : AppCompatActivity() {
             startActivity(intent)
         }
         getAllCouriers(this@Manager, courierList, emptyListMsg)
+        getAllCustomers(this@Manager)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -121,17 +124,5 @@ class Manager : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    fun showPopupWindow(information: String) {
-        val builder = AlertDialog.Builder(this@Manager)
-        builder.setTitle("Orders assigned")
-        builder.setMessage(information)
-        builder.setIcon(R.drawable.baseline_info_24)
-        builder.setNegativeButton("CLOSE") { dialogInterface, _ ->
-            dialogInterface.dismiss()
-        }
-        val alertDialog = builder.create()
-        alertDialog.show()
     }
 }

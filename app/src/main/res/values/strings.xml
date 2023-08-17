@@ -35,4 +35,12 @@
         <item>First enter city</item>
     </string-array>
 
+    <string-array name="generalReports">
+        <item>Choose report type</item>
+        <item>Avg Delivery Time</item>
+        <item>Avg Pickup Time</item>
+        <item>Avg Daily Orders</item>
+        <item>Something else to report</item>
+    </string-array>
+
 </resources>

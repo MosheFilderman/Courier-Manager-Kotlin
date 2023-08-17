@@ -12,7 +12,7 @@ import androidx.appcompat.app.AlertDialog
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.couriermanagerkotlin.Courier
+import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eRole
 import com.example.couriermanagerkotlin.eStatus
@@ -32,7 +32,8 @@ class DBUtilities {
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
-        var couriers = ArrayList<Courier>()
+        var couriers = ArrayList<User>()
+        var customers = ArrayList<User>()
         var shipments = ArrayList<Shipment>()
         var pickupAddresses = ArrayList<String>()
         var deliveryAddresses = ArrayList<String>()
@@ -89,7 +90,7 @@ class DBUtilities {
                     params["firstName"] = firstName
                     params["lastName"] = lastName
                     params["email"] = email
-                    params["phone"] = "+972" + phone.substring(1)
+                    params["phone"] = phone
                     params["eRole"] = eRole
                     return params
                 }
@@ -293,7 +294,7 @@ class DBUtilities {
 
                         for (i in 0 until jsonArrayOrders.length()) {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
-                            val tmpCourier = Courier(
+                            val tmpCourier = User(
                                 jsonInner.get("firstName").toString(),
                                 jsonInner.get("lastName").toString(),
                                 jsonInner.get("email").toString(),
@@ -306,6 +307,38 @@ class DBUtilities {
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
                         emptyListMsg.text = "All the courier's left..."
+                    }
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        fun getAllCustomers(
+            context: Context,
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/getAllCustomers.php"
+            customers.clear()
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    if (!response.toString().trim().equals("empty")) {
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("customers")
+
+                        for (i in 0 until jsonArrayOrders.length()) {
+                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
+                            val tmpCustomer = User(
+                                jsonInner.get("firstName").toString(),
+                                jsonInner.get("lastName").toString(),
+                                jsonInner.get("email").toString(),
+                                jsonInner.get("phone").toString()
+                            )
+                            customers.add(tmpCustomer)
+                        }
                     }
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
@@ -416,34 +449,6 @@ class DBUtilities {
                         params["weight"] = measures.weight.toString()
                         return params
                     }
-                }
-            val requestQueue = Volley.newRequestQueue(context)
-            requestQueue.add(stringRequest)
-        }
-
-        fun getMeasures(
-            context: Context
-        ) {
-            val url: String = "http://$ipv4Address/courier_project/getMeasures.php"
-            val stringRequest: StringRequest =
-                object : StringRequest(Method.POST, url, Response.Listener { response ->
-
-                    println(response)
-
-                    val strRes = response.toString()
-                    val jsonArray = JSONArray(strRes)
-                    val jsonResponse = jsonArray.getJSONObject(0)
-                    val jsonArrayOrders = jsonResponse.getJSONArray("measures")
-                    val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(0)
-
-                    measures.height = jsonInner.get("height").toString().toInt()
-                    measures.width = jsonInner.get("width").toString().toInt()
-                    measures.length = jsonInner.get("length").toString().toInt()
-                    measures.weight = jsonInner.get("weight").toString().toInt()
-
-                }, Response.ErrorListener { error ->
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-                }) {
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)

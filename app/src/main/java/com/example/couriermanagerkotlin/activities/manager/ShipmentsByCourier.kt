@@ -5,7 +5,7 @@ import android.os.Bundle
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
-import com.example.couriermanagerkotlin.Courier
+import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.R
@@ -17,13 +17,13 @@ class ShipmentsByCourier : AppCompatActivity() {
     lateinit var shipmentList: ListView
     lateinit var emptyListMsg: TextView
 
-    private lateinit var chosenCourier: Courier
+    private lateinit var chosenCourier: User
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_shipments_by_courier)
 
-        chosenCourier = (intent.getSerializableExtra("chosenCourier") as? Courier)!!
+        chosenCourier = (intent.getSerializableExtra("chosenCourier") as? User)!!
 
         firstName = findViewById(R.id.firstName)
         lastName = findViewById(R.id.lastName)

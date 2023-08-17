@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.view.View
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -42,12 +43,6 @@ class Login : AppCompatActivity() {
 
         shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
 
-//        Toast.makeText(this,shrd.getString("firstName", "fff"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getString("lastName", "lll"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getString("email", "eee"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getString("phone", "ppp"),Toast.LENGTH_SHORT).show()
-//        Toast.makeText(this,shrd.getBoolean("connected", false).toString(),Toast.LENGTH_SHORT).show()
-
         if (shrd.getBoolean("connected", false)) {
             when (shrd.getString("eRole", "none")) {
                 "CUSTOMER" -> {
@@ -70,7 +65,6 @@ class Login : AppCompatActivity() {
 
     fun registration(view: View) {
         startActivity(Intent(this, Registration::class.java))
-        finish()
     }
 
     fun sendSMS(phone: String, code: String) {
