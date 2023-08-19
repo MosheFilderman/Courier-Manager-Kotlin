@@ -37,10 +37,17 @@
 
     <string-array name="generalReports">
         <item>Choose report type</item>
-        <item>Avg Delivery Time</item>
+        <item>Orders by status per courier</item>
         <item>Avg Pickup Time</item>
-        <item>Avg Daily Orders</item>
+        <item>Avg Daily Orders By Courier</item>
         <item>Something else to report</item>
     </string-array>
 
+    <dimen name="new_datepicker_height">150dp</dimen> <!-- Adjust the height value as needed -->
+
 </resources>
+
+    <!-- res/values/dimens.xml -->
+
+
+

@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin.activities.manager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -32,6 +33,8 @@ class Manager : AppCompatActivity() {
     lateinit var courierList: ListView
     lateinit var emptyListMsg: TextView
     lateinit var menu: BottomNavigationView
+
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,4 +128,6 @@ class Manager : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+
 }

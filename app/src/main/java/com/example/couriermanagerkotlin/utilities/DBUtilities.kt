@@ -28,7 +28,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.234"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -504,7 +504,7 @@ class DBUtilities {
             for (ship in shipments) {
                 if (ship.status.equals(eStatus.COLLECTED)) {
                     pickupAddresses.remove(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
-                    pickupAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
+                    deliveryAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
                 }
             }
         }

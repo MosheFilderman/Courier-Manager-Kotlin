@@ -74,6 +74,7 @@ class AddEmployee : AppCompatActivity() {
     fun addEmployee(view: View) {
         errorMassage.visibility = View.GONE
         if (isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) && isEmpty(phoneNumber)) {
+            Toast.makeText(this@AddEmployee,"from if",Toast.LENGTH_SHORT).show()
             registerEmployee(
                 this@AddEmployee,
                 firstName.text.toString().trim(),
@@ -90,7 +91,7 @@ class AddEmployee : AppCompatActivity() {
 
     fun checkRadioButton(view: View) {
         radioButton = findViewById(radioGroup.checkedRadioButtonId)
-        //  Toast.makeText(this,radioButton.text,Toast.LENGTH_SHORT).show()
+          Toast.makeText(this@AddEmployee,radioButton.text,Toast.LENGTH_SHORT).show()
     }
 
 
