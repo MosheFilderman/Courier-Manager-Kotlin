@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
+import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
@@ -28,7 +29,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.234"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -538,6 +539,91 @@ class DBUtilities {
             }
             val alertDialog = builder.create()
             alertDialog.show()
+        }
+
+        fun ordersPassed24HFromCreation(context: Context,status: eStatus){
+            val url: String = "http://$ipv4Address/courier_project/24hFromStatusReport.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["status"] = status.name
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+
+        }
+
+        fun avgHoursByStatusInDateRange(context: Context,status: eStatus,startDate : String,endDate:String){
+            val url: String = "http://$ipv4Address/avgHoursToStatusReport.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["status"] = status.name
+                        params["startDate"] = startDate
+                        params["endDate"] = endDate
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+
+        }
+
+
+         fun amountOfShipmentsByCourierPerCity(context: Context,startDate : String, endDate : String){
+             val url: String = "http://$ipv4Address/courierCityStatusReport.php"
+             val stringRequest: StringRequest =
+                 object : StringRequest(Method.POST, url, Response.Listener { response ->
+                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+
+                 }, Response.ErrorListener { error ->
+                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                 }) {
+                     override fun getParams(): Map<String, String> {
+                         val params: MutableMap<String, String> = HashMap()
+                         params["startDate"] = startDate
+                         params["endDate"] = endDate
+                         return params
+                     }
+                 }
+             val requestQueue = Volley.newRequestQueue(context)
+             requestQueue.add(stringRequest)
+
+         }
+
+        fun amountOfShipmentsByCourierByStatus(context: Context,startDate : String, endDate : String){
+            val url: String = "http://$ipv4Address/courierOrderStatusReport.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["startDate"] = startDate
+                        params["endDate"] = endDate
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+
         }
 
         /* End of companion object */

@@ -175,7 +175,7 @@ class ManagerReports : AppCompatActivity() {
 
     fun getReportParameters(view: View) {
         val dateRange =
-            "From: ${fromDate.dayOfMonth}-${fromDate.month}-${fromDate.year}\nTo: ${toDate.dayOfMonth}-${toDate.month}-${toDate.year}"
+            "From: ${fromDate.dayOfMonth}/${fromDate.month + 1}/${fromDate.year}\nTo: ${toDate.dayOfMonth}/${toDate.month + 1}/${toDate.year}"
         errorMessageLayout.visibility = View.VISIBLE
         errorMessage.text = dateRange
 
