@@ -37,10 +37,10 @@
 
     <string-array name="generalReports">
         <item>Choose report type</item>
-        <item>Orders by status</item>
-        <item>Avg Pickup Time</item>
-        <item>Avg Daily Orders By Courier</item>
-        <item>Something else to report</item>
+        <item>Orders passed 24H from creation</item>
+        <item>Avg hours by status in date range</item>
+        <item>Amount of shipments by courier per city</item>
+        <item>Amount of shipments by courier by status</item>
     </string-array>
 
     <dimen name="new_datepicker_height">150dp</dimen> <!-- Adjust the height value as needed -->

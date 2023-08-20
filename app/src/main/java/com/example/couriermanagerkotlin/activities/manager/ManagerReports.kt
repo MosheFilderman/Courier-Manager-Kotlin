@@ -17,6 +17,7 @@ import com.example.couriermanagerkotlin.eStatus
 class ManagerReports : AppCompatActivity() {
 
     lateinit var errorMessage: TextView
+    lateinit var errorMessageLayout: LinearLayout
     lateinit var statusPicker: LinearLayout
     lateinit var dateRangePicker: LinearLayout
 
@@ -47,6 +48,7 @@ class ManagerReports : AppCompatActivity() {
         val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
 
         spinnerGeneralReports = findViewById(R.id.spinnerGeneralReports)
+        errorMessageLayout = findViewById(R.id.errorMessageLayout)
         errorMessage = findViewById(R.id.errorMessage)
         statusPicker = findViewById(R.id.statusPicker)
         dateRangePicker = findViewById(R.id.dateRangePicker)
@@ -77,37 +79,33 @@ class ManagerReports : AppCompatActivity() {
                 position: Int,
                 id: Long
             ) {
-                errorMessage.visibility = View.GONE
+                errorMessageLayout.visibility = View.GONE
                 statusPicker.visibility = View.GONE
                 dateRangePicker.visibility = View.GONE
                 if (parent != null) {
                     strGeneralReport = parent.getItemAtPosition(position).toString()
                     when (strGeneralReport) {
-                        "Orders by status" -> {
+                        "Orders passed 24H from creation" -> {
                             statusPicker.visibility = View.VISIBLE
                         }
 
-                        "Avg Pickup Time" -> {
+                        "Avg hours by status in date range" -> {
                             statusPicker.visibility = View.VISIBLE
                             dateRangePicker.visibility = View.VISIBLE
                         }
 
-                        "Avg Daily Orders By Courier" -> {
+                        "Amount of shipments by courier per city" -> {
                             dateRangePicker.visibility = View.VISIBLE
                         }
 
-                        "Something else to report" -> {
-                            Toast.makeText(
-                                this@ManagerReports,
-                                "Interesting...",
-                                Toast.LENGTH_SHORT
-                            ).show()
+                        "Amount of shipments by courier by status" -> {
+                            dateRangePicker.visibility = View.VISIBLE
                         }
-//
-//                        else -> {
-//                            errorMessage.visibility = View.VISIBLE
-//                            errorMessage.text = "To get report, must choose report type"
-//                        }
+
+                        else -> {
+                            errorMessageLayout.visibility = View.VISIBLE
+                            errorMessage.text = "To get report, must choose report type"
+                        }
                     }
                 }
             }
@@ -176,7 +174,10 @@ class ManagerReports : AppCompatActivity() {
     }
 
     fun getReportParameters(view: View) {
-
+        val dateRange =
+            "From: ${fromDate.dayOfMonth}-${fromDate.month}-${fromDate.year}\nTo: ${toDate.dayOfMonth}-${toDate.month}-${toDate.year}"
+        errorMessageLayout.visibility = View.VISIBLE
+        errorMessage.text = dateRange
     }
 }
 

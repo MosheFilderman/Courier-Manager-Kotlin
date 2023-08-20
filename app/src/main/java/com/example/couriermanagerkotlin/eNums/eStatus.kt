@@ -5,12 +5,11 @@ enum class eStatus {
     SCHEDULED,
     COLLECTED,
     DELIVERED,
-    CANCELLED,
-    UNKNOWN;
+    CANCELLED;
 
     companion object {
         fun findStatus(value: String): eStatus {
-            var result: eStatus = UNKNOWN
+            var result: eStatus = CANCELLED
 
             when(value) {
                 NEW.name -> result = NEW
@@ -23,7 +22,6 @@ enum class eStatus {
         }
 
         fun setToNext(currentStatus: eStatus) : eStatus {
-
             val result: eStatus = when (currentStatus) {
                 SCHEDULED -> COLLECTED
                 COLLECTED -> DELIVERED
