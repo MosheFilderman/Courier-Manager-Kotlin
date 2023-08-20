@@ -1,119 +1,138 @@
 package com.example.couriermanagerkotlin.activities.manager
 
 import android.icu.util.Calendar
-import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.DatePicker
 import android.widget.LinearLayout
 import android.widget.Spinner
+import android.widget.TextView
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.utilities.DBUtilities
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.couriers
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.customers
+import com.example.couriermanagerkotlin.eStatus
 
 class ManagerReports : AppCompatActivity() {
 
-    lateinit var fromDate:DatePicker
-    lateinit var toDate:DatePicker
-    lateinit var spinnerReportByCustomer: Spinner
-    lateinit var spinnerReportByCourier: Spinner
+    lateinit var errorMessage: TextView
+    lateinit var statusPicker: LinearLayout
+    lateinit var dateRangePicker: LinearLayout
+
+    lateinit var fromDate: DatePicker
+    lateinit var toDate: DatePicker
+    lateinit var spinnerStatusPicker: Spinner
     lateinit var spinnerGeneralReports: Spinner
 
-    lateinit var strCustomer: String
-    lateinit var strCourier: String
+    lateinit var strStatus: String
+
+    //    lateinit var strCustomer: String
+//    lateinit var strCourier: String
     lateinit var strGeneralReport: String
 
-    val couriersNames = ArrayList<String>()
-    val customersNames = ArrayList<String>()
+    private val statuses = ArrayList<String>()
+//    private val couriersNames = ArrayList<String>()
+//    private val customersNames = ArrayList<String>()
 
-    val calendar = Calendar.getInstance()
-    val currentYear = calendar.get(Calendar.YEAR)
-    val currentMonth = calendar.get(Calendar.MONTH)
-    val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+    lateinit var calendar: Calendar
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manager_reports)
-        fromDate = findViewById(R.id.fromdatePicker)
-        toDate = findViewById(R.id.todatePicker)
-        spinnerReportByCustomer = findViewById(R.id.spinnerReportByCustomer)
-        spinnerReportByCourier = findViewById(R.id.spinnerReportByCourier)
+
+        calendar = Calendar.getInstance()
+        val currentYear = calendar.get(Calendar.YEAR)
+        val currentMonth = calendar.get(Calendar.MONTH)
+        val currentDay = calendar.get(Calendar.DAY_OF_MONTH)
+
         spinnerGeneralReports = findViewById(R.id.spinnerGeneralReports)
+        errorMessage = findViewById(R.id.errorMessage)
+        statusPicker = findViewById(R.id.statusPicker)
+        dateRangePicker = findViewById(R.id.dateRangePicker)
+        spinnerStatusPicker = findViewById(R.id.spinnerStatusPicker)
+        fromDate = findViewById(R.id.fromDatePicker)
+        toDate = findViewById(R.id.toDatePicker)
 
-        customersNames.add("Choose customer")
-        customers.forEach{ customer ->
-            customersNames.add("${customer.firstName} ${customer.lastName}")
-        }
-        couriersNames.add("Choose courier")
-        couriers.forEach{ courier ->
-            couriersNames.add("${courier.firstName} ${courier.lastName}")
-        }
-
-
-        /* Reports by customer Spinner */
-        val byCustomerArrayAdapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, customersNames
-        )
-        spinnerReportByCustomer.adapter = byCustomerArrayAdapter
-
-        spinnerReportByCustomer.setSelection(0, false)
-
-        spinnerReportByCustomer.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                if (parent != null) {
-                    strCustomer = parent.getItemAtPosition(position).toString()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
-        }
-
-        /* Reports by courier Spinner */
-        val byCourierArrayAdapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, couriersNames
-        )
-        spinnerReportByCourier.adapter = byCourierArrayAdapter
-
-        spinnerReportByCourier.setSelection(0, false)
-
-        spinnerReportByCourier.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
-            ) {
-                if (parent != null) {
-                    strCourier = parent.getItemAtPosition(position).toString()
-                }
-            }
-
-            override fun onNothingSelected(parent: AdapterView<*>?) {
-            }
+        statuses.add("Choose status")
+        eStatus.values().forEach { status ->
+            statuses.add(status.name)
         }
 
         /* General reports Spinner */
         val pickupCityArrayAdapter = ArrayAdapter(
-            this, android.R.layout.simple_spinner_item, resources.getStringArray(R.array.generalReports)
+            this,
+            android.R.layout.simple_spinner_item,
+            resources.getStringArray(R.array.generalReports)
         )
+
         spinnerGeneralReports.adapter = pickupCityArrayAdapter
 
         spinnerGeneralReports.setSelection(0, false)
 
         spinnerGeneralReports.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
-                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
             ) {
+                errorMessage.visibility = View.GONE
+                statusPicker.visibility = View.GONE
+                dateRangePicker.visibility = View.GONE
                 if (parent != null) {
                     strGeneralReport = parent.getItemAtPosition(position).toString()
+                    when (strGeneralReport) {
+                        "Orders by status" -> {
+                            statusPicker.visibility = View.VISIBLE
+                        }
+
+                        "Avg Pickup Time" -> {
+                            statusPicker.visibility = View.VISIBLE
+                            dateRangePicker.visibility = View.VISIBLE
+                        }
+
+                        "Avg Daily Orders By Courier" -> {
+                            dateRangePicker.visibility = View.VISIBLE
+                        }
+
+                        "Something else to report" -> {
+                            Toast.makeText(
+                                this@ManagerReports,
+                                "Interesting...",
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
+//
+//                        else -> {
+//                            errorMessage.visibility = View.VISIBLE
+//                            errorMessage.text = "To get report, must choose report type"
+//                        }
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+            }
+        }
+
+        /* Status picker Spinner */
+        val byCustomerArrayAdapter =
+            ArrayAdapter(this, android.R.layout.simple_spinner_item, statuses)
+
+        spinnerStatusPicker.adapter = byCustomerArrayAdapter
+
+        spinnerStatusPicker.setSelection(0, false)
+
+        spinnerStatusPicker.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if (parent != null) {
+                    strStatus = parent.getItemAtPosition(position).toString()
                 }
             }
 
@@ -126,37 +145,38 @@ class ManagerReports : AppCompatActivity() {
         fromDate.maxDate = calendar.timeInMillis
         toDate.maxDate = calendar.timeInMillis
 
-        val newHeightInPixels = resources.getDimensionPixelSize(R.dimen.new_datepicker_height) // Define your desired height dimension
+        val newHeightInPixels =
+            resources.getDimensionPixelSize(R.dimen.new_datepicker_height) // Define your desired height dimension
         val params = toDate.layoutParams as LinearLayout.LayoutParams
         params.height = newHeightInPixels
         toDate.layoutParams = params
         fromDate.layoutParams = params
 
-
-
-
-        fromDate.init(currentYear, currentMonth, currentDay, object : DatePicker.OnDateChangedListener {
-            override fun onDateChanged(view: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
-                val fromDate = Calendar.getInstance()
-                fromDate.set(year, monthOfYear, dayOfMonth)
-                if (fromDate.after(Calendar.getInstance())) {
-                    // Adjust "to date" when "from date" is after "to date"
-                    toDate.updateDate(year, monthOfYear, dayOfMonth)
-                }
+        fromDate.init(
+            currentYear,
+            currentMonth,
+            currentDay
+        ) { view, year, monthOfYear, dayOfMonth ->
+            val fromDate = Calendar.getInstance()
+            fromDate.set(year, monthOfYear, dayOfMonth)
+            if (fromDate.after(Calendar.getInstance())) {
+                // Adjust "to date" when "from date" is after "to date"
+                toDate.updateDate(year, monthOfYear, dayOfMonth)
             }
-        })
+        }
 
-        toDate.init(currentYear, currentMonth, currentDay, object : DatePicker.OnDateChangedListener {
-            override fun onDateChanged(view: DatePicker?, year: Int, monthOfYear: Int, dayOfMonth: Int) {
-                val toDate = Calendar.getInstance()
-                toDate.set(year, monthOfYear, dayOfMonth)
-                if (toDate.before(Calendar.getInstance())) {
-                    // Adjust "from date" when "to date" is before "from date"
-                    fromDate.updateDate(year, monthOfYear, dayOfMonth)
-                }
+        toDate.init(currentYear, currentMonth, currentDay) { view, year, monthOfYear, dayOfMonth ->
+            val toDate = Calendar.getInstance()
+            toDate.set(year, monthOfYear, dayOfMonth)
+            if (toDate.before(Calendar.getInstance())) {
+                // Adjust "from date" when "to date" is before "from date"
+                fromDate.updateDate(year, monthOfYear, dayOfMonth)
             }
-        })
+        }
     }
 
+    fun getReportParameters(view: View) {
+
+    }
 }
 

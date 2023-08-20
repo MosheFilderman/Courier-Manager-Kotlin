@@ -37,7 +37,7 @@
 
     <string-array name="generalReports">
         <item>Choose report type</item>
-        <item>Orders by status per courier</item>
+        <item>Orders by status</item>
         <item>Avg Pickup Time</item>
         <item>Avg Daily Orders By Courier</item>
         <item>Something else to report</item>
