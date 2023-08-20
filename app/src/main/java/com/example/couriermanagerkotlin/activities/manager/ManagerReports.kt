@@ -178,6 +178,29 @@ class ManagerReports : AppCompatActivity() {
             "From: ${fromDate.dayOfMonth}-${fromDate.month}-${fromDate.year}\nTo: ${toDate.dayOfMonth}-${toDate.month}-${toDate.year}"
         errorMessageLayout.visibility = View.VISIBLE
         errorMessage.text = dateRange
+
+        when (strGeneralReport) {
+            "Orders passed 24H from creation" -> {
+                Toast.makeText(this@ManagerReports, "in first case", Toast.LENGTH_SHORT).show()
+            }
+
+            "Avg hours by status in date range" -> {
+                Toast.makeText(this@ManagerReports, "in second case", Toast.LENGTH_SHORT).show()
+            }
+
+            "Amount of shipments by courier per city" -> {
+                Toast.makeText(this@ManagerReports, "in third case", Toast.LENGTH_SHORT).show()
+            }
+
+            "Amount of shipments by courier by status" -> {
+                Toast.makeText(this@ManagerReports, "in fourth case", Toast.LENGTH_SHORT).show()
+            }
+
+            else -> {
+                errorMessageLayout.visibility = View.VISIBLE
+                errorMessage.text = "To get report, must choose report type"
+            }
+        }
     }
 }
 
