@@ -13,6 +13,8 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.avgHoursByStatusInDateRange
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.ordersPassed24HFromCreation
 
 class ManagerReports : AppCompatActivity() {
 
@@ -21,8 +23,8 @@ class ManagerReports : AppCompatActivity() {
     lateinit var statusPicker: LinearLayout
     lateinit var dateRangePicker: LinearLayout
 
-    lateinit var fromDate: DatePicker
-    lateinit var toDate: DatePicker
+    lateinit var startDate: DatePicker
+    lateinit var endDate: DatePicker
     lateinit var spinnerStatusPicker: Spinner
     lateinit var spinnerGeneralReports: Spinner
 
@@ -53,8 +55,8 @@ class ManagerReports : AppCompatActivity() {
         statusPicker = findViewById(R.id.statusPicker)
         dateRangePicker = findViewById(R.id.dateRangePicker)
         spinnerStatusPicker = findViewById(R.id.spinnerStatusPicker)
-        fromDate = findViewById(R.id.fromDatePicker)
-        toDate = findViewById(R.id.toDatePicker)
+        startDate = findViewById(R.id.fromDatePicker)
+        endDate = findViewById(R.id.toDatePicker)
 
         statuses.add("Choose status")
         eStatus.values().forEach { status ->
@@ -85,7 +87,7 @@ class ManagerReports : AppCompatActivity() {
                 if (parent != null) {
                     strGeneralReport = parent.getItemAtPosition(position).toString()
                     when (strGeneralReport) {
-                        "Orders passed 24H from creation" -> {
+                        "Orders passed 24H from status" -> {
                             statusPicker.visibility = View.VISIBLE
                         }
 
@@ -138,19 +140,19 @@ class ManagerReports : AppCompatActivity() {
             }
         }
 
-        fromDate.updateDate(currentYear, currentMonth, currentDay)
-        toDate.updateDate(currentYear, currentMonth, currentDay)
-        fromDate.maxDate = calendar.timeInMillis
-        toDate.maxDate = calendar.timeInMillis
+        startDate.updateDate(currentYear, currentMonth, currentDay)
+        endDate.updateDate(currentYear, currentMonth, currentDay)
+        startDate.maxDate = calendar.timeInMillis
+        endDate.maxDate = calendar.timeInMillis
 
         val newHeightInPixels =
             resources.getDimensionPixelSize(R.dimen.new_datepicker_height) // Define your desired height dimension
-        val params = toDate.layoutParams as LinearLayout.LayoutParams
+        val params = endDate.layoutParams as LinearLayout.LayoutParams
         params.height = newHeightInPixels
-        toDate.layoutParams = params
-        fromDate.layoutParams = params
+        endDate.layoutParams = params
+        startDate.layoutParams = params
 
-        fromDate.init(
+        startDate.init(
             currentYear,
             currentMonth,
             currentDay
@@ -159,33 +161,33 @@ class ManagerReports : AppCompatActivity() {
             fromDate.set(year, monthOfYear, dayOfMonth)
             if (fromDate.after(Calendar.getInstance())) {
                 // Adjust "to date" when "from date" is after "to date"
-                toDate.updateDate(year, monthOfYear, dayOfMonth)
+                endDate.updateDate(year, monthOfYear, dayOfMonth)
             }
         }
 
-        toDate.init(currentYear, currentMonth, currentDay) { view, year, monthOfYear, dayOfMonth ->
+        endDate.init(currentYear, currentMonth, currentDay) { view, year, monthOfYear, dayOfMonth ->
             val toDate = Calendar.getInstance()
             toDate.set(year, monthOfYear, dayOfMonth)
             if (toDate.before(Calendar.getInstance())) {
                 // Adjust "from date" when "to date" is before "from date"
-                fromDate.updateDate(year, monthOfYear, dayOfMonth)
+                startDate.updateDate(year, monthOfYear, dayOfMonth)
             }
         }
     }
 
     fun getReportParameters(view: View) {
-        val dateRange =
-            "From: ${fromDate.dayOfMonth}/${fromDate.month + 1}/${fromDate.year}\nTo: ${toDate.dayOfMonth}/${toDate.month + 1}/${toDate.year}"
-        errorMessageLayout.visibility = View.VISIBLE
-        errorMessage.text = dateRange
+        val startDate = "${startDate.year}-${startDate.month + 1}-${startDate.dayOfMonth}"
+        val endDate ="${endDate.year}-${endDate.month + 1}-${endDate.dayOfMonth}"
+
 
         when (strGeneralReport) {
-            "Orders passed 24H from creation" -> {
-                Toast.makeText(this@ManagerReports, "in first case", Toast.LENGTH_SHORT).show()
+            "Orders passed 24H from status" -> {
+                ordersPassed24HFromCreation(this@ManagerReports,strStatus,errorMessage)
             }
 
             "Avg hours by status in date range" -> {
-                Toast.makeText(this@ManagerReports, "in second case", Toast.LENGTH_SHORT).show()
+                avgHoursByStatusInDateRange(this@ManagerReports,strStatus,startDate,endDate)
+
             }
 
             "Amount of shipments by courier per city" -> {
