@@ -37,7 +37,7 @@
 
     <string-array name="generalReports">
         <item>Choose report type</item>
-        <item>Orders passed 24H from creation</item>
+        <item>Orders passed 24H from status</item>
         <item>Avg hours by status in date range</item>
         <item>Amount of shipments by courier per city</item>
         <item>Amount of shipments by courier by status</item>

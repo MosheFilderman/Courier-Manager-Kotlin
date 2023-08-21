@@ -38,6 +38,7 @@ class DBUtilities {
         var shipments = ArrayList<Shipment>()
         var pickupAddresses = ArrayList<String>()
         var deliveryAddresses = ArrayList<String>()
+        var report =ArrayList<Shipment>()
 
         fun registerUser(
             context: Context,
@@ -465,9 +466,6 @@ class DBUtilities {
             val url: String = "http://$ipv4Address/courier_project/getMeasures.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-
-                    println(response)
-
                     val strRes = response.toString()
                     val jsonArray = JSONArray(strRes)
                     val jsonResponse = jsonArray.getJSONObject(0)
@@ -541,18 +539,51 @@ class DBUtilities {
             alertDialog.show()
         }
 
-        fun ordersPassed24HFromCreation(context: Context,status: eStatus){
+        fun ordersPassed24HFromCreation(context: Context,status: String,errorMessage: TextView){
+            report.clear()
             val url: String = "http://$ipv4Address/courier_project/24hFromStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                    if(response.toString()!="empty"){
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("report")
+
+                        for (i in 0 until jsonArrayOrders.length()) {
+                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
+                            val tmpShipment = Shipment(
+                                jsonInner.get("order_id").toString(),
+                                jsonInner.get("pickupFirstName").toString(),
+                                jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupPhone").toString(),
+                                jsonInner.get("pickupEmail").toString(),
+                                jsonInner.get("pickupCity").toString(),
+                                jsonInner.get("pickupStreet").toString(),
+                                jsonInner.get("pickupBuild").toString(),
+                                jsonInner.get("deliveryName").toString(),
+                                jsonInner.get("deliveryPhone").toString(),
+                                jsonInner.get("deliveryEmail").toString(),
+                                jsonInner.get("deliveryCity").toString(),
+                                jsonInner.get("deliveryStreet").toString(),
+                                jsonInner.get("deliveryBuild").toString(),
+                                eStatus.findStatus(jsonInner.get("orderStatus").toString()),
+                                jsonInner.get("comment").toString()
+                            )
+                            report.add(tmpShipment)
+
+                        }
+
+                    }else{
+                        errorMessage.text = "No matching orders"
+                    }
 
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
-                        params["status"] = status.name
+                        params["status"] = status
                         return params
                     }
                 }
@@ -561,10 +592,11 @@ class DBUtilities {
 
         }
 
-        fun avgHoursByStatusInDateRange(context: Context,status: eStatus,startDate : String,endDate:String){
+        fun avgHoursByStatusInDateRange(context: Context,status: String ,startDate : String,endDate:String){
             val url: String = "http://$ipv4Address/avgHoursToStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Log.e("respose",response.toString())
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
 
                 }, Response.ErrorListener { error ->
@@ -572,7 +604,7 @@ class DBUtilities {
                 }) {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
-                        params["status"] = status.name
+                        params["status"] = status
                         params["startDate"] = startDate
                         params["endDate"] = endDate
                         return params
