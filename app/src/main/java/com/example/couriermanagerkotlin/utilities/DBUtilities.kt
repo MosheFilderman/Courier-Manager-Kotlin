@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
-import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ListView
 import android.widget.TextView
@@ -38,7 +37,7 @@ class DBUtilities {
         var shipments = ArrayList<Shipment>()
         var pickupAddresses = ArrayList<String>()
         var deliveryAddresses = ArrayList<String>()
-        var report =ArrayList<Shipment>()
+        var infoForReports = ArrayList<Shipment>()
 
         fun registerUser(
             context: Context,
@@ -527,7 +526,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-        fun showPopupWindow(context: Context, information: String) {
+        fun showPopupWindow(
+            context: Context,
+            information: String
+        ) {
             val builder = AlertDialog.Builder(context)
             builder.setTitle("Assignment result")
             builder.setMessage(information)
@@ -539,12 +541,17 @@ class DBUtilities {
             alertDialog.show()
         }
 
-        fun ordersPassed24HFromCreation(context: Context,status: String,errorMessage: TextView){
-            report.clear()
+        fun ordersPassed24HFromCreation(
+            context: Context,
+            status: String,
+            errorMessage: TextView
+        ) {
+            infoForReports.clear()
+
             val url: String = "http://$ipv4Address/courier_project/24hFromStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    if(response.toString()!="empty"){
+                    if (response.toString() != "empty") {
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
@@ -570,14 +577,11 @@ class DBUtilities {
                                 eStatus.findStatus(jsonInner.get("orderStatus").toString()),
                                 jsonInner.get("comment").toString()
                             )
-                            report.add(tmpShipment)
-
+                            infoForReports.add(tmpShipment)
                         }
-
-                    }else{
+                    } else {
                         errorMessage.text = "No matching orders"
                     }
-
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
@@ -589,22 +593,44 @@ class DBUtilities {
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
-
         }
 
-        fun avgHoursByStatusInDateRange(context: Context,status: String ,startDate : String,endDate:String){
-            val url: String = "http://$ipv4Address/avgHoursToStatusReport.php"
+        fun avgHoursByStatusInDateRange(
+            context: Context,
+            startStatus: String,
+            endStatus: String,
+            startDate: String,
+            endDate: String,
+            errorMessage: TextView
+        ) {
+            Log.i("report Ranges", "$startStatus $endStatus $startDate $endDate")
+
+            val url: String = "http://$ipv4Address/courier_project/avgHoursToStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Log.e("respose",response.toString())
-                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                    if (response.toString() != "empty") {
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("report")
+
+                        val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(0)
+                        val strResponse = "The average hours difference between:\n" +
+                                "Statuses $startStatus to $endStatus\n" +
+                                "Dates $startDate -> $endDate\n" +
+                                "is: ${jsonInner.get("avg_time_difference_hours")}"
+                        showPopupWindow(context, strResponse)
+                    } else {
+                        errorMessage.text = "No matching orders"
+                    }
 
                 }, Response.ErrorListener { error ->
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    errorMessage.text = error.toString()
                 }) {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
-                        params["status"] = status
+                        params["startStatus"] = startStatus
+                        params["endStatus"] = endStatus
                         params["startDate"] = startDate
                         params["endDate"] = endDate
                         return params
@@ -615,30 +641,37 @@ class DBUtilities {
 
         }
 
+        fun amountOfShipmentsByCourierPerCity(
+            context: Context,
+            startDate: String,
+            endDate: String
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/courierCityStatusReport.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
 
-         fun amountOfShipmentsByCourierPerCity(context: Context,startDate : String, endDate : String){
-             val url: String = "http://$ipv4Address/courierCityStatusReport.php"
-             val stringRequest: StringRequest =
-                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["startDate"] = startDate
+                        params["endDate"] = endDate
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
 
-                 }, Response.ErrorListener { error ->
-                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
-                 }) {
-                     override fun getParams(): Map<String, String> {
-                         val params: MutableMap<String, String> = HashMap()
-                         params["startDate"] = startDate
-                         params["endDate"] = endDate
-                         return params
-                     }
-                 }
-             val requestQueue = Volley.newRequestQueue(context)
-             requestQueue.add(stringRequest)
+        }
 
-         }
-
-        fun amountOfShipmentsByCourierByStatus(context: Context,startDate : String, endDate : String){
-            val url: String = "http://$ipv4Address/courierOrderStatusReport.php"
+        fun amountOfShipmentsByCourierByStatus(
+            context: Context,
+            startDate: String,
+            endDate: String
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/courierOrderStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
