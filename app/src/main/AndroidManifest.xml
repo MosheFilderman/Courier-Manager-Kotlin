@@ -57,7 +57,7 @@
         <activity
             android:name=".Registration"
             android:exported="true"
-            android:parentActivityName=".Login"/>
+            android:parentActivityName=".Login" />
         <activity
             android:name=".activities.customer.CustomerNewOrder"
             android:exported="true"
