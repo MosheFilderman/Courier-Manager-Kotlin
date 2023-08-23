@@ -1,9 +1,7 @@
 package com.example.couriermanagerkotlin.utilities
 
 import android.content.Context
-import android.content.Intent
 import android.content.SharedPreferences
-import android.net.Uri
 import android.util.Log
 import android.view.View
 import android.widget.EditText
@@ -12,7 +10,6 @@ import android.widget.ListView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.core.content.FileProvider
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
@@ -23,16 +20,11 @@ import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
-import com.example.couriermanagerkotlin.objects.CourierShipmetnsAmauntByCity
 import com.example.couriermanagerkotlin.objects.Measures
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.objects.Shipment
-import org.apache.poi.ss.usermodel.Workbook
-import org.apache.poi.xssf.usermodel.XSSFWorkbook
 import org.json.JSONArray
 import org.json.JSONObject
-import java.io.File
-import java.io.FileOutputStream
 
 class DBUtilities {
 
@@ -46,8 +38,6 @@ class DBUtilities {
         var shipments = ArrayList<Shipment>()
         var pickupAddresses = ArrayList<String>()
         var deliveryAddresses = ArrayList<String>()
-        var report24hException = ArrayList<Shipment>()
-        var reportCourierAmountShipmentsByPickupCity = ArrayList<ArrayList<String>>()
 
         fun registerUser(
             context: Context,
@@ -513,18 +503,25 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        interface ReportCallback {
+            fun onSuccess(fileName: String, title: String, data: List<List<String>>)
+            fun onError(errorMessageLayout: LinearLayout, errorMessage: TextView, message: String)
+        }
+
         fun ordersPassed24HFromCreation(
             context: Context,
             status: String,
             errorMessageLayout: LinearLayout,
-            errorMessage: TextView
+            errorMessage: TextView,
+            callback: ReportCallback
         ) {
-            report24hException.clear()
-
             val url: String = "http://$ipv4Address/courier_project/24hFromStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (response.toString() != "empty") {
+                        val report24hException = mutableListOf<List<String>>()
+                        report24hException.add(listOf("Order ID","Pickup Contact Name","Pickup Phone","Pickup Email","Pickup City","Pickup Street","Pickup Build","Delivery Contact Name","Delivery Phone","Delivery Email","Delivery City","Delivery Street","Delivery Build","Order Status","Comment's"))
+
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
@@ -532,10 +529,9 @@ class DBUtilities {
 
                         for (i in 0 until jsonArrayOrders.length()) {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
-                            val tmpShipment = Shipment(
+                            val tmpRow = listOf(
                                 jsonInner.get("order_id").toString(),
-                                jsonInner.get("pickupFirstName").toString(),
-                                jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupName").toString(),
                                 jsonInner.get("pickupPhone").toString(),
                                 jsonInner.get("pickupEmail").toString(),
                                 jsonInner.get("pickupCity").toString(),
@@ -547,18 +543,17 @@ class DBUtilities {
                                 jsonInner.get("deliveryCity").toString(),
                                 jsonInner.get("deliveryStreet").toString(),
                                 jsonInner.get("deliveryBuild").toString(),
-                                eStatus.findStatus(jsonInner.get("orderStatus").toString()),
+                                jsonInner.get("orderStatus").toString(),
                                 jsonInner.get("comment").toString()
                             )
-                            report24hException.add(tmpShipment)
+                            report24hException.add(tmpRow)
                         }
+                        callback.onSuccess("orders_excepted_24H_from_$status", "Orders which except 24H from status - $status", report24hException)
                     } else {
-                        errorMessageLayout.visibility = View.VISIBLE
-                        errorMessage.text = "No matching orders"
+                        callback.onError(errorMessageLayout, errorMessage,"No matching orders")
                     }
                 }, Response.ErrorListener { error ->
-                    errorMessageLayout.visibility = View.VISIBLE
-                    errorMessage.text = error.toString()
+                    callback.onError(errorMessageLayout, errorMessage, error.toString())
                 }) {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
@@ -623,57 +618,6 @@ class DBUtilities {
             startDate: String,
             endDate: String,
             errorMessageLayout: LinearLayout,
-            errorMessage: TextView
-        ) {
-            val url: String = "http://$ipv4Address/courier_project/courierCityStatusReport.php"
-            val stringRequest: StringRequest =
-                object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    if (response.toString() != "empty") {
-                        val strRes = response.toString()
-                        val jsonArray = JSONArray(strRes)
-                        val jsonResponse = jsonArray.getJSONObject(0)
-                        val jsonArrayOrders = jsonResponse.getJSONArray("report")
-
-                        for (i in 0 until jsonArrayOrders.length()) {
-                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
-                            val tmpRow = ArrayList<String>()
-                            tmpRow.add(jsonInner.get("full_name").toString())
-                            tmpRow.add(jsonInner.get("pickupCity").toString())
-                            tmpRow.add(jsonInner.get("SCHEDULED").toString())
-                            tmpRow.add(jsonInner.get("COLLECTED").toString())
-                            tmpRow.add(jsonInner.get("DELIVERED").toString())
-
-                            reportCourierAmountShipmentsByPickupCity.add(tmpRow)
-                        }
-                    } else {
-                        errorMessageLayout.visibility = View.VISIBLE
-                        errorMessage.text = "No matching orders"
-                    }
-                }, Response.ErrorListener { error ->
-                    errorMessageLayout.visibility = View.VISIBLE
-                    errorMessage.text = error.toString()
-                }) {
-                    override fun getParams(): Map<String, String> {
-                        val params: MutableMap<String, String> = HashMap()
-                        params["startDate"] = startDate
-                        params["endDate"] = endDate
-                        return params
-                    }
-                }
-            val requestQueue = Volley.newRequestQueue(context)
-            requestQueue.add(stringRequest)
-        }
-
-        interface ReportCallback {
-            fun onSuccess(data: List<List<String>>)
-            fun onError(errorMessageLayout: LinearLayout, errorMessage: TextView, message: String)
-        }
-
-        fun amountOfShipmentsByCourierPerCity(
-            context: Context,
-            startDate: String,
-            endDate: String,
-            errorMessageLayout: LinearLayout,
             errorMessage: TextView,
             callback: ReportCallback
         ) {
@@ -681,14 +625,13 @@ class DBUtilities {
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     if (response.toString() != "empty") {
+                        val reportCourierAmountShipmentsByPickupCity = mutableListOf<List<String>>()
+                        reportCourierAmountShipmentsByPickupCity.add(listOf("Full name","Pickup City","SCHEDULED","COLLECTED","DELIVERED"))
+
                         val strRes = response.toString()
                         val jsonArray = JSONArray(strRes)
                         val jsonResponse = jsonArray.getJSONObject(0)
                         val jsonArrayOrders = jsonResponse.getJSONArray("report")
-
-                        val reportCourierAmountShipmentsByPickupCity = mutableListOf<List<String>>()
-
-                        reportCourierAmountShipmentsByPickupCity.add(listOf("Full name","Pickup City","SCHEDULED","COLLECTED","DELIVERED"))
 
                         for (i in 0 until jsonArrayOrders.length()) {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
@@ -701,8 +644,7 @@ class DBUtilities {
                             )
                             reportCourierAmountShipmentsByPickupCity.add(tmpRow)
                         }
-
-                        callback.onSuccess(reportCourierAmountShipmentsByPickupCity)
+                        callback.onSuccess( "courier_shipment_by_pickup_city", "Courier shipments by pickup city",reportCourierAmountShipmentsByPickupCity)
                     } else {
                         callback.onError(errorMessageLayout, errorMessage,"No matching orders")
                     }
@@ -723,15 +665,40 @@ class DBUtilities {
         fun amountOfShipmentsByCourierByStatus(
             context: Context,
             startDate: String,
-            endDate: String
+            endDate: String,
+            errorMessageLayout: LinearLayout,
+            errorMessage: TextView,
+            callback: ReportCallback
         ) {
             val url: String = "http://$ipv4Address/courier_project/courierOrderStatusReport.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                    if (response.toString() != "empty") {
+                        val reportCourierOrdersAmountByStatus = mutableListOf<List<String>>()
+                        reportCourierOrdersAmountByStatus.add(listOf("Full name","Total amount","SCHEDULED","COLLECTED","DELIVERED"))
 
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("report")
+
+                        for (i in 0 until jsonArrayOrders.length()) {
+                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
+                            val tmpRow = listOf(
+                                jsonInner.get("full_name").toString(),
+                                jsonInner.get("total_orders").toString(),
+                                jsonInner.get("SCHEDULED").toString(),
+                                jsonInner.get("COLLECTED").toString(),
+                                jsonInner.get("DELIVERED").toString()
+                            )
+                            reportCourierOrdersAmountByStatus.add(tmpRow)
+                        }
+                        callback.onSuccess("courier_shipments_total_and_by_status","Courier total shipment's and spread by status",reportCourierOrdersAmountByStatus)
+                    } else {
+                        callback.onError(errorMessageLayout, errorMessage,"No matching orders")
+                    }
                 }, Response.ErrorListener { error ->
-                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                    callback.onError(errorMessageLayout, errorMessage, error.toString())
                 }) {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
@@ -778,13 +745,6 @@ class DBUtilities {
             }
         }
 
-        private fun openExcelFile(context: Context, file: File) {
-            val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.setDataAndType(uri, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
-            intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-            context.startActivity(Intent.createChooser(intent, "Open Excel File"))
-        }
 
         /* End of companion object */
     }
