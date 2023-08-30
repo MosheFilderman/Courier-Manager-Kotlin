@@ -91,8 +91,6 @@ class AddEmployee : AppCompatActivity() {
 
     fun checkRadioButton(view: View) {
         radioButton = findViewById(radioGroup.checkedRadioButtonId)
-          Toast.makeText(this@AddEmployee,radioButton.text,Toast.LENGTH_SHORT).show()
     }
-
 
 }

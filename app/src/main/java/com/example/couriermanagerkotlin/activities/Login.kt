@@ -9,14 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.view.View
-import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.example.couriermanagerkotlin.activities.courier.CourierListView
+import com.example.couriermanagerkotlin.activities.courier.CourierShipmentList
 import com.example.couriermanagerkotlin.activities.customer.CustomerOrderList
 import com.example.couriermanagerkotlin.activities.manager.Manager
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.login
@@ -43,6 +42,9 @@ class Login : AppCompatActivity() {
 
         shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
 
+        /**
+         * Redirect the logged in user to the proper activity.
+         */
         if (shrd.getBoolean("connected", false)) {
             when (shrd.getString("eRole", "none")) {
                 "CUSTOMER" -> {
@@ -51,7 +53,7 @@ class Login : AppCompatActivity() {
                 }
 
                 "COURIER" -> {
-                    startActivity(Intent(this@Login, CourierListView::class.java))
+                    startActivity(Intent(this@Login, CourierShipmentList::class.java))
                     finish()
                 }
 
@@ -63,10 +65,16 @@ class Login : AppCompatActivity() {
         }
     }
 
+    /**
+     * open the registration activity
+     */
     fun registration(view: View) {
         startActivity(Intent(this, Registration::class.java))
     }
 
+    /**
+     * Check user's SDK and send the SMS in the appropriate way
+     */
     fun sendSMS(phone: String, code: String) {
         // on the below line we are creating a try and catch block
         try {
@@ -95,6 +103,9 @@ class Login : AppCompatActivity() {
         }
     }
 
+    /**
+     * Confirm that entered code is correct, if correct open the appropriate activity by the user's role
+     */
     fun verifySMS(code: String) {
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
@@ -113,7 +124,7 @@ class Login : AppCompatActivity() {
                     }
 
                     "COURIER" -> {
-                        startActivity(Intent(this@Login, CourierListView::class.java))
+                        startActivity(Intent(this@Login, CourierShipmentList::class.java))
                         finish()
                     }
 
@@ -130,6 +141,11 @@ class Login : AppCompatActivity() {
         builder.show()
     }
 
+    /**
+     * Check the user gave permission to send SMS, if not ask it,
+     * confirm that user filled required fields,
+     * continue the code confirmation flow.
+     */
     fun login(view: View) {
         if (ContextCompat.checkSelfPermission(
                 this.applicationContext,

@@ -49,7 +49,6 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var errorMessage: TextView
     lateinit var comment: EditText
 
-//      private val geocoder: Geocoder = Geocoder(this, Locale.getDefault())
 
 
     /* String objects of the spinners and autofill */
@@ -297,19 +296,3 @@ class CustomerNewOrder : AppCompatActivity() {
         }
     }
 }
-
-
-//val pickupAddress = "1600 Amphitheatre Parkway, Mountain View, CA"
-//val deliveryAddress = "1 Infinite Loop, Cupertino, CA"
-//val apiKey = "YOUR_GOOGLE_MAPS_API_KEY"
-//
-//val result = calculateDistanceDurationAndCoordinates(apiKey, pickupAddress, deliveryAddress)
-//
-//if (result != null) {
-//    println("Distance: ${result.distance} meters")
-//    println("Duration: ${result.duration} seconds")
-//    println("Pickup Location: (${result.pickupLocation.latitude}, ${result.pickupLocation.longitude})")
-//    println("Delivery Location: (${result.deliveryLocation.latitude}, ${result.deliveryLocation.longitude})")
-//} else {
-//    println("Error: Unable to calculate distance and time.")
-//}

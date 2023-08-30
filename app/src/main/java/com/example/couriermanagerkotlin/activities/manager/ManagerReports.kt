@@ -19,8 +19,7 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.amountOfShipmentsByCourierByStatus
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.amountOfShipmentsByCourierPerCity
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.avgHoursByStatusInDateRange
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.ordersPassed24HFromCreation
-import com.google.android.material.snackbar.Snackbar
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.ordersPassed24HFromStatus
 import org.apache.poi.ss.usermodel.Workbook
 import org.apache.poi.ss.util.CellRangeAddress
 import org.apache.poi.xssf.usermodel.XSSFWorkbook
@@ -281,7 +280,7 @@ class ManagerReports : AppCompatActivity() {
 
         when (strGeneralReport) {
             "Orders passed 24H from status" -> {
-                ordersPassed24HFromCreation(
+                ordersPassed24HFromStatus(
                     this@ManagerReports,
                     strSingleStatus,
                     errorMessageLayout,
@@ -381,6 +380,10 @@ class ManagerReports : AppCompatActivity() {
         }
     }
 
+    /**
+     * Getting the full path the created report file,
+     * open window with the suggested app's to open the excel file.
+     */
     fun openExcelFile(context: Context, file: File) {
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         val intent = Intent(Intent.ACTION_VIEW)
@@ -392,6 +395,11 @@ class ManagerReports : AppCompatActivity() {
         context.startActivity(intent)
     }
 
+    /**
+     * Receive two two-dimensional list of the proper data from DB,
+     * the name of the report file and the report title.
+     * create and fill the excel sheet with the data from the list.
+     */
     fun exportToExcelAndOpen(context: Context, data: List<List<String>>, fileName: String, title: String) {
         val workbook: Workbook = XSSFWorkbook()
         val sheet = workbook.createSheet("Sheet1")

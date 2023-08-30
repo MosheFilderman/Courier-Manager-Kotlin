@@ -23,25 +23,21 @@ import com.google.android.material.navigation.NavigationView
 
 class Manager : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var userFullName: TextView
     private lateinit var userEmail: TextView
 
     lateinit var shrd: SharedPreferences
-    lateinit var firstName: TextView
-    lateinit var lastName: TextView
     lateinit var courierList: ListView
     lateinit var emptyListMsg: TextView
-    lateinit var menu: BottomNavigationView
-
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manager)
 
         drawerLayout = findViewById(R.id.drawerLayout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
 
         toggle = ActionBarDrawerToggle(
@@ -128,6 +124,5 @@ class Manager : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
-
 
 }

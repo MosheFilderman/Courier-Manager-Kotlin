@@ -36,13 +36,12 @@ import java.time.format.DateTimeFormatter
 
 class CustomerOrderList : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var userFullName: TextView
     private lateinit var userEmail: TextView
 
     lateinit var shrd: SharedPreferences
-    lateinit var firstName: TextView
-    lateinit var lastName: TextView
     lateinit var ordersList: ListView
     lateinit var emptyListMsg: TextView
     lateinit var search: SearchView
@@ -53,7 +52,7 @@ class CustomerOrderList : AppCompatActivity() {
         setContentView(R.layout.activity_customer_order_list)
 
         drawerLayout = findViewById(R.id.drawerLayout)
-        val navView: NavigationView = findViewById(R.id.nav_view)
+        navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
 
         toggle = ActionBarDrawerToggle(
@@ -232,6 +231,11 @@ class CustomerOrderList : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    /**
+     * Check if the received list is empty,
+     * if empty show appropriate message,
+     * otherwise show the information.
+     */
     private fun isListEmpty(list: ArrayList<Order>, emptyListMsg: TextView, listView: ListView) {
         if (list.isEmpty()) {
             emptyListMsg.visibility = View.VISIBLE
@@ -242,6 +246,10 @@ class CustomerOrderList : AppCompatActivity() {
         }
     }
 
+    /**
+     * Create PDF file with order's id and the current time and date,
+     * with order's information.
+     */
     private fun createAndOpenPdf(order: Order) {
         // Get the current time
         val currentTime = LocalDateTime.now()
@@ -279,6 +287,9 @@ class CustomerOrderList : AppCompatActivity() {
         }
     }
 
+    /**
+     * Create PDF file with the received file name, in the current app directory.
+     */
     private fun createPdfFile(context: Context, filename: String): File? {
         val filePath = context.getExternalFilesDir(null)?.absolutePath
         if (filePath != null) {
@@ -291,6 +302,9 @@ class CustomerOrderList : AppCompatActivity() {
         return null
     }
 
+    /**
+     * Show apps suggested to open PDF format file.
+     */
     private fun openPdfFile(context: Context, file: File) {
         val uri = FileProvider.getUriForFile(context, "${context.packageName}.provider", file)
         val intent = Intent(Intent.ACTION_VIEW)

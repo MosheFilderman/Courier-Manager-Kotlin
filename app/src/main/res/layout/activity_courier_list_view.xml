@@ -9,7 +9,7 @@
     android:background="@color/app_background"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.courier.CourierListView">
+    tools:context=".activities.courier.CourierShipmentList">
 
     <RelativeLayout
         android:layout_width="match_parent"

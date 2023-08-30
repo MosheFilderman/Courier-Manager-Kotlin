@@ -66,7 +66,7 @@
             android:name=".activities.customer.CustomerOrderList"
             android:exported="true" />
         <activity
-            android:name=".activities.courier.CourierListView"
+            android:name=".activities.courier.CourierShipmentList"
             android:exported="true" />
         <activity
             android:name=".activities.courier.CourierMapView"

@@ -8,6 +8,11 @@ enum class eStatus {
     CANCELLED;
 
     companion object {
+        /**
+         * Receive String, check if it's value fit any eStatus,
+         * if found match return the eStatus,
+         * if not found return CANCELLED.
+         */
         fun findStatus(value: String): eStatus {
             var result: eStatus = CANCELLED
 
@@ -21,6 +26,10 @@ enum class eStatus {
             return result
         }
 
+        /**
+         * Receive current eStatus,
+         * return the next eStatus in order.
+         */
         fun setToNext(currentStatus: eStatus) : eStatus {
             val result: eStatus = when (currentStatus) {
                 SCHEDULED -> COLLECTED

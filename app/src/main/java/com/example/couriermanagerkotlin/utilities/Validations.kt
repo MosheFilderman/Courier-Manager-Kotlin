@@ -5,14 +5,12 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.measures
 
 open class Validations {
     companion object {
-        fun checkPhoneLength(view: EditText): Boolean {
-            if (view.text.toString().length != 10) {
-                view.error = "phone should be 10 digits"
-                return false
-            }
-            return true
-        }
 
+        /**
+         * Check the received EditText is empty,
+         * if empty, show error window and return false,
+         * otherwise return's true.
+         */
         fun isEmpty(view: EditText): Boolean {
             if (view.length() == 0) {
                 view.error = "This field is required"
@@ -21,6 +19,11 @@ open class Validations {
             return true
         }
 
+        /**
+         * Check if the received measures less then the defined valid measures by the MANAGER,
+         * return false if some of the field's equal or more and show message at the failed field,
+         * if all the measures are suitable, return's true.
+         */
         fun checkOrderMeasures(packageHeight :EditText, packageWidth :EditText, packageLength :EditText, packageWeight : EditText  ): Boolean {
             /* Package measures field's */
             if (packageHeight.length() == 0 || Integer.parseInt(packageHeight.text.toString()) > measures.height) {

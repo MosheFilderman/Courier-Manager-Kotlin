@@ -39,6 +39,9 @@ class DBUtilities {
         var pickupAddresses = ArrayList<String>()
         var deliveryAddresses = ArrayList<String>()
 
+        /**
+         * Receive user data after validation, send to PHP for creation of the CUSTOMER in the DB.
+         */
         fun registerUser(
             context: Context,
             firstName: String,
@@ -69,6 +72,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Receive user data after validation, send to PHP for creation of the COURIER/MANAGER in the DB.
+         */
         fun registerEmployee(
             context: Context,
             firstName: String,
@@ -100,7 +106,11 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-
+        /**
+         * Receive user email and phone, check if it's exist in the DB.
+         * if exist, return users data and fill with it the Shared preferences,
+         * if doesn't exist throw message to user.
+         */
         fun login(
             context: Context,
             email: String,
@@ -125,7 +135,6 @@ class DBUtilities {
                         editor.putString("eRole", jsonInner.get("eRole").toString())
                         editor.putBoolean("connected", true)
                         editor.apply()
-
                     } else {
                         Toast.makeText(
                             context,
@@ -149,6 +158,9 @@ class DBUtilities {
 
         }
 
+        /**
+         * Receive CUSTOMER email and return all the opened orders which created by him
+         */
         fun getCustomerOrders(
             context: Context,
             orderList: ListView,
@@ -203,6 +215,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Receive CUSTOMER email and new order data as Order object,
+         * create new order in the DB.
+         */
         fun createOrder(
             context: Context,
             order: Order,
@@ -240,7 +256,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-
+        /**
+         * Receive city name,
+         * return all the street's from this city from DB.
+         */
         fun getStreetByCity(
             context: Context,
             city: String
@@ -278,6 +297,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Return all the available courier's from DB.
+         */
         fun getAllCouriers(
             context: Context,
             courierList: ListView,
@@ -317,6 +339,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Return all the customer's from DB.
+         */
         fun getAllCustomers(
             context: Context,
         ) {
@@ -349,6 +374,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Receive COURIER email,
+         * return all the not closed shipments which had assign to him.
+         */
         fun getShipmentsByCourier(
             context: Context,
             email: String,
@@ -408,6 +437,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Receive eStatus update to and order id which update,
+         * update order by order id to received status in DB.
+         */
         fun updateOrderStatus(
             context: Context,
             orderId: String,
@@ -431,6 +464,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Update Measures table in the DB, by the Measures object current data.
+         */
         fun setMeasures(
             context: Context
         ) {
@@ -454,6 +490,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Return current valid measures from the DB.
+         */
         fun getMeasures(
             context: Context,
             height: EditText,
@@ -488,6 +527,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Assign order's to all available courier's.
+         */
         fun assignOrdersToCouriers(
             context: Context
         ) {
@@ -503,12 +545,19 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Interface to manage the callback's
+         */
         interface ReportCallback {
             fun onSuccess(fileName: String, title: String, data: List<List<String>>)
             fun onError(errorMessageLayout: LinearLayout, errorMessage: TextView, message: String)
         }
 
-        fun ordersPassed24HFromCreation(
+        /**
+         * Receive status,
+         * return all order's which exceeded 24H from received status.
+         */
+        fun ordersPassed24HFromStatus(
             context: Context,
             status: String,
             errorMessageLayout: LinearLayout,
@@ -565,6 +614,9 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * Return the average time in hours, between the received statuses in the received date's.
+         */
         fun avgHoursByStatusInDateRange(
             context: Context,
             startStatus: String,
@@ -613,6 +665,10 @@ class DBUtilities {
 
         }
 
+        /**
+         * Return the amount of shipment's,
+         * ordered by courier and pick up city.
+         */
         fun amountOfShipmentsByCourierPerCity(
             context: Context,
             startDate: String,
@@ -662,6 +718,10 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
+        /**
+         * return the amount of shipment's,
+         * ordered by statuses(SCHEDULED, COLLECTED, DELIVERED) for each courier.
+         */
         fun amountOfShipmentsByCourierByStatus(
             context: Context,
             startDate: String,
@@ -712,6 +772,9 @@ class DBUtilities {
 
         }
 
+        /**
+         * Create popup window in the received activity context.
+         */
         fun showPopupWindow(
             context: Context,
             information: String
@@ -727,15 +790,21 @@ class DBUtilities {
             alertDialog.show()
         }
 
+        /**
+         * Add pickup address to current pickupAddresses List
+         */
         fun getPickupAddresses() {
             for (ship in shipments) {
                 if (ship.status.equals(eStatus.SCHEDULED)) {
                     pickupAddresses.add(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
-
                 }
             }
         }
 
+        /**
+         * Remove COLLECTED shipment address from pickupAddresses List,
+         * add it's delivery address to deliveryAddresses list.
+         */
         fun getDeliveryAddresses() {
             for (ship in shipments) {
                 if (ship.status.equals(eStatus.COLLECTED)) {
