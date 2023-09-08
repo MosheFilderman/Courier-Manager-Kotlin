@@ -31,6 +31,7 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipment
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.updateOrderStatus
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
 
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
@@ -83,11 +84,6 @@ class CourierShipmentList : AppCompatActivity() {
 
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.listView -> {
-                    startActivity(Intent(this@CourierShipmentList, CourierShipmentList::class.java))
-                    finish()
-                    true
-                }
 
                 R.id.calculateRoute -> {
                     if (pickupAddresses.size > 0){
@@ -95,6 +91,12 @@ class CourierShipmentList : AppCompatActivity() {
                     }else{
                         startOptimizedNavigation(deliveryAddresses)
                     }
+                    true
+                }
+
+                R.id.editInfo -> {
+                    startActivity(Intent(this@CourierShipmentList, EditUserDetails::class.java))
+                    drawerLayout.close()
                     true
                 }
 

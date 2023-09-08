@@ -59,6 +59,9 @@
             android:exported="true"
             android:parentActivityName=".Login" />
         <activity
+            android:name=".activities.EditUserDetails"
+            android:exported="true"/>
+        <activity
             android:name=".activities.customer.CustomerNewOrder"
             android:exported="true"
             android:parentActivityName=".activities.customer.CustomerOrderList" />

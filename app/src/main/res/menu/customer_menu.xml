@@ -6,9 +6,9 @@
             android:icon="@drawable/baseline_add_24"
             android:title="New Order" />
         <item
-            android:id="@+id/orderList"
-            android:icon="@drawable/baseline_list_24"
-            android:title="Order's List" />
+            android:id="@+id/editInfo"
+            android:icon="@drawable/baseline_edit_note_24"
+            android:title="Edit Details" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/baseline_logout_24"

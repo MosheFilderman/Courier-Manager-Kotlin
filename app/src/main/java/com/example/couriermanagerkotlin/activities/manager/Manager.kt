@@ -3,7 +3,6 @@ package com.example.couriermanagerkotlin.activities.manager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.icu.util.Calendar
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
@@ -17,8 +16,8 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.couriers
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCouriers
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCustomers
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.navigation.NavigationView
 
 class Manager : AppCompatActivity() {
@@ -68,7 +67,13 @@ class Manager : AppCompatActivity() {
                     true
                 }
 
-                R.id.settings -> {
+                R.id.editInfo -> {
+                    startActivity(Intent(this@Manager, EditUserDetails::class.java))
+                    drawerLayout.close()
+                    true
+                }
+
+                R.id.setMeasures -> {
                     startActivity(Intent(this@Manager, AppSettings::class.java))
                     true
                 }

@@ -13,12 +13,11 @@
     <string-array name="areaCodes">
         <item>Area code</item>
         <item>050</item>
+        <item>051</item>
         <item>052</item>
         <item>053</item>
         <item>054</item>
         <item>055</item>
-        <item>056</item>
-        <item>057</item>
         <item>058</item>
     </string-array>
 

@@ -25,6 +25,7 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.updateOr
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.google.android.material.navigation.NavigationView
@@ -75,7 +76,9 @@ class CustomerOrderList : AppCompatActivity() {
                     true
                 }
 
-                R.id.orderList -> {
+                R.id.editInfo -> {
+                    startActivity(Intent(this@CustomerOrderList, EditUserDetails::class.java))
+                    drawerLayout.close()
                     true
                 }
 

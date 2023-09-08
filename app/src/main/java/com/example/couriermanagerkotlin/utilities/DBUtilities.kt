@@ -1,5 +1,6 @@
 package com.example.couriermanagerkotlin.utilities
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
@@ -15,6 +16,7 @@ import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.activities.manager.Manager
 import com.example.couriermanagerkotlin.eRole
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
@@ -99,6 +101,45 @@ class DBUtilities {
                     params["email"] = email
                     params["phone"] = phone
                     params["eRole"] = eRole
+                    return params
+                }
+            }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        /**
+         * Receive updated user details after validation
+         * and update in DB user information.
+         */
+        fun updateUserDetail(
+            context: Context,
+            firstName: String,
+            lastName: String,
+            email: String,
+            phone: String,
+            errorMessage: TextView
+        ){
+            Toast.makeText(context, "line 121", Toast.LENGTH_SHORT).show()
+            val url: String = "http://$ipv4Address/courier_project/updateUserDetail.php"
+            val stringRequest: StringRequest = object : StringRequest(
+                Method.POST, url,
+                Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                    if(context is Activity) {
+                        context.finish()
+                    }
+                },
+                Response.ErrorListener { error ->
+                    errorMessage.visibility = View.VISIBLE
+                    errorMessage.text = error.toString()
+                }) {
+                override fun getParams(): Map<String, String> {
+                    val params: MutableMap<String, String> = HashMap()
+                    params["firstName"] = firstName
+                    params["lastName"] = lastName
+                    params["email"] = email
+                    params["phone"] = phone
                     return params
                 }
             }

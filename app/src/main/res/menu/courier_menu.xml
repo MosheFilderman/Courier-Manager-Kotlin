@@ -6,9 +6,9 @@
             android:icon="@drawable/baseline_play_arrow_24"
             android:title="Start Deliver" />
         <item
-            android:id="@+id/listView"
-            android:icon="@drawable/baseline_list_24"
-            android:title="Shipments" />
+            android:id="@+id/editInfo"
+            android:icon="@drawable/baseline_edit_note_24"
+            android:title="Edit Details" />
         <item
             android:id="@+id/logout"
             android:icon="@drawable/baseline_logout_24"
