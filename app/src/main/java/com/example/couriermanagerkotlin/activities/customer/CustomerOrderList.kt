@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin.activities.customer
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
@@ -29,11 +30,19 @@ import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.google.android.material.navigation.NavigationView
+import com.google.zxing.BarcodeFormat
+import com.google.zxing.EncodeHintType
+import com.google.zxing.MultiFormatWriter
+import com.google.zxing.WriterException
+import com.google.zxing.common.BitMatrix
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.EnumMap
+import java.util.Hashtable
+
 
 class CustomerOrderList : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
@@ -262,8 +271,11 @@ class CustomerOrderList : AppCompatActivity() {
         val formattedTime = currentTime.format(formatter)
 
         val pdfFile = createPdfFile(this@CustomerOrderList, "Order_ID:${order.orderId.substring(0,8)}_${formattedTime}.pdf")
-        if (pdfFile != null) {
+        val bitMatrix = generateQRCode(order.orderId, 100, 100)
+
+        if (pdfFile != null && bitMatrix != null) {
             try {
+               val qrCodeBitmap = bitMatrixToBitmap(bitMatrix)
                 val pdfDocument = PdfDocument()
                 val pageInfo = PdfDocument.PageInfo.Builder(400, 300, 1).create()
                 val page = pdfDocument.startPage(pageInfo)
@@ -271,14 +283,15 @@ class CustomerOrderList : AppCompatActivity() {
                     val canvas = page.canvas
                     val paint = Paint()
                     paint.color = Color.BLACK
-                    canvas.drawText("Order ID: ${order.orderId}", 40f, 50f, paint)
-                    canvas.drawText("Contact name: ${order.name}", 40f, 80f, paint)
-                    canvas.drawText("Contact phone: ${order.phone}", 40f, 110f, paint)
-                    canvas.drawText("Contact email: ${order.email}", 40f, 140f, paint)
-                    canvas.drawText("Pickup Address: ${order.pickupStreet} ${order.pickupBuild}, ${order.pickupCity}", 40f, 170f, paint)
-                    canvas.drawText("Delivery Address: ${order.deliveryStreet} ${order.deliveryBuild}, ${order.deliveryCity}", 40f, 200f, paint)
+                    canvas.drawBitmap(qrCodeBitmap,250f,50f,paint)
+ //                   canvas.drawText("Order ID: ${order.orderId}", 40f, 50f, paint)
+                    canvas.drawText("Contact name: ${order.name}", 40f, 50f, paint)
+                    canvas.drawText("Contact phone: ${order.phone}", 40f, 80f, paint)
+                    canvas.drawText("Contact email: ${order.email}", 40f, 110f, paint)
+                    canvas.drawText("Pickup Address: ${order.pickupStreet} ${order.pickupBuild}, ${order.pickupCity}", 40f, 140f, paint)
+                    canvas.drawText("Delivery Address: ${order.deliveryStreet} ${order.deliveryBuild}, ${order.deliveryCity}", 40f, 170f, paint)
                     paint.color = Color.RED
-                    canvas.drawText("Comment's: ${order.comment}", 40f, 230f, paint)
+                    canvas.drawText("Comment's: ${order.comment}", 40f, 200f, paint)
                     pdfDocument.finishPage(page)
                     pdfDocument.writeTo(FileOutputStream(pdfFile))
                     pdfDocument.close()
@@ -314,5 +327,32 @@ class CustomerOrderList : AppCompatActivity() {
         intent.setDataAndType(uri, "application/pdf")
         intent.flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
         context.startActivity(intent)
+    }
+
+    fun generateQRCode(content: String, width: Int, height: Int): BitMatrix? {
+        val hints: MutableMap<EncodeHintType, Any> = EnumMap(EncodeHintType::class.java)
+        hints[EncodeHintType.CHARACTER_SET] = "UTF-8"
+
+        try {
+            return MultiFormatWriter().encode(content, BarcodeFormat.QR_CODE, width, height, hints)
+        } catch (e: WriterException) {
+            e.printStackTrace()
+        }
+
+        return null
+    }
+
+    fun bitMatrixToBitmap(bitMatrix: BitMatrix): Bitmap {
+        val width = bitMatrix.width
+        val height = bitMatrix.height
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+
+        for (x in 0 until width) {
+            for (y in 0 until height) {
+                bitmap.setPixel(x, y, if (bitMatrix[x, y]) Color.BLACK else Color.WHITE)
+            }
+        }
+
+        return bitmap
     }
 }

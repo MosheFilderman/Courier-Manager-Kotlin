@@ -31,15 +31,15 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.17"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
         var couriers = ArrayList<User>()
         var customers = ArrayList<User>()
         var shipments = ArrayList<Shipment>()
-        var pickupAddresses = ArrayList<String>()
-        var deliveryAddresses = ArrayList<String>()
+        var routeAddresses = ArrayList<String>()
+//        var deliveryAddresses = ArrayList<String>()
 
         /**
          * Receive user data after validation, send to PHP for creation of the CUSTOMER in the DB.
@@ -459,8 +459,7 @@ class DBUtilities {
                         }
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
-                        getPickupAddresses()
-                        getDeliveryAddresses()
+                        getRouteAddresses()
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
                         emptyListMsg.text = "No deliveries have been assigned to this courier"
@@ -834,23 +833,35 @@ class DBUtilities {
         /**
          * Add pickup address to current pickupAddresses List
          */
-        fun getPickupAddresses() {
-            for (ship in shipments) {
-                if (ship.status.equals(eStatus.SCHEDULED)) {
-                    pickupAddresses.add(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
-                }
-            }
-        }
+//        fun getPickupAddresses() {
+//            for (ship in shipments) {
+//                if (ship.status.equals(eStatus.SCHEDULED)) {
+//                    pickupAddresses.add(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
+//                }
+//            }
+//        }
 
         /**
          * Remove COLLECTED shipment address from pickupAddresses List,
          * add it's delivery address to deliveryAddresses list.
          */
-        fun getDeliveryAddresses() {
+//        fun getDeliveryAddresses() {
+//            for (ship in shipments) {
+//                if (ship.status.equals(eStatus.COLLECTED)) {
+//                    pickupAddresses.remove(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
+//                    deliveryAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
+//                }
+//            }
+//        }
+
+        fun getRouteAddresses() {
             for (ship in shipments) {
+                if (ship.status.equals(eStatus.SCHEDULED)) {
+                    routeAddresses.add(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
+                }
                 if (ship.status.equals(eStatus.COLLECTED)) {
-                    pickupAddresses.remove(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
-                    deliveryAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
+                    routeAddresses.remove(ship.pickupStreet + " " + ship.pickupBuild + " " + ship.pickupCity)
+                    routeAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
                 }
             }
         }
