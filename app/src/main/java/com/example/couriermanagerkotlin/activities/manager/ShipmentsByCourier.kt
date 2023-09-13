@@ -1,7 +1,9 @@
 package com.example.couriermanagerkotlin.activities.manager
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
@@ -9,15 +11,21 @@ import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.R
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ShipmentsByCourier : AppCompatActivity() {
 
+    private val maxShipmentAmount = 20
+
     lateinit var firstName: TextView
     lateinit var lastName: TextView
+    lateinit var currentShipmentAmountView: TextView
     lateinit var shipmentList: ListView
     lateinit var emptyListMsg: TextView
+    lateinit var floatingAssignButton: FloatingActionButton
 
     private lateinit var chosenCourier: User
+    private var currentShipmentAmount: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,11 +35,27 @@ class ShipmentsByCourier : AppCompatActivity() {
 
         firstName = findViewById(R.id.firstName)
         lastName = findViewById(R.id.lastName)
+        currentShipmentAmountView = findViewById(R.id.currentShipmentAmount)
         shipmentList = findViewById(R.id.shipmentListView)
         emptyListMsg = findViewById(R.id.emptyListMsg)
+        floatingAssignButton = findViewById(R.id.floatingAssignButton)
 
         firstName.text = chosenCourier.firstName
         lastName.text = chosenCourier.lastName
+
+        currentShipmentAmount = if(shipments.isEmpty()) {
+            0
+        } else {
+            shipments.size
+        }
+
+        currentShipmentAmountView.text = currentShipmentAmount.toString()
+
+        if(currentShipmentAmount < maxShipmentAmount) {
+            floatingAssignButton.visibility = View.VISIBLE
+        } else {
+            floatingAssignButton.visibility = View.GONE
+        }
 
         shipmentList.setOnItemClickListener { parent, view, position, id ->
             val builder = AlertDialog.Builder(this)
@@ -83,6 +107,13 @@ class ShipmentsByCourier : AppCompatActivity() {
             builder.show()
         }
 
-        getShipmentsByCourier(this, chosenCourier.email, shipmentList, emptyListMsg)
+        getShipmentsByCourier(this, chosenCourier.email, shipmentList, currentShipmentAmountView, emptyListMsg)
+    }
+
+    fun assignOrders(view: View) {
+        intent = Intent(this@ShipmentsByCourier, ManagerAssignOrder::class.java)
+        intent.putExtra("chosenCourier", chosenCourier)
+        intent.putExtra("shipmentLimit", (maxShipmentAmount - currentShipmentAmount).toString())
+        startActivity(intent)
     }
 }
