@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".activities.manager.ShipmentsByCourier">
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/titleSection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,6 +17,7 @@
         android:padding="10dp">
 
         <ImageView
+            android:id="@+id/userImage"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginEnd="10dp"
@@ -27,20 +28,43 @@
             android:layout_width="wrap_content"
             android:layout_height="60dp"
             android:layout_marginEnd="10dp"
+            android:layout_toEndOf="@+id/userImage"
             android:gravity="center"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/lastName"
             android:layout_width="wrap_content"
             android:layout_height="60dp"
+            android:layout_toEndOf="@+id/firstName"
             android:gravity="center"
+            android:textColor="@color/black"
             android:textSize="20sp"
-            android:textStyle="bold"
-            android:textColor="@color/black" />
-    </LinearLayout>
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/currentShipmentAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_toStartOf="@+id/maxAmount"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/maxAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="60dp"
+            android:layout_alignParentEnd="true"
+            android:gravity="center"
+            android:text="/20"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
     <ListView
         android:id="@+id/shipmentListView"
@@ -61,5 +85,18 @@
         android:layout_below="@+id/titleSection"
         android:gravity="center"
         android:visibility="gone" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingAssignButton"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_gravity="center"
+        android:layout_margin="15dp"
+        android:contentDescription="Assign orders to user"
+        android:onClick="assignOrders"
+        android:src="@drawable/baseline_add_24" />
 
 </RelativeLayout>

@@ -5,9 +5,11 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
+import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
@@ -40,6 +42,7 @@ class DBUtilities {
         var shipments = ArrayList<Shipment>()
         var routeAddresses = ArrayList<String>()
 //        var deliveryAddresses = ArrayList<String>()
+        var availablePickupCities = ArrayList<String>()
 
         /**
          * Receive user data after validation, send to PHP for creation of the CUSTOMER in the DB.
@@ -410,6 +413,71 @@ class DBUtilities {
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
                 }) {
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        /**
+         * Receive COURIER email,
+         * return all the not closed shipments which had assign to him.
+         */
+        fun getShipmentsByCourier(
+            context: Context,
+            email: String,
+            shipmentList: ListView,
+            currentShipmentAmount: TextView,
+            emptyListMsg: TextView
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/getCourierShipment.php"
+            shipments.clear()
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    if (!response.toString().trim().equals("empty")) {
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("shipments")
+
+                        for (i in 0 until jsonArrayOrders.length()) {
+                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
+                            val tmpShipment = Shipment(
+                                jsonInner.get("order_id").toString(),
+                                jsonInner.get("pickupFirstName").toString(),
+                                jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupPhone").toString(),
+                                jsonInner.get("pickupEmail").toString(),
+                                jsonInner.get("pickupCity").toString(),
+                                jsonInner.get("pickupStreet").toString(),
+                                jsonInner.get("pickupBuild").toString(),
+                                jsonInner.get("deliveryName").toString(),
+                                jsonInner.get("deliveryPhone").toString(),
+                                jsonInner.get("deliveryEmail").toString(),
+                                jsonInner.get("deliveryCity").toString(),
+                                jsonInner.get("deliveryStreet").toString(),
+                                jsonInner.get("deliveryBuild").toString(),
+                                eStatus.findStatus(jsonInner.get("orderStatus").toString()),
+                                jsonInner.get("comment").toString()
+                            )
+                            shipments.add(tmpShipment)
+                        }
+                        currentShipmentAmount.text = shipments.size.toString()
+                        shipmentList.visibility = View.VISIBLE
+                        shipmentList.adapter = ShipmentsAdapter(context, shipments)
+                        getPickupAddresses()
+                        getDeliveryAddresses()
+                    } else {
+                        emptyListMsg.visibility = View.VISIBLE
+                        emptyListMsg.text = "No deliveries have been assigned to this courier"
+                    }
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["email"] = email
+                        return params
+                    }
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
@@ -864,6 +932,73 @@ class DBUtilities {
                     routeAddresses.add(ship.deliveryStreet + " " + ship.deliveryBuild + " " + ship.deliveryCity)
                 }
             }
+        }
+
+        /**
+         * Return list of pickup cities from which there are order's in NEW status.
+         */
+        fun getAvailablePickupCities(
+            context: Context
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/getPickupCityList.php"
+            availablePickupCities.clear()
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    if (!response.toString().trim().equals("empty")) {
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("pickupCities")
+                        availablePickupCities.add("Choose pickup city")
+
+                        for (i in 0 until jsonArrayOrders.length()) {
+                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
+                            val tmpPickupCity = jsonInner.get("pickupCity").toString()
+                            availablePickupCities.add(tmpPickupCity)
+                        }
+                    } else {
+                        availablePickupCities.add("No NEW order's yet")
+                    }
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+//                    override fun getParams(): Map<String, String> {
+//                        val params: MutableMap<String, String> = HashMap()
+//                        return params
+//                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        /**
+         * Receive courier email and assigned orders limit,
+         * set the courier email column to the received and update order status.
+         */
+        fun assignOrdersToCourierByPickupCity(
+            context: Context,
+            courierEmail: String,
+            chosenPickupCity: String,
+            shipmentLimit: String
+        ){
+            val url: String = "http://$ipv4Address/courier_project/assignOrdersToCourierByPickupCity.php"
+
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["courierEmail"] = courierEmail
+                        params["chosenPickupCity"] = chosenPickupCity
+                        params["shipmentLimit"] = shipmentLimit
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
         }
 
 

@@ -18,6 +18,7 @@ import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCustomers
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAvailablePickupCities
 import com.google.android.material.navigation.NavigationView
 
 class Manager : AppCompatActivity() {
@@ -74,7 +75,7 @@ class Manager : AppCompatActivity() {
                 }
 
                 R.id.setMeasures -> {
-                    startActivity(Intent(this@Manager, AppSettings::class.java))
+                    startActivity(Intent(this@Manager, ManagerSetMeasures::class.java))
                     true
                 }
 
@@ -121,6 +122,7 @@ class Manager : AppCompatActivity() {
         }
         getAllCouriers(this@Manager, courierList, emptyListMsg)
         getAllCustomers(this@Manager)
+        getAvailablePickupCities(this@Manager)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

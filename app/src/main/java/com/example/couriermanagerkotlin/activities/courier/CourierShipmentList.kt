@@ -66,7 +66,7 @@ class CourierShipmentList : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_courier_list_view)
+        setContentView(R.layout.activity_courier_shipment_list)
 
         shipmentsList = findViewById(R.id.shipmentListView)
         emptyListMsg = findViewById(R.id.emptyListMsg)
