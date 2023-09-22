@@ -267,13 +267,10 @@ class CourierShipmentList : AppCompatActivity() {
                                 Toast.makeText(this@CourierShipmentList,"Order Not Found",Toast.LENGTH_LONG).show()
                             }
                         }
-
                     }
                 }
-
                 return false
             }
-
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 searchShipmentList.clear()
@@ -295,8 +292,6 @@ class CourierShipmentList : AppCompatActivity() {
 
         return super.onCreateOptionsMenu(menu)
     }
-
-
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {

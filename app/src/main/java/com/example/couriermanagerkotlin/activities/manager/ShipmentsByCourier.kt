@@ -3,14 +3,19 @@ package com.example.couriermanagerkotlin.activities.manager
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.ListView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipments
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.availablePickupCities
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.suspendUser
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class ShipmentsByCourier : AppCompatActivity() {
@@ -51,10 +56,10 @@ class ShipmentsByCourier : AppCompatActivity() {
 
         currentShipmentAmountView.text = currentShipmentAmount.toString()
 
-        if(currentShipmentAmount < maxShipmentAmount) {
-            floatingAssignButton.visibility = View.VISIBLE
-        } else {
+        if(maxShipmentAmount <= currentShipmentAmount || availablePickupCities[0].equals("No NEW order's yet")) {
             floatingAssignButton.visibility = View.GONE
+        } else {
+            floatingAssignButton.visibility = View.VISIBLE
         }
 
         shipmentList.setOnItemClickListener { parent, view, position, id ->
@@ -108,6 +113,25 @@ class ShipmentsByCourier : AppCompatActivity() {
         }
 
         getShipmentsByCourier(this, chosenCourier.email, shipmentList, currentShipmentAmountView, emptyListMsg)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.suspend_user, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.suspendUser -> {
+                if(shipments.size == 0){
+                    suspendUser(this@ShipmentsByCourier, chosenCourier.email, chosenCourier.phone)
+                    startActivity(Intent(this@ShipmentsByCourier, Manager::class.java))
+                } else {
+                    Toast.makeText(this@ShipmentsByCourier, "Courier still have undelivered shipment's", Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     fun assignOrders(view: View) {

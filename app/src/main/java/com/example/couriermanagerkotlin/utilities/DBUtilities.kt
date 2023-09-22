@@ -33,7 +33,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.100.102.253"
+        const val ipv4Address: String = "10.0.0.7"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -42,6 +42,8 @@ class DBUtilities {
         var shipments = ArrayList<Shipment>()
         var routeAddresses = ArrayList<String>()
         var availablePickupCities = ArrayList<String>()
+
+        /* User Utilities */
 
         /**
          * Receive user data after validation, send to PHP for creation of the CUSTOMER in the DB.
@@ -122,7 +124,6 @@ class DBUtilities {
             phone: String,
             errorMessage: TextView
         ){
-            Toast.makeText(context, "line 121", Toast.LENGTH_SHORT).show()
             val url: String = "http://$ipv4Address/courier_project/updateUserDetail.php"
             val stringRequest: StringRequest = object : StringRequest(
                 Method.POST, url,
@@ -140,6 +141,34 @@ class DBUtilities {
                     val params: MutableMap<String, String> = HashMap()
                     params["firstName"] = firstName
                     params["lastName"] = lastName
+                    params["email"] = email
+                    params["phone"] = phone
+                    return params
+                }
+            }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        /**
+         *
+         */
+        fun suspendUser(
+            context: Context,
+            email: String,
+            phone: String
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/suspendUser.php"
+            val stringRequest: StringRequest = object : StringRequest(
+                Method.POST, url,
+                Response.Listener { response ->
+                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                },
+                Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+                override fun getParams(): Map<String, String> {
+                    val params: MutableMap<String, String> = HashMap()
                     params["email"] = email
                     params["phone"] = phone
                     return params
