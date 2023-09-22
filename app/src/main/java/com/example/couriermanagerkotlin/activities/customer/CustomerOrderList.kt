@@ -292,7 +292,6 @@ class CustomerOrderList : AppCompatActivity() {
                     val paint = Paint()
                     paint.color = Color.BLACK
                     canvas.drawBitmap(qrCodeBitmap,250f,50f,paint)
- //                   canvas.drawText("Order ID: ${order.orderId}", 40f, 50f, paint)
                     canvas.drawText("Contact name: ${order.name}", 40f, 50f, paint)
                     canvas.drawText("Contact phone: ${order.phone}", 40f, 80f, paint)
                     canvas.drawText("Contact email: ${order.email}", 40f, 110f, paint)

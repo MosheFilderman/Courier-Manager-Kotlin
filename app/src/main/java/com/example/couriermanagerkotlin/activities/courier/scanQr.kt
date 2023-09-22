@@ -16,8 +16,9 @@ class scanQr : AppCompatActivity() {
         // Start the QR code scanner
         val integrator = IntentIntegrator(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
-        integrator.setPrompt("Scan a QR Code")
+        integrator.setPrompt("Scan the Order QR")
         integrator.setCameraId(0)  // Use the back camera
+        integrator.setOrientationLocked(true)
         integrator.setBeepEnabled(true) // Beep when a QR code is scanned
         integrator.initiateScan()
     }
@@ -28,7 +29,9 @@ class scanQr : AppCompatActivity() {
         val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
         if (result.contents != null) {
             val scannedText = result.contents
-            Toast.makeText(this@scanQr,scannedText,Toast.LENGTH_LONG).show()
+            val intent = Intent(this, CourierShipmentList::class.java)
+            intent.putExtra("scannedText", scannedText)
+            startActivity(intent)
         } else {
             // Handle the case where no QR code was scanned
         }

@@ -68,7 +68,7 @@ class CourierShipmentList : AppCompatActivity() {
     lateinit var emptyListMsg: TextView
     lateinit var search: SearchView
     var searchShipmentList = ArrayList<Shipment>()
-    lateinit var qr: Button
+
 
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
 
@@ -82,7 +82,7 @@ class CourierShipmentList : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
-        qr = findViewById(R.id.qr)
+
 
         toggle = ActionBarDrawerToggle(
             this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -245,12 +245,35 @@ class CourierShipmentList : AppCompatActivity() {
 
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem?.actionView as SearchView
-
+        val scannedText = intent.getStringExtra("scannedText")
+        if(!scannedText.isNullOrEmpty()){
+            searchView.setQuery(scannedText,true)
+            Toast.makeText(this@CourierShipmentList,scannedText,Toast.LENGTH_LONG).show()
+        }
         // Set up search view listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+
+                if (scannedText != null) {
+                    if (scannedText.isNotEmpty()) {
+                        searchShipmentList.clear()
+                        for (tmpShipment in shipments) {
+                            if (tmpShipment.orderId == scannedText) {
+                                searchShipmentList.add(tmpShipment)
+                                shipmentsList.adapter =
+                                    ShipmentsAdapter(this@CourierShipmentList, searchShipmentList)
+
+                            }else{
+                                Toast.makeText(this@CourierShipmentList,"Order Not Found",Toast.LENGTH_LONG).show()
+                            }
+                        }
+
+                    }
+                }
+
                 return false
             }
+
 
             override fun onQueryTextChange(p0: String?): Boolean {
                 searchShipmentList.clear()
@@ -288,7 +311,15 @@ class CourierShipmentList : AppCompatActivity() {
                 } else {
                     // Handle other home navigation logic here
                 }
+
+
                 return true
+            }
+            R.id.qr -> {
+                val intent = Intent(this, scanQr::class.java)
+                startActivity(intent)
+                finish()
+
             }
         }
 
@@ -595,42 +626,9 @@ class CourierShipmentList : AppCompatActivity() {
         return null
     }
 
-    fun openQrScan(view: View) {
-        val intent = Intent(this, scanQr::class.java)
-        startActivity(intent)
 
-    }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == REQUEST_CODE_QR_SCANNER && resultCode == Activity.RESULT_OK) {
-            // Get the scanned text from the result
-            val extras = data?.extras
-            if (extras != null && extras.containsKey("data")) {
-                scannedText = extras.getString("data")
 
-                Toast.makeText(this@CourierShipmentList,scannedText.toString(),Toast.LENGTH_LONG).show()
-
-            }
-        }
-    }
-    private fun openQRScanner() {
-        // Create an intent to open the QR code scanner app
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-
-        // Check if there are apps that can handle the intent
-        val packageManager = packageManager
-        val activities: List<ResolveInfo> = packageManager.queryIntentActivities(intent, 0)
-
-        if (activities.isNotEmpty()) {
-            // Start the QR code scanner
-            startActivityForResult(intent, REQUEST_CODE_QR_SCANNER)
-        } else {
-            Toast.makeText(this@CourierShipmentList,"QR SCANNER MOSSING",Toast.LENGTH_LONG).show()
-        }
-    }
-
-    private val REQUEST_CODE_QR_SCANNER = 123
 
 }
