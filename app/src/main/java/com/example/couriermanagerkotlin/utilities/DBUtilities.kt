@@ -33,7 +33,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.100.102.17"
+        const val ipv4Address: String = "10.100.102.253"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -41,7 +41,6 @@ class DBUtilities {
         var customers = ArrayList<User>()
         var shipments = ArrayList<Shipment>()
         var routeAddresses = ArrayList<String>()
-//        var deliveryAddresses = ArrayList<String>()
         var availablePickupCities = ArrayList<String>()
 
         /**
@@ -464,8 +463,7 @@ class DBUtilities {
                         currentShipmentAmount.text = shipments.size.toString()
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
-                        getPickupAddresses()
-                        getDeliveryAddresses()
+                        getRouteAddresses()
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
                         emptyListMsg.text = "No deliveries have been assigned to this courier"

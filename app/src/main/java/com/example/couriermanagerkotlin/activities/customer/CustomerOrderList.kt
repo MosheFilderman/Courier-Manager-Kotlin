@@ -3,11 +3,14 @@ package com.example.couriermanagerkotlin.activities.customer
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.util.Linkify
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -143,6 +146,7 @@ class CustomerOrderList : AppCompatActivity() {
             val orderId: TextView = dialogLayout.findViewById(R.id.orderId)
             val name: TextView = dialogLayout.findViewById(R.id.name)
             val phone: TextView = dialogLayout.findViewById(R.id.phone)
+            Linkify.addLinks(phone, Linkify.PHONE_NUMBERS)
             val email: TextView = dialogLayout.findViewById(R.id.email)
             val status: TextView = dialogLayout.findViewById(R.id.orderStatus)
             val pickupAddress: TextView = dialogLayout.findViewById(R.id.pickupAddress)
@@ -242,6 +246,10 @@ class CustomerOrderList : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
+
+
+
 
     /**
      * Check if the received list is empty,
@@ -355,4 +363,6 @@ class CustomerOrderList : AppCompatActivity() {
 
         return bitmap
     }
+
+
 }

@@ -1,19 +1,25 @@
 package com.example.couriermanagerkotlin.activities.courier
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.content.pm.ResolveInfo
 import android.location.Address
 import android.location.Criteria
 import android.location.Geocoder
 import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
+import android.text.util.Linkify
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.TextView
@@ -56,11 +62,13 @@ class CourierShipmentList : AppCompatActivity() {
     private lateinit var userEmail: TextView
 
 
+    private var scannedText: String? = null
     lateinit var shrd: SharedPreferences
     lateinit var shipmentsList: ListView
     lateinit var emptyListMsg: TextView
     lateinit var search: SearchView
     var searchShipmentList = ArrayList<Shipment>()
+    lateinit var qr: Button
 
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
 
@@ -74,6 +82,7 @@ class CourierShipmentList : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
+        qr = findViewById(R.id.qr)
 
         toggle = ActionBarDrawerToggle(
             this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -181,10 +190,12 @@ class CourierShipmentList : AppCompatActivity() {
 
             pickupName = dialogLayout.findViewById(R.id.pickupName)
             pickupPhone = dialogLayout.findViewById(R.id.pickupPhone)
+            Linkify.addLinks(pickupPhone, Linkify.PHONE_NUMBERS)
             pickupEmail = dialogLayout.findViewById(R.id.pickupEmail)
             pickupAddress = dialogLayout.findViewById(R.id.pickupAddress)
             deliveryName = dialogLayout.findViewById(R.id.deliveryName)
             deliveryPhone = dialogLayout.findViewById(R.id.deliveryPhone)
+            Linkify.addLinks(deliveryPhone, Linkify.PHONE_NUMBERS)
             deliveryEmail = dialogLayout.findViewById(R.id.deliveryEmail)
             deliveryAddress = dialogLayout.findViewById(R.id.deliveryAddress)
             status = dialogLayout.findViewById(R.id.orderStatus)
@@ -261,6 +272,8 @@ class CourierShipmentList : AppCompatActivity() {
 
         return super.onCreateOptionsMenu(menu)
     }
+
+
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (toggle.onOptionsItemSelected(item)) {
@@ -582,5 +595,42 @@ class CourierShipmentList : AppCompatActivity() {
         return null
     }
 
+    fun openQrScan(view: View) {
+        val intent = Intent(this, scanQr::class.java)
+        startActivity(intent)
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == REQUEST_CODE_QR_SCANNER && resultCode == Activity.RESULT_OK) {
+            // Get the scanned text from the result
+            val extras = data?.extras
+            if (extras != null && extras.containsKey("data")) {
+                scannedText = extras.getString("data")
+
+                Toast.makeText(this@CourierShipmentList,scannedText.toString(),Toast.LENGTH_LONG).show()
+
+            }
+        }
+    }
+    private fun openQRScanner() {
+        // Create an intent to open the QR code scanner app
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+
+        // Check if there are apps that can handle the intent
+        val packageManager = packageManager
+        val activities: List<ResolveInfo> = packageManager.queryIntentActivities(intent, 0)
+
+        if (activities.isNotEmpty()) {
+            // Start the QR code scanner
+            startActivityForResult(intent, REQUEST_CODE_QR_SCANNER)
+        } else {
+            Toast.makeText(this@CourierShipmentList,"QR SCANNER MOSSING",Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private val REQUEST_CODE_QR_SCANNER = 123
 
 }
