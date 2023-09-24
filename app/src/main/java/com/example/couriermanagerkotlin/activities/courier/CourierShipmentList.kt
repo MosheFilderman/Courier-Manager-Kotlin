@@ -46,6 +46,8 @@ import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipment
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.updateOrderStatus
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.navigation.NavigationView
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -61,7 +63,7 @@ class CourierShipmentList : AppCompatActivity() {
     private lateinit var userFullName: TextView
     private lateinit var userEmail: TextView
 
-
+    private var scannedContent: String? = null
     private var scannedText: String? = null
     lateinit var shrd: SharedPreferences
     lateinit var shipmentsList: ListView
@@ -254,23 +256,6 @@ class CourierShipmentList : AppCompatActivity() {
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
 
-                if (scannedText != null) {
-                    if (scannedText.isNotEmpty()) {
-                        searchShipmentList.clear()
-                        for (tmpShipment in shipments) {
-                            if (tmpShipment.orderId == scannedText) {
-                                searchShipmentList.add(tmpShipment)
-                                shipmentsList.adapter =
-                                    ShipmentsAdapter(this@CourierShipmentList, searchShipmentList)
-
-                            }else{
-                                Toast.makeText(this@CourierShipmentList,"Order Not Found",Toast.LENGTH_LONG).show()
-                            }
-                        }
-
-                    }
-                }
-
                 return false
             }
 
@@ -312,187 +297,16 @@ class CourierShipmentList : AppCompatActivity() {
                     // Handle other home navigation logic here
                 }
 
-
                 return true
             }
             R.id.qr -> {
-                val intent = Intent(this, scanQr::class.java)
-                startActivity(intent)
-                finish()
+                startQRCodeScanning()
 
             }
         }
 
         return super.onOptionsItemSelected(item)
     }
-
-    /**
-     * Check if there's enough addresses for the navigation calculation,
-     * if not, pop toast's.
-     */
-    private fun startOptimizedNavigation(addresses: ArrayList<String>) {
-        if (addresses.size < 2) {
-            Toast.makeText(this, "Not enough addresses for navigation", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        val geocoder = Geocoder(this)
-        val waypoints = ArrayList<LatLng>()
-
-        for (address in addresses) {
-            val results: List<Address>? = geocoder.getFromLocationName(address, 1)
-            if (results != null && results.isNotEmpty()) {
-                val location = results[0]
-                waypoints.add(LatLng(location.latitude, location.longitude))
-            }
-        }
-
-        if (waypoints.size < 2) {
-            Toast.makeText(this, "Not enough waypoints for navigation", Toast.LENGTH_SHORT).show()
-            return
-        }
-
-        // Request an optimized route using Google Directions API
-        requestOptimizedRoute(waypoints)
-    }
-
-    /**
-     * Create URL for google direction's api, with the received addresses as waypoint's.
-     */
-    private fun requestOptimizedRoute(waypoints: List<LatLng>) {
-        val origin = waypoints.first()
-        Log.e("origin", origin.toString())
-        val destination = waypoints.last()
-        Log.e("destination", destination.toString())
-        val waypointsExceptOriginAndDestination = waypoints.subList(1, waypoints.size)
-        Log.e("waypointsExceptOriginAndDestination", waypointsExceptOriginAndDestination.toString())
-        val waypointsParam =
-            waypointsExceptOriginAndDestination.joinToString("|") { "${it.latitude},${it.longitude}" }
-        Log.e("waypointsParam", waypointsParam.toString())
-        val apiKey = getString(R.string.GOOGLE_API_KEY)
-        val url =
-            "https://maps.googleapis.com/maps/api/directions/json" + "?origin=${origin.latitude},${origin.longitude}" + "&destination=${destination.latitude},${destination.longitude}" + "&waypoints=optimize:true|$waypointsParam" + "&key=$apiKey"
-
-        val requestQueue = Volley.newRequestQueue(this)
-        val request = JsonObjectRequest(Request.Method.GET, url, null, { response ->
-            val optimizedWaypoints = parseOptimizedWaypoints(response)
-
-            if (optimizedWaypoints.isNotEmpty()) {
-                // Construct intentUri using optimizedWaypoints
-                val intentUri = buildNavigationUri(optimizedWaypoints)
-
-                // Launch navigation using intentUri
-                val intent = Intent(Intent.ACTION_VIEW, intentUri)
-                intent.setPackage("com.google.android.apps.maps") // Use the package name of Google Maps
-                if (intent.resolveActivity(packageManager) != null) {
-                    startActivity(intent)
-                } else {
-                    Toast.makeText(this, "Google Maps app not installed.", Toast.LENGTH_SHORT)
-                        .show()
-                }
-            }
-        }, { error ->
-            // Handle error
-            Toast.makeText(this, "Error retrieving route: ${error.message}", Toast.LENGTH_SHORT)
-                .show()
-        })
-
-        requestQueue.add(request)
-    }
-
-    /**
-     * Convert google response into list of coordinate's.
-     */
-    private fun parseOptimizedWaypoints(response: JSONObject): List<LatLng> {
-        val optimizedWaypoints = ArrayList<LatLng>()
-
-        val routes = response.getJSONArray("routes")
-        if (routes.length() > 0) {
-            val legs = routes.getJSONObject(0).getJSONArray("legs")
-            for (i in 0 until legs.length()) {
-                val leg = legs.getJSONObject(i)
-                val startLocation = leg.getJSONObject("start_location")
-                val lat = startLocation.getDouble("lat")
-                val lng = startLocation.getDouble("lng")
-                optimizedWaypoints.add(LatLng(lat, lng))
-            }
-        }
-
-        return optimizedWaypoints
-    }
-
-    /**
-     * Convert the waypoint's into URI, which send to google api.
-     */
-    private fun buildNavigationUri(waypoints: List<LatLng>): Uri {
-        val intentUriBuilder =
-            StringBuilder("google.navigation:q=${waypoints.last().latitude},${waypoints.last().longitude}&waypoints=")
-        for (i in 0 until waypoints.size - 1) {
-            intentUriBuilder.append("${waypoints[i].latitude},${waypoints[i].longitude}")
-            if (i < waypoints.size - 2) {
-                intentUriBuilder.append("|")
-            }
-        }
-        return Uri.parse(intentUriBuilder.toString())
-    }
-
-
-    /////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-//    fun openGoogleMapsWithClosestRoute(currentLocation: LatLng, closestLocation: LatLng) {
-//        val intent = Intent(
-//            Intent.ACTION_VIEW,
-//            Uri.parse("http://maps.google.com/maps?saddr=${currentLocation.latitude},${currentLocation.longitude}&daddr=${closestLocation.latitude},${closestLocation.longitude}")
-//        )
-//        startActivity(intent)
-//    }
-//
-//    fun findClosestAddress(
-//        currentLocation: LatLng,
-//        addresses: ArrayList<LatLng>,
-//        apiKey: String
-//    ): LatLng? {
-//        val context = GeoApiContext.Builder()
-//            .apiKey(apiKey)
-//            .build()
-//
-//        val origins = arrayOf(
-//            com.google.maps.model.LatLng(
-//                currentLocation.latitude,
-//                currentLocation.longitude
-//            )
-//        )
-//        val destinations =
-//            addresses.map { com.google.maps.model.LatLng(it.latitude, it.longitude) }.toTypedArray()
-//
-//        val result: DistanceMatrix = DistanceMatrixApi.newRequest(context)
-//            .origins(*origins)
-//            .destinations(*destinations)
-//            .mode(TravelMode.DRIVING) // You can choose the travel mode here
-//            .units(Unit.METRIC) // Use Unit.METRIC for metric units
-//            .await()
-//
-//        if (result.rows.isNotEmpty()) {
-//            val closestRow = result.rows[0]
-//            var minDistance = Double.MAX_VALUE
-//            var closestDestination: LatLng? = null
-//
-//            for (i in closestRow.elements.indices) {
-//                val element = closestRow.elements[i]
-//                val distance = element.distance.inMeters.toDouble()
-//
-//                if (distance < minDistance) {
-//                    minDistance = distance
-//                    closestDestination = addresses[i]
-//                }
-//            }
-//
-//            return closestDestination
-//        }
-//
-//        return null
-//    }
 
 
     private fun openGoogleMapsWithRouteToNearest(
@@ -503,6 +317,7 @@ class CourierShipmentList : AppCompatActivity() {
             val nearestAddress = findNearestAddress(context, originLatLng, addresses)
 
             withContext(Dispatchers.Main) {
+                Log.e("nearest Address",nearestAddress)
                 if (nearestAddress.isNotEmpty()) {
                     val uri = Uri.parse("google.navigation:q=${nearestAddress.replace(" ", "+")}")
                     val mapIntent = Intent(Intent.ACTION_VIEW, uri)
@@ -584,15 +399,17 @@ class CourierShipmentList : AppCompatActivity() {
         for (address in addresses) {
             val destinationLatLng = getLatLngFromAddress(context, address)
             if (destinationLatLng != null) {
-                val distance = calculateDistance(context,
+                calculateDistance(context,
                     originLatLng,
                     destinationLatLng,
                     getString(R.string.GOOGLE_API_KEY),
                     object : DistanceCallback {
                         override fun onDistanceReceived(distance: Double) {
+
                             if (distance < shortestDistance) {
                                 shortestDistance = distance
                                 nearestAddress = address
+
                             }
                             println("Distance between the two points: $distance kilometers")
                         }
@@ -605,7 +422,7 @@ class CourierShipmentList : AppCompatActivity() {
 
             }
         }
-
+        Thread.sleep(2500)
         return nearestAddress
     }
 
@@ -627,8 +444,34 @@ class CourierShipmentList : AppCompatActivity() {
     }
 
 
+    private fun startQRCodeScanning() {
+        val integrator = IntentIntegrator(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        integrator.setPrompt("Scan Order QR Code")
+        integrator.setCameraId(0)  // Use the back camera
+        integrator.setBeepEnabled(true) // Beep when a QR code is scanned
+        integrator.initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result.contents != null) {
+            scannedContent = result.contents
+            searchShipmentList.clear()
+            for (tmpShipment in shipments) {
+                if (tmpShipment.orderId == scannedContent) {
+                    searchShipmentList.add(tmpShipment)
+                    shipmentsList.adapter =
+                                    ShipmentsAdapter(this@CourierShipmentList, searchShipmentList)
+
+                }
+            }
 
 
+
+        }
+    }
 
 
 }

@@ -463,6 +463,7 @@ class DBUtilities {
                         currentShipmentAmount.text = shipments.size.toString()
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
+                        routeAddresses.clear()
                         getRouteAddresses()
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
@@ -483,8 +484,7 @@ class DBUtilities {
 
         /**
          * Receive COURIER email,
-         * return all the not closed shipments which had assign to him.
-         */
+         * return all the not closed shipments which had assign to him.*/
         fun getShipmentsByCourier(
             context: Context,
             email: String,
@@ -525,6 +525,7 @@ class DBUtilities {
                         }
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
+                        routeAddresses.clear()
                         getRouteAddresses()
                     } else {
                         emptyListMsg.visibility = View.VISIBLE
@@ -542,6 +543,7 @@ class DBUtilities {
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)
         }
+
 
         /**
          * Receive eStatus update to and order id which update,
