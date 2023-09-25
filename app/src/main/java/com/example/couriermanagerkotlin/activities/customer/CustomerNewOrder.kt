@@ -3,7 +3,6 @@ package com.example.couriermanagerkotlin.activities.customer
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -13,15 +12,18 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.createOrder
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getMeasures
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getStreetByCity
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.streets
-import com.example.couriermanagerkotlin.objects.Order
-import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.checkOrderMeasures
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.isEmpty
-import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.utilities.Validations.Companion.isPhoneNumberNoAreaCode
+import com.example.couriermanagerkotlin.utilities.Validations.Companion.validateStreetName
 import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
@@ -48,7 +50,6 @@ class CustomerNewOrder : AppCompatActivity() {
     lateinit var packageWeight: EditText
     lateinit var errorMessage: TextView
     lateinit var comment: EditText
-
 
 
     /* String objects of the spinners and autofill */
@@ -96,7 +97,13 @@ class CustomerNewOrder : AppCompatActivity() {
 
 
         /* Get the current valid measures from Database */
-        getMeasures(this@CustomerNewOrder, packageHeight, packageWidth, packageLength, packageWeight)
+        getMeasures(
+            this@CustomerNewOrder,
+            packageHeight,
+            packageWidth,
+            packageLength,
+            packageWeight
+        )
 
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
@@ -241,56 +248,58 @@ class CustomerNewOrder : AppCompatActivity() {
     }
 
     fun newOrder(view: View) {
-        if (strPickupStreet.isNullOrEmpty()) {
-            pickupStreet.error = "Must choose street from the option's."
-            return
-        }
-        if (strDeliveryStreet.isNullOrEmpty()) {
-            deliveryStreet.error = "Must choose street from the option's."
-            return
-        }
-
-        if (checkOrderMeasures(
-                packageHeight,
-                packageWidth,
-                packageLength,
-                packageWeight
-            ) && isEmpty(contFirstName) && isEmpty(contLastName) && isEmpty(
-                contEmail
-            ) && isEmpty(contPhoneNumber)
+        if (isEmpty(contFirstName)
+            && isEmpty(contLastName)
+            && isPhoneNumberNoAreaCode(contPhoneNumber)
+            && isEmpty(contEmail)
         ) {
-            Toast.makeText(
-                this,
-                "All fields have been filled in correctly, creating your order",
-                Toast.LENGTH_SHORT
-            ).show()
+            if (strPickupStreet.isNullOrBlank()) {
+                pickupStreet.error = "Must choose street from the option's."
+                return
+            }
+            if (strDeliveryStreet.isNullOrBlank()) {
+                deliveryStreet.error = "Must choose street from the option's."
+                return
+            }
+            if (validateStreetName(strPickupStreet!!, pickupStreet)
+                && validateStreetName(strDeliveryStreet!!, deliveryStreet)
+                && checkOrderMeasures(packageHeight, packageWidth, packageLength, packageWeight)
+            ) {
+                Toast.makeText(
+                    this,
+                    "All fields have been filled in correctly, creating your order",
+                    Toast.LENGTH_SHORT
+                ).show()
 
-            val orderToAdd = Order(
-                UUID.randomUUID().toString(),
-                contFirstName.text.toString().trim() + " " + contLastName.text.toString().trim(),
-                "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
-                contEmail.text.toString().trim(),
-                eStatus.NEW,
-                strPickupCity,
-                strPickupStreet!!,
-                pickupBuild.text.toString().trim(),
-                strDeliveryCity,
-                strDeliveryStreet!!,
-                deliveryBuild.text.toString().trim(),
-                comment.text.toString().trim()
-            )
+                val orderToAdd = Order(
+                    UUID.randomUUID().toString(),
+                    contFirstName.text.toString().trim() + " " + contLastName.text.toString()
+                        .trim(),
+                    "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
+                    contEmail.text.toString().trim(),
+                    eStatus.NEW,
+                    strPickupCity,
+                    strPickupStreet!!,
+                    pickupBuild.text.toString().trim(),
+                    strDeliveryCity,
+                    strDeliveryStreet!!,
+                    deliveryBuild.text.toString().trim(),
+                    comment.text.toString().trim()
+                )
 
-            createOrder(
-                this@CustomerNewOrder,
-                orderToAdd,
-                shrd.getString("email", "none").toString(),
-                errorMessage
-            )
-            Thread.sleep(1000)
-            Toast.makeText(this, "New order created", Toast.LENGTH_SHORT).show()
-            errorMessage.visibility = View.VISIBLE
-            startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
-            finish()
+                createOrder(
+                    this@CustomerNewOrder,
+                    orderToAdd,
+                    shrd.getString("email", "none").toString(),
+                    errorMessage
+                )
+                Thread.sleep(1000)
+                Toast.makeText(this, "New order created", Toast.LENGTH_SHORT).show()
+                errorMessage.visibility = View.VISIBLE
+                startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))
+                finish()
+            }
+
         } else {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }

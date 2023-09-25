@@ -36,7 +36,6 @@ import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
-import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.objects.Shipment
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.routeAddresses
@@ -162,76 +161,7 @@ class CourierShipmentList : AppCompatActivity() {
         }
 
         shipmentsList.setOnItemClickListener { parent, view, position, id ->
-            val builder = AlertDialog.Builder(this)
-            val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.courier_shipment_full_info, null)
-
-            builder.setView(dialogLayout)
-
-            var pickupName: TextView? = null
-            var pickupPhone: TextView? = null
-            var pickupEmail: TextView? = null
-            var pickupAddress: TextView? = null
-            var deliveryName: TextView? = null
-            var deliveryPhone: TextView? = null
-            var deliveryEmail: TextView? = null
-            var deliveryAddress: TextView? = null
-            var status: TextView? = null
-            var comment: TextView? = null
-
-            val strPickupName =
-                "${shipments[position].pickupFirstName} ${shipments[position].pickupLastName}"
-            val fullPickupAddress: String =
-                "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
-            val fullDeliveryAddress: String =
-                "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
-
-            pickupName = dialogLayout.findViewById(R.id.pickupName)
-            pickupPhone = dialogLayout.findViewById(R.id.pickupPhone)
-            Linkify.addLinks(pickupPhone, Linkify.PHONE_NUMBERS)
-            pickupEmail = dialogLayout.findViewById(R.id.pickupEmail)
-            pickupAddress = dialogLayout.findViewById(R.id.pickupAddress)
-            deliveryName = dialogLayout.findViewById(R.id.deliveryName)
-            deliveryPhone = dialogLayout.findViewById(R.id.deliveryPhone)
-            Linkify.addLinks(deliveryPhone, Linkify.PHONE_NUMBERS)
-            deliveryEmail = dialogLayout.findViewById(R.id.deliveryEmail)
-            deliveryAddress = dialogLayout.findViewById(R.id.deliveryAddress)
-            status = dialogLayout.findViewById(R.id.orderStatus)
-            comment = dialogLayout.findViewById(R.id.comment)
-
-            pickupName.text = strPickupName
-            pickupPhone.text = shipments[position].pickupPhone
-            pickupEmail.text = shipments[position].pickupEmail
-            pickupAddress.text = fullPickupAddress
-            deliveryName.text = shipments[position].deliveryName
-            deliveryPhone.text = shipments[position].deliveryPhone
-            deliveryEmail.text = shipments[position].deliveryEmail
-            deliveryAddress.text = fullDeliveryAddress
-            status.text = shipments[position].status.name
-            comment.text = shipments[position].comment
-
-            builder.setPositiveButton("Change Status") { dialogInterface, i ->
-                shipments[position].status = setToNext(shipments[position].status)
-                status.text = shipments[position].status.name
-                updateOrderStatus(
-                    this@CourierShipmentList,
-                    shipments[position].orderId,
-                    shipments[position].status
-                )
-                Toast.makeText(
-                    this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
-                ).show()
-                Thread.sleep(1000)
-                sendSMS(shipments[position])
-                getShipmentsByCourier(
-                    this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg
-                )
-            }
-
-            builder.setNeutralButton("Cancel") { dialogInterface, i ->
-                dialogInterface.dismiss()
-            }
-            builder.show()
+            showShipmentFullInfo(shipments[position])
         }
 
         getShipmentsByCourier(
@@ -252,8 +182,6 @@ class CourierShipmentList : AppCompatActivity() {
         // Set up search view listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
-<<<<<<< HEAD
                 if (scannedText != null) {
                     if (scannedText.isNotEmpty()) {
                         searchShipmentList.clear()
@@ -269,8 +197,6 @@ class CourierShipmentList : AppCompatActivity() {
                         }
                     }
                 }
-=======
->>>>>>> origin/dev
                 return false
             }
 
@@ -320,9 +246,83 @@ class CourierShipmentList : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    fun showShipmentFullInfo(shipment: Shipment) {
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.courier_shipment_full_info, null)
+
+        builder.setView(dialogLayout)
+
+        var pickupName: TextView? = null
+        var pickupPhone: TextView? = null
+        var pickupEmail: TextView? = null
+        var pickupAddress: TextView? = null
+        var deliveryName: TextView? = null
+        var deliveryPhone: TextView? = null
+        var deliveryEmail: TextView? = null
+        var deliveryAddress: TextView? = null
+        var status: TextView? = null
+        var comment: TextView? = null
+
+        val strPickupName =
+            "${shipment.pickupFirstName} ${shipment.pickupLastName}"
+        val fullPickupAddress: String =
+            "${shipment.pickupStreet} ${shipment.pickupBuild}, ${shipment.pickupCity}"
+        val fullDeliveryAddress: String =
+            "${shipment.deliveryStreet} ${shipment.deliveryBuild}, ${shipment.deliveryCity}"
+
+        pickupName = dialogLayout.findViewById(R.id.pickupName)
+        pickupPhone = dialogLayout.findViewById(R.id.pickupPhone)
+        Linkify.addLinks(pickupPhone, Linkify.PHONE_NUMBERS)
+        pickupEmail = dialogLayout.findViewById(R.id.pickupEmail)
+        pickupAddress = dialogLayout.findViewById(R.id.pickupAddress)
+        deliveryName = dialogLayout.findViewById(R.id.deliveryName)
+        deliveryPhone = dialogLayout.findViewById(R.id.deliveryPhone)
+        Linkify.addLinks(deliveryPhone, Linkify.PHONE_NUMBERS)
+        deliveryEmail = dialogLayout.findViewById(R.id.deliveryEmail)
+        deliveryAddress = dialogLayout.findViewById(R.id.deliveryAddress)
+        status = dialogLayout.findViewById(R.id.orderStatus)
+        comment = dialogLayout.findViewById(R.id.comment)
+
+        pickupName.text = strPickupName
+        pickupPhone.text = shipment.pickupPhone
+        pickupEmail.text = shipment.pickupEmail
+        pickupAddress.text = fullPickupAddress
+        deliveryName.text = shipment.deliveryName
+        deliveryPhone.text = shipment.deliveryPhone
+        deliveryEmail.text = shipment.deliveryEmail
+        deliveryAddress.text = fullDeliveryAddress
+        status.text = shipment.status.name
+        comment.text = shipment.comment
+
+        builder.setPositiveButton("Change Status") { dialogInterface, i ->
+            shipment.status = setToNext(shipment.status)
+            status.text = shipment.status.name
+            updateOrderStatus(
+                this@CourierShipmentList,
+                shipment.orderId,
+                shipment.status
+            )
+            Toast.makeText(
+                this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
+            ).show()
+            Thread.sleep(1000)
+            sendSMS(shipment)
+            getShipmentsByCourier(
+                this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg
+            )
+        }
+
+        builder.setNeutralButton("Cancel") { dialogInterface, i ->
+            dialogInterface.dismiss()
+        }
+        builder.show()
+    }
 
     private fun openGoogleMapsWithRouteToNearest(
-        context: Context, addresses: ArrayList<String>, apiKey: String
+        context: Context,
+        addresses: ArrayList<String>,
+        apiKey: String
     ) {
         Toast.makeText(this@CourierShipmentList,"looking for the closest address",Toast.LENGTH_LONG).show()
         GlobalScope.launch(Dispatchers.IO) {
@@ -340,7 +340,6 @@ class CourierShipmentList : AppCompatActivity() {
             }
         }
     }
-
 
     @SuppressLint("MissingPermission")
     fun getCurrentLocationLatLng(context: Context): LatLng {
@@ -366,7 +365,11 @@ class CourierShipmentList : AppCompatActivity() {
     }
 
     fun calculateDistance(
-        context: Context, start: LatLng, end: LatLng, apiKey: String, callback: DistanceCallback
+        context: Context,
+        start: LatLng,
+        end: LatLng,
+        apiKey: String,
+        callback: DistanceCallback
     ) {
         val url =
             "https://maps.googleapis.com/maps/api/directions/json" + "?origin=${start.latitude},${start.longitude}" + "&destination=${end.latitude},${end.longitude}" + "&mode=driving" + "&key=$apiKey"
@@ -402,9 +405,10 @@ class CourierShipmentList : AppCompatActivity() {
         requestQueue.add(request)
     }
 
-
     fun findNearestAddress(
-        context: Context, originLatLng: LatLng, addresses: ArrayList<String>
+        context: Context,
+        originLatLng: LatLng,
+        addresses: ArrayList<String>
     ): String {
         var nearestAddress = ""
         var shortestDistance = Double.MAX_VALUE
@@ -432,14 +436,11 @@ class CourierShipmentList : AppCompatActivity() {
                             println("Error: $message")
                         }
                     })
-
             }
         }
-
         Thread.sleep(2500)
         return nearestAddress
     }
-
 
     fun getLatLngFromAddress(context: Context, addressStr: String): LatLng? {
         val geocoder = Geocoder(context)
@@ -475,13 +476,11 @@ class CourierShipmentList : AppCompatActivity() {
             searchShipmentList.clear()
             for (tmpShipment in shipments) {
                 if (tmpShipment.orderId == scannedContent) {
-                    searchShipmentList.add(tmpShipment)
-                    shipmentsList.adapter =
-                                    ShipmentsAdapter(this@CourierShipmentList, searchShipmentList)
-
+                    showShipmentFullInfo(tmpShipment)
+                    break
                 }
             }
-
+            Toast.makeText(this@CourierShipmentList, "No matching order id", Toast.LENGTH_SHORT).show()
         }
     }
 

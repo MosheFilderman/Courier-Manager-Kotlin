@@ -61,7 +61,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:text="First name: "
                     android:textColor="@color/black"
@@ -83,7 +83,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="110dp"
                     android:layout_height="wrap_content"
                     android:text="Last name: "
                     android:textColor="@color/black"
@@ -184,7 +184,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="City: "
                     android:textColor="@color/black"
@@ -208,7 +208,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Street: "
                     android:textColor="@color/black"
@@ -231,7 +231,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Building: "
                     android:textColor="@color/black"
@@ -283,7 +283,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="City: "
                     android:textColor="@color/black"
@@ -307,7 +307,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Street: "
                     android:textColor="@color/black"
@@ -331,7 +331,7 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"
                     android:text="Building: "
                     android:textColor="@color/black"
@@ -382,10 +382,10 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
-                    android:text="Package Height(cm):"
+                    android:text="Height(cm):"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="italic" />
@@ -407,10 +407,10 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
-                    android:text="Package Width(cm): "
+                    android:text="Width(cm): "
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="italic" />
@@ -432,10 +432,10 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
-                    android:text="Package Length(cm):"
+                    android:text="Length(cm):"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="italic" />
@@ -457,10 +457,10 @@
                 android:padding="5dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="125dp"
                     android:layout_height="wrap_content"
                     android:padding="3dp"
-                    android:text="Package Weight(cm):"
+                    android:text="Weight(kg):"
                     android:textColor="@color/black"
                     android:textSize="18sp"
                     android:textStyle="italic" />

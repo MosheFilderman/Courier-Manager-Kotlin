@@ -59,8 +59,6 @@ class ManagerAssignOrder : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>?) {
             }
         }
-
-
     }
 
     fun assignOrders(view: View) {

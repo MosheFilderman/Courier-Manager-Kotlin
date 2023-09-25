@@ -1,7 +1,9 @@
 package com.example.couriermanagerkotlin.utilities
 
+import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.measures
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.streets
 
 open class Validations {
     companion object {
@@ -19,9 +21,35 @@ open class Validations {
             return true
         }
 
+
+        /**
+         * Validate the phone number without the area code
+         */
+        fun isPhoneNumberNoAreaCode(view: EditText): Boolean {
+            if (view.length() != 7) {
+                view.error = "This field must contain 7 digit's"
+                return false
+            }
+            return true
+        }
+
+        /**
+         * Validate the full phone length at login
+         */
         fun isCorrectLength(view: EditText): Boolean {
             if (view.length() != 10) {
-                view.error = "Phone length is in incorrect"
+                view.error = "Phone length is incorrect"
+                return false
+            }
+            return true
+        }
+
+        /**
+         * Validate that the entered street name appear in the city street list
+         */
+        fun validateStreetName(street: String,view: EditText): Boolean {
+            if(street !in streets) {
+                view.error = "Choose from the list"
                 return false
             }
             return true
@@ -34,19 +62,19 @@ open class Validations {
          */
         fun checkOrderMeasures(packageHeight :EditText, packageWidth :EditText, packageLength :EditText, packageWeight : EditText  ): Boolean {
             /* Package measures field's */
-            if (packageHeight.length() == 0 || Integer.parseInt(packageHeight.text.toString()) > measures.height) {
+            if (packageHeight.length() == 0 || Integer.parseInt(packageHeight.text.toString()) < 1 || Integer.parseInt(packageHeight.text.toString()) > measures.height) {
                 packageHeight.error = "Package height must be filled & less then ${measures.height}cm"
                 return false
             }
-            if (packageWidth.length() == 0 || Integer.parseInt(packageWidth.text.toString()) > measures.width) {
+            if (packageWidth.length() == 0 || Integer.parseInt(packageHeight.text.toString()) < 1 || Integer.parseInt(packageWidth.text.toString()) > measures.width) {
                 packageWidth.error = "Package width must be filled & less then ${measures.width}cm"
                 return false
             }
-            if (packageLength.length() == 0 || Integer.parseInt(packageLength.text.toString()) > measures.length) {
+            if (packageLength.length() == 0 || Integer.parseInt(packageHeight.text.toString()) < 1 || Integer.parseInt(packageLength.text.toString()) > measures.length) {
                 packageLength.error = "Package length must be filled & less then ${measures.length}cm"
                 return false
             }
-            if (packageWeight.length() == 0 || Integer.parseInt(packageWeight.text.toString()) > measures.weight) {
+            if (packageWeight.length() == 0 || Integer.parseInt(packageHeight.text.toString()) < 1 || Integer.parseInt(packageWeight.text.toString()) > measures.weight) {
                 packageWeight.error = "Package weight must be filled & less then ${measures.weight}kg"
                 return false
             }
