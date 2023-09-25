@@ -106,10 +106,11 @@
         android:layout_height="wrap_content"
         android:onClick="registration"
         android:padding="5dp"
-        android:text="Registration"
-        android:textColor="@color/black"
+        android:text="Don't Have Acount"
+        android:textColor="#007aff"
         android:textSize="22sp"
-        android:textStyle="italic" />
+        android:textStyle="italic"
+    />
 
     <TextView
         android:id="@+id/message"

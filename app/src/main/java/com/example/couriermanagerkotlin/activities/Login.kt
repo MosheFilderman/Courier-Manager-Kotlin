@@ -115,7 +115,7 @@ class Login : AppCompatActivity() {
 
         builder.setView(dialogLayout)
 
-        builder.setPositiveButton("Verify") { dialogInterface, i ->
+        builder.setPositiveButton("Verify Code") { dialogInterface, i ->
             if (userInputCode.text.toString().compareTo(code) == 0) {
                 when (shrd.getString("eRole", "none")) {
                     "CUSTOMER" -> {
@@ -134,7 +134,7 @@ class Login : AppCompatActivity() {
                     }
                 }
             } else {
-                Toast.makeText(this@Login, "Invalid Code", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this@Login, "Invalid Code", Toast.LENGTH_LONG).show()
             }
             dialogInterface.dismiss()
         }
@@ -157,7 +157,7 @@ class Login : AppCompatActivity() {
                 arrayOf(android.Manifest.permission.SEND_SMS), PERMISSIONS_REQUEST_ACCESS_SEND_SMS
             )
         }
-        if (Validations.isEmpty(email) && Validations.isEmpty(phone)) {
+        if (Validations.isEmpty(email) && Validations.isCorrectLength(phone)) {
             login(
                 this@Login,
                 email.text.toString().trim(),

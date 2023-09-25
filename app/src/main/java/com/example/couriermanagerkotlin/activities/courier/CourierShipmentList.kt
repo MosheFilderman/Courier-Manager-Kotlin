@@ -1,25 +1,21 @@
 package com.example.couriermanagerkotlin.activities.courier
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.pm.ResolveInfo
 import android.location.Address
 import android.location.Criteria
 import android.location.Geocoder
 import android.location.LocationManager
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
+import android.telephony.SmsManager
 import android.text.util.Linkify
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
-import android.widget.Button
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.TextView
@@ -37,8 +33,10 @@ import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
+import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
+import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.objects.Shipment
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.routeAddresses
@@ -52,7 +50,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONObject
 import java.io.IOException
 
 
@@ -64,7 +61,6 @@ class CourierShipmentList : AppCompatActivity() {
     private lateinit var userEmail: TextView
 
     private var scannedContent: String? = null
-    private var scannedText: String? = null
     lateinit var shrd: SharedPreferences
     lateinit var shipmentsList: ListView
     lateinit var emptyListMsg: TextView
@@ -226,6 +222,7 @@ class CourierShipmentList : AppCompatActivity() {
                     this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
                 ).show()
                 Thread.sleep(1000)
+                sendSMS(shipments[position])
                 getShipmentsByCourier(
                     this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg
                 )
@@ -312,12 +309,13 @@ class CourierShipmentList : AppCompatActivity() {
     private fun openGoogleMapsWithRouteToNearest(
         context: Context, addresses: ArrayList<String>, apiKey: String
     ) {
+        Toast.makeText(this@CourierShipmentList,"looking for the closest address",Toast.LENGTH_LONG).show()
         GlobalScope.launch(Dispatchers.IO) {
             val originLatLng = getCurrentLocationLatLng(context)
+
             val nearestAddress = findNearestAddress(context, originLatLng, addresses)
 
             withContext(Dispatchers.Main) {
-                Log.e("nearest Address",nearestAddress)
                 if (nearestAddress.isNotEmpty()) {
                     val uri = Uri.parse("google.navigation:q=${nearestAddress.replace(" ", "+")}")
                     val mapIntent = Intent(Intent.ACTION_VIEW, uri)
@@ -422,6 +420,7 @@ class CourierShipmentList : AppCompatActivity() {
 
             }
         }
+
         Thread.sleep(2500)
         return nearestAddress
     }
@@ -468,10 +467,50 @@ class CourierShipmentList : AppCompatActivity() {
                 }
             }
 
-
-
         }
     }
 
+
+    fun sendSMS(shipment: Shipment) {
+        // on the below line we are creating a try and catch block
+        try {
+            // on below line we are initializing sms manager.
+            // as after android 10 the getDefault function no longer works
+            // so we have to check that if our android version is greater
+            // than or equal to android version 6.0 i.e SDK 23
+            val smsManager: SmsManager
+            if (Build.VERSION.SDK_INT >= 23) {
+                // if SDK is greater that or equal to 23 then
+                // this is how we will initialize the SmsManager
+                smsManager = this.getSystemService(SmsManager::class.java)
+            } else {
+                // if user's SDK is less than 23 then
+                // SmsManager will be initialized like this
+                smsManager = SmsManager.getDefault()
+            }
+            // on below line we are sending text message.
+            when(shipment.status){
+
+                eStatus.COLLECTED -> {
+                    smsManager.sendTextMessage(shipment.deliveryPhone, null, " שלום ${shipment.deliveryName}ההזמנה שלך נאספה ותסופק בימים הקרובים ", null, null)
+                }
+                eStatus.DELIVERED -> {
+                    smsManager.sendTextMessage(shipment.deliveryPhone, null, " שלום ${shipment.deliveryName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון\n ", null, null)
+                    smsManager.sendTextMessage(shipment.pickupPhone, null, " שלום ${shipment.pickupFirstName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון ", null, null)
+                }
+
+                else -> {
+
+                }
+            }
+
+            // on below line we are displaying a toast message for message send,
+            // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
+        } catch (e: Exception) {
+            // on catch block we are displaying toast message for error.
+            Toast.makeText(applicationContext, e.message.toString(), Toast.LENGTH_LONG)
+                .show()
+        }
+    }
 
 }

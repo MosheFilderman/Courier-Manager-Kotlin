@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/order_list_shape"
-        android:hint="Enter Code"
+        android:hint="Enter received Code"
         android:inputType="number"
         android:padding="6dp"/>
 
