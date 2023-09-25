@@ -286,7 +286,7 @@ class CustomerNewOrder : AppCompatActivity() {
                 shrd.getString("email", "none").toString(),
                 errorMessage
             )
-
+            Thread.sleep(1000)
             Toast.makeText(this, "New order created", Toast.LENGTH_SHORT).show()
             errorMessage.visibility = View.VISIBLE
             startActivity(Intent(this@CustomerNewOrder, CustomerOrderList::class.java))

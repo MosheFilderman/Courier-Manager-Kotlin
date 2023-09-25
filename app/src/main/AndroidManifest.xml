@@ -55,16 +55,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".activities.courier.scanQr"
-            android:exported="true"
-            android:label="QR Scanner"
-            android:screenOrientation="portrait"
-            >
-            <intent-filter>
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
 
         <activity
             android:name=".Registration"
@@ -83,9 +73,7 @@
         <activity
             android:name=".activities.courier.CourierShipmentList"
             android:exported="true" />
-        <activity
-            android:name=".activities.courier.CourierMapView"
-            android:exported="false" />
+
         <activity
             android:name=".activities.manager.Manager"
             android:exported="true" />

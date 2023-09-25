@@ -19,6 +19,14 @@ open class Validations {
             return true
         }
 
+        fun isCorrectLength(view: EditText): Boolean {
+            if (view.length() != 10) {
+                view.error = "Phone length is in incorrect"
+                return false
+            }
+            return true
+        }
+
         /**
          * Check if the received measures less then the defined valid measures by the MANAGER,
          * return false if some of the field's equal or more and show message at the failed field,
