@@ -13,6 +13,7 @@ import android.widget.Toast
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.registerUser
 import com.example.couriermanagerkotlin.utilities.Validations
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.isEmpty
+import com.example.couriermanagerkotlin.utilities.Validations.Companion.isPhoneNumberNoAreaCode
 
 class Registration : AppCompatActivity() {
     lateinit var firstName: EditText
@@ -61,14 +62,14 @@ class Registration : AppCompatActivity() {
     }
 
     fun register(view: View) {
-        if (isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) && isEmpty(phoneNumber)) {
+        if (isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) && isPhoneNumberNoAreaCode(phoneNumber)) {
             Toast.makeText(this, "All field's filled successfully.", Toast.LENGTH_LONG).show()
             registerUser(
                 this@Registration,
                 firstName.text.toString().trim(),
                 lastName.text.toString().trim(),
                 email.text.toString().trim(),
-                "+972" + strAreaCode.substring(1) + phoneNumber.text.toString().trim()
+                 strAreaCode + phoneNumber.text.toString().trim()
             )
             startActivity(Intent(this@Registration, Login::class.java))
             finish()

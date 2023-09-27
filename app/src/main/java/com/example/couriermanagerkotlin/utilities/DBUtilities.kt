@@ -33,7 +33,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.253"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -69,7 +69,7 @@ class DBUtilities {
                     params["firstName"] = firstName
                     params["lastName"] = lastName
                     params["email"] = email
-                    params["phone"] = "+972" + phone.substring(1)
+                    params["phone"] =  phone
                     params["eRole"] = eRole.CUSTOMER.name
                     return params
                 }
@@ -220,7 +220,7 @@ class DBUtilities {
                 override fun getParams(): Map<String, String> {
                     val params: MutableMap<String, String> = HashMap()
                     params["email"] = email
-                    params["phone"] = "+972" + phone.substring(1)
+                    params["phone"] =  phone
                     return params
                 }
 
@@ -471,8 +471,7 @@ class DBUtilities {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
                             val tmpShipment = Shipment(
                                 jsonInner.get("order_id").toString(),
-                                jsonInner.get("pickupFirstName").toString(),
-                                jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupFirstName").toString()+ jsonInner.get("pickupLastName").toString(),
                                 jsonInner.get("pickupPhone").toString(),
                                 jsonInner.get("pickupEmail").toString(),
                                 jsonInner.get("pickupCity").toString(),
@@ -534,8 +533,7 @@ class DBUtilities {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
                             val tmpShipment = Shipment(
                                 jsonInner.get("order_id").toString(),
-                                jsonInner.get("pickupFirstName").toString(),
-                                jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupFirstName").toString() + " " + jsonInner.get("pickupLastName").toString(),
                                 jsonInner.get("pickupPhone").toString(),
                                 jsonInner.get("pickupEmail").toString(),
                                 jsonInner.get("pickupCity").toString(),

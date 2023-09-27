@@ -20,6 +20,7 @@ import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.registerEmployee
 import com.example.couriermanagerkotlin.utilities.Validations
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.isEmpty
+import com.example.couriermanagerkotlin.utilities.Validations.Companion.isPhoneNumberNoAreaCode
 
 class AddEmployee : AppCompatActivity() {
     lateinit var firstName: EditText
@@ -73,14 +74,14 @@ class AddEmployee : AppCompatActivity() {
 
     fun addEmployee(view: View) {
         errorMassage.visibility = View.GONE
-        if (isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) && isEmpty(phoneNumber)) {
+        if (isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) && isPhoneNumberNoAreaCode(phoneNumber)) {
             Toast.makeText(this@AddEmployee,"from if",Toast.LENGTH_SHORT).show()
             registerEmployee(
                 this@AddEmployee,
                 firstName.text.toString().trim(),
                 lastName.text.toString().trim(),
                 email.text.toString().trim(),
-                "+972" + strAreaCode.substring(1) + phoneNumber.text.toString().trim(),
+                 strAreaCode + phoneNumber.text.toString().trim(),
                 radioButton.text.toString()
             )
         } else {

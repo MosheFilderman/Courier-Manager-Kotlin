@@ -93,7 +93,7 @@ class Login : AppCompatActivity() {
                 smsManager = SmsManager.getDefault()
             }
             // on below line we are sending text message.
-            smsManager.sendTextMessage(phone, null, code, null, null)
+            smsManager.sendTextMessage("+972"+phone.substring(1), null, code, null, null)
             // on below line we are displaying a toast message for message send,
             // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {

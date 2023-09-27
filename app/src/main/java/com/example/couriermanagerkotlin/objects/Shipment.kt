@@ -5,8 +5,7 @@ import java.io.Serializable
 
 data class Shipment(
     val orderId: String,
-    val pickupFirstName: String,
-    val pickupLastName: String,
+    val pickupName: String,
     val pickupPhone: String,
     val pickupEmail: String,
     val pickupCity: String,

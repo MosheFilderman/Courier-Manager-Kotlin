@@ -174,46 +174,35 @@ class CourierShipmentList : AppCompatActivity() {
 
         val searchItem = menu.findItem(R.id.search)
         val searchView = searchItem?.actionView as SearchView
-        val scannedText = intent.getStringExtra("scannedText")
-        if(!scannedText.isNullOrEmpty()){
-            searchView.setQuery(scannedText,true)
-            Toast.makeText(this@CourierShipmentList,scannedText,Toast.LENGTH_LONG).show()
-        }
         // Set up search view listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                if (scannedText != null) {
-                    if (scannedText.isNotEmpty()) {
-                        searchShipmentList.clear()
-                        for (tmpShipment in shipments) {
-                            if (tmpShipment.orderId == scannedText) {
-                                searchShipmentList.add(tmpShipment)
-                                shipmentsList.adapter =
-                                    ShipmentsAdapter(this@CourierShipmentList, searchShipmentList)
 
-                            }else{
-                                Toast.makeText(this@CourierShipmentList,"Order Not Found",Toast.LENGTH_LONG).show()
-                            }
-                        }
-                    }
-                }
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
+
                 searchShipmentList.clear()
                 for (tmpShipment in shipments) {
-                    if (tmpShipment.pickupEmail.lowercase()
-                            .contains(p0!!.lowercase()) || tmpShipment.deliveryEmail.lowercase()
-                            .contains(p0!!.lowercase()) || tmpShipment.pickupPhone.lowercase()
-                            .contains(p0!!.lowercase()) || tmpShipment.deliveryPhone.lowercase()
-                            .contains(p0!!.lowercase())
-                    ) {
-                        searchShipmentList.add(tmpShipment)
+                    if (p0 != null) {
+                        if (tmpShipment.pickupPhone.startsWith(p0) || tmpShipment.deliveryPhone.startsWith(p0)
+                            || tmpShipment.deliveryEmail.lowercase().startsWith(p0.lowercase())
+                            || tmpShipment.pickupEmail.lowercase().startsWith(p0.lowercase())
+                            || tmpShipment.deliveryName.lowercase().startsWith(p0)
+                            || tmpShipment.pickupName.lowercase().startsWith(p0)
+                            || tmpShipment.deliveryStreet.lowercase().startsWith(p0)
+                            || tmpShipment.pickupStreet.lowercase().startsWith(p0)){
+                            searchShipmentList.add(tmpShipment)
+                        }
+
                     }
                 }
                 shipmentsList.adapter =
                     ShipmentsAdapter(this@CourierShipmentList, searchShipmentList)
+                shipmentsList.setOnItemClickListener { parent, view, position, id ->
+                    showShipmentFullInfo(searchShipmentList[position])
+                }
                 return false
             }
         })
@@ -264,8 +253,7 @@ class CourierShipmentList : AppCompatActivity() {
         var status: TextView? = null
         var comment: TextView? = null
 
-        val strPickupName =
-            "${shipment.pickupFirstName} ${shipment.pickupLastName}"
+
         val fullPickupAddress: String =
             "${shipment.pickupStreet} ${shipment.pickupBuild}, ${shipment.pickupCity}"
         val fullDeliveryAddress: String =
@@ -284,7 +272,7 @@ class CourierShipmentList : AppCompatActivity() {
         status = dialogLayout.findViewById(R.id.orderStatus)
         comment = dialogLayout.findViewById(R.id.comment)
 
-        pickupName.text = strPickupName
+        pickupName.text = shipment.pickupName
         pickupPhone.text = shipment.pickupPhone
         pickupEmail.text = shipment.pickupEmail
         pickupAddress.text = fullPickupAddress
@@ -477,7 +465,7 @@ class CourierShipmentList : AppCompatActivity() {
             for (tmpShipment in shipments) {
                 if (tmpShipment.orderId == scannedContent) {
                     showShipmentFullInfo(tmpShipment)
-                    break
+                    return
                 }
             }
             Toast.makeText(this@CourierShipmentList, "No matching order id", Toast.LENGTH_SHORT).show()
@@ -506,11 +494,11 @@ class CourierShipmentList : AppCompatActivity() {
             when(shipment.status){
 
                 eStatus.COLLECTED -> {
-                    smsManager.sendTextMessage(shipment.deliveryPhone, null, " שלום ${shipment.deliveryName}ההזמנה שלך נאספה ותסופק בימים הקרובים ", null, null)
+                    smsManager.sendTextMessage("+972"+shipment.deliveryPhone.substring(1), null, " שלום ${shipment.deliveryName}ההזמנה שלך נאספה ותסופק בימים הקרובים ", null, null)
                 }
                 eStatus.DELIVERED -> {
-                    smsManager.sendTextMessage(shipment.deliveryPhone, null, " שלום ${shipment.deliveryName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון\n ", null, null)
-                    smsManager.sendTextMessage(shipment.pickupPhone, null, " שלום ${shipment.pickupFirstName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון ", null, null)
+                    smsManager.sendTextMessage("+972"+shipment.deliveryPhone.substring(1), null, " שלום ${shipment.deliveryName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון\n ", null, null)
+                    smsManager.sendTextMessage("+972"+shipment.pickupPhone.substring(1), null, " שלום ${shipment.pickupName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון ", null, null)
                 }
 
                 else -> {

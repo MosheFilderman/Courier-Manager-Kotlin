@@ -43,7 +43,7 @@ class EditUserDetails : AppCompatActivity() {
         lastName.hint = shrd.getString("lastName", "None")
         email.text = shrd.getString("email", "None").toString()
         val currentPhone = shrd.getString("phone", "").toString()
-        phoneNumber.hint = currentPhone.substring(6)
+        phoneNumber.hint = currentPhone.substring(3)
 
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
@@ -56,14 +56,14 @@ class EditUserDetails : AppCompatActivity() {
 
         areaCode.setSelection(0, false)
 
-        when (currentPhone.substring(4, 6)) {
-            "50" -> areaCode.setSelection(1)
-            "51" -> areaCode.setSelection(2)
-            "52" -> areaCode.setSelection(3)
-            "53" -> areaCode.setSelection(4)
-            "54" -> areaCode.setSelection(5)
-            "55" -> areaCode.setSelection(6)
-            "58" -> areaCode.setSelection(7)
+        when (currentPhone.substring(0, 3)) {
+            "050" -> areaCode.setSelection(1)
+            "051" -> areaCode.setSelection(2)
+            "052" -> areaCode.setSelection(3)
+            "053" -> areaCode.setSelection(4)
+            "054" -> areaCode.setSelection(5)
+            "055" -> areaCode.setSelection(6)
+            "058" -> areaCode.setSelection(7)
             else -> areaCode.setSelection(0)
         }
 
@@ -95,7 +95,7 @@ class EditUserDetails : AppCompatActivity() {
                 firstName.text.toString().trim(),
                 lastName.text.toString().trim(),
                 shrd.getString("email", "None").toString(),
-                "+972" + strAreaCode.substring(1) + phoneNumber.text.toString().trim(),
+                strAreaCode + phoneNumber.text.toString().trim(),
                 errorMessage
             )
         } else {

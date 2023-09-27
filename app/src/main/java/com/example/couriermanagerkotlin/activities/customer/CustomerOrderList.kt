@@ -18,10 +18,12 @@ import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.SearchView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
+import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.orders
@@ -32,12 +34,15 @@ import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
+import com.example.couriermanagerkotlin.utilities.DBUtilities
 import com.google.android.material.navigation.NavigationView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
 import com.google.zxing.MultiFormatWriter
 import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
+import com.google.zxing.integration.android.IntentIntegrator
+import com.google.zxing.integration.android.IntentResult
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -134,59 +139,7 @@ class CustomerOrderList : AppCompatActivity() {
 
         // Click on order open dialog with all the order details
         ordersList.setOnItemClickListener { parent, view, position, id ->
-            val builder = AlertDialog.Builder(this)
-            val inflater = layoutInflater
-            val dialogLayout = inflater.inflate(R.layout.customer_order_full_info, null)
-            val selectedOrder = orders[position]
-            ordersList.visibility = View.VISIBLE
-
-            builder.setView(dialogLayout)
-
-            val exportToPdf: ImageButton = dialogLayout.findViewById(R.id.exportToPdf)
-            val orderId: TextView = dialogLayout.findViewById(R.id.orderId)
-            val name: TextView = dialogLayout.findViewById(R.id.name)
-            val phone: TextView = dialogLayout.findViewById(R.id.phone)
-            Linkify.addLinks(phone, Linkify.PHONE_NUMBERS)
-            val email: TextView = dialogLayout.findViewById(R.id.email)
-            val status: TextView = dialogLayout.findViewById(R.id.orderStatus)
-            val pickupAddress: TextView = dialogLayout.findViewById(R.id.pickupAddress)
-            val deliveryAddress: TextView = dialogLayout.findViewById(R.id.deliveryAddress)
-            val comment: TextView = dialogLayout.findViewById(R.id.comment)
-
-            val strPickupAddress: String =
-                selectedOrder.pickupCity + "," + selectedOrder.pickupStreet + " " + selectedOrder.deliveryBuild
-            val strDeliveryAddress: String =
-                "${selectedOrder.deliveryCity}, ${selectedOrder.deliveryStreet} ${selectedOrder.deliveryBuild}"
-
-            orderId.text = selectedOrder.orderId.substring(0,8)
-            name.text = selectedOrder.name
-            phone.text = selectedOrder.phone
-            email.text = selectedOrder.email
-            status.text = selectedOrder.status.name
-            pickupAddress.text = strPickupAddress
-            deliveryAddress.text = strDeliveryAddress
-            comment.text = selectedOrder.comment
-
-            exportToPdf.setOnClickListener {
-                createAndOpenPdf(selectedOrder)
-            }
-
-            if (selectedOrder.status.name.equals("NEW")) {
-                builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
-                    updateOrderStatus(
-                        this@CustomerOrderList,
-                        selectedOrder.orderId,
-                        eStatus.CANCELLED
-                    )
-                    orders.removeAt(position)
-                    isListEmpty(orders, emptyListMsg, ordersList)
-                }
-            }
-
-            builder.setNegativeButton("Close") { dialogInterface, i ->
-                dialogInterface.dismiss()
-            }
-            builder.show()
+            showOrderFullInfo(orders[position])
         }
 
         getCustomerOrders(
@@ -242,6 +195,11 @@ class CustomerOrderList : AppCompatActivity() {
                 }
                 return true
             }
+            R.id.qr -> {
+                startQRCodeScanning()
+
+            }
+
         }
 
         return super.onOptionsItemSelected(item)
@@ -361,6 +319,92 @@ class CustomerOrderList : AppCompatActivity() {
         }
 
         return bitmap
+    }
+
+    fun showOrderFullInfo(order:Order){
+        val builder = AlertDialog.Builder(this)
+        val inflater = layoutInflater
+        val dialogLayout = inflater.inflate(R.layout.customer_order_full_info, null)
+        val selectedOrder = order
+        ordersList.visibility = View.VISIBLE
+
+        builder.setView(dialogLayout)
+
+        val exportToPdf: ImageButton = dialogLayout.findViewById(R.id.exportToPdf)
+        val orderId: TextView = dialogLayout.findViewById(R.id.orderId)
+        val name: TextView = dialogLayout.findViewById(R.id.name)
+        val phone: TextView = dialogLayout.findViewById(R.id.phone)
+        Linkify.addLinks(phone, Linkify.PHONE_NUMBERS)
+        val email: TextView = dialogLayout.findViewById(R.id.email)
+        val status: TextView = dialogLayout.findViewById(R.id.orderStatus)
+        val pickupAddress: TextView = dialogLayout.findViewById(R.id.pickupAddress)
+        val deliveryAddress: TextView = dialogLayout.findViewById(R.id.deliveryAddress)
+        val comment: TextView = dialogLayout.findViewById(R.id.comment)
+
+        val strPickupAddress: String =
+            selectedOrder.pickupCity + "," + selectedOrder.pickupStreet + " " + selectedOrder.deliveryBuild
+        val strDeliveryAddress: String =
+            "${selectedOrder.deliveryCity}, ${selectedOrder.deliveryStreet} ${selectedOrder.deliveryBuild}"
+
+        orderId.text = selectedOrder.orderId.substring(0,8)
+        name.text = selectedOrder.name
+        phone.text = selectedOrder.phone
+        email.text = selectedOrder.email
+        status.text = selectedOrder.status.name
+        pickupAddress.text = strPickupAddress
+        deliveryAddress.text = strDeliveryAddress
+        comment.text = selectedOrder.comment
+
+        exportToPdf.setOnClickListener {
+            createAndOpenPdf(selectedOrder)
+        }
+
+        if (selectedOrder.status.name.equals("NEW")) {
+            builder.setPositiveButton("Cancel Order") { dialogInterface, i ->
+                updateOrderStatus(
+                    this@CustomerOrderList,
+                    selectedOrder.orderId,
+                    eStatus.CANCELLED
+                )
+                getCustomerOrders(
+                    this@CustomerOrderList,
+                    ordersList,
+                    emptyListMsg,
+                    shrd.getString("email", "none").toString()
+                )
+            }
+        }
+
+        builder.setNegativeButton("Close") { dialogInterface, i ->
+            dialogInterface.dismiss()
+        }
+        builder.show()
+    }
+
+
+    private fun startQRCodeScanning() {
+        val integrator = IntentIntegrator(this)
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
+        integrator.setPrompt("Scan Order QR Code")
+        integrator.setCameraId(0)  // Use the back camera
+        integrator.setBeepEnabled(true) // Beep when a QR code is scanned
+        integrator.initiateScan()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        val result: IntentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data)
+        if (result.contents != null) {
+            var scannedContent = result.contents
+            searchOrderList.clear()
+            for (order in orders) {
+                if (order.orderId == scannedContent) {
+                    showOrderFullInfo(order)
+                    return
+                }
+            }
+            Toast.makeText(this@CustomerOrderList, "No matching order id", Toast.LENGTH_SHORT).show()
+        }
     }
 
 

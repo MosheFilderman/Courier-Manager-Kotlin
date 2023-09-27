@@ -80,7 +80,7 @@ class ShipmentsByCourier : AppCompatActivity() {
             var status: TextView? = null
             var comment: TextView? = null
 
-            val strPickupName = "${shipments[position].pickupFirstName} ${shipments[position].pickupLastName}"
+
             val fullPickupAddress: String = "${shipments[position].pickupStreet} ${shipments[position].pickupBuild}, ${shipments[position].pickupCity}"
             val fullDeliveryAddress: String = "${shipments[position].deliveryStreet} ${shipments[position].deliveryBuild}, ${shipments[position].deliveryCity}"
 
@@ -95,7 +95,7 @@ class ShipmentsByCourier : AppCompatActivity() {
             status = dialogLayout.findViewById(R.id.orderStatus)
             comment = dialogLayout.findViewById(R.id.comment)
 
-            pickupName.text = strPickupName
+            pickupName.text = shipments[position].pickupName
             pickupPhone.text = shipments[position].pickupPhone
             pickupEmail.text = shipments[position].pickupEmail
             pickupAddress.text = fullPickupAddress

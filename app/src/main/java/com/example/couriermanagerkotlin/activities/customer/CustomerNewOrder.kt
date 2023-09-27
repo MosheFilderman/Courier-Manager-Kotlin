@@ -275,7 +275,7 @@ class CustomerNewOrder : AppCompatActivity() {
                     UUID.randomUUID().toString(),
                     contFirstName.text.toString().trim() + " " + contLastName.text.toString()
                         .trim(),
-                    "+972" + strAreaCode.substring(1) + contPhoneNumber.text.toString().trim(),
+                     strAreaCode + contPhoneNumber.text.toString().trim(),
                     contEmail.text.toString().trim(),
                     eStatus.NEW,
                     strPickupCity,
