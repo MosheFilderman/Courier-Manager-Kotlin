@@ -3,27 +3,27 @@ package com.example.couriermanagerkotlin.activities.customer
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
 import android.os.Bundle
-import android.provider.MediaStore
 import android.text.util.Linkify
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.ImageButton
 import android.widget.ListView
 import android.widget.SearchView
+import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.FileProvider
-import androidx.core.view.get
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getCustomerOrders
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.orders
@@ -32,9 +32,8 @@ import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
-import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.eNums.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
-import com.example.couriermanagerkotlin.utilities.DBUtilities
 import com.google.android.material.navigation.NavigationView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -49,7 +48,6 @@ import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.EnumMap
-import java.util.Hashtable
 
 
 class CustomerOrderList : AppCompatActivity() {
@@ -60,6 +58,7 @@ class CustomerOrderList : AppCompatActivity() {
     private lateinit var userEmail: TextView
 
     lateinit var shrd: SharedPreferences
+    lateinit var statusSpinner: Spinner
     lateinit var ordersList: ListView
     lateinit var emptyListMsg: TextView
     lateinit var search: SearchView
@@ -137,6 +136,52 @@ class CustomerOrderList : AppCompatActivity() {
         ordersList = findViewById(R.id.orderList)
         emptyListMsg = findViewById(R.id.emptyListMsg)
 
+        /* Status spinner */
+
+        statusSpinner = findViewById(R.id.statusSpinner)
+        val statusesNames = ArrayList<String>()
+        statusesNames.add("Status sort by")
+        eStatus.values().forEach { status ->
+            statusesNames.add(status.name)
+        }
+        val statusArrayAdapter = ArrayAdapter(
+            this@CustomerOrderList,
+            android.R.layout.simple_spinner_item,
+            statusesNames
+        )
+        statusSpinner.adapter = statusArrayAdapter
+
+        statusSpinner.setSelection(0, false)
+
+        statusSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                if (parent != null) {
+                    val statusSortBy = parent.getItemAtPosition(position).toString()
+
+                    searchOrderList.clear()
+                    for (tmpOrder in orders) {
+                        if (
+                            tmpOrder.status.name.compareTo(statusSortBy) == 0
+                        ) {
+                            searchOrderList.add(tmpOrder)
+                        }
+                    }
+                    ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
+                    ordersList.setOnItemClickListener { parent, view, position, id ->
+                        showOrderFullInfo(searchOrderList[position])
+                    }
+                }
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                Toast.makeText(
+                    this@CustomerOrderList, "Area code must bo chosen", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+
         // Click on order open dialog with all the order details
         ordersList.setOnItemClickListener { parent, view, position, id ->
             showOrderFullInfo(orders[position])
@@ -165,14 +210,18 @@ class CustomerOrderList : AppCompatActivity() {
             override fun onQueryTextChange(p0: String?): Boolean {
                 searchOrderList.clear()
                 for (tmpOrder in orders) {
-                    if (tmpOrder.email.lowercase()
-                            .contains(p0!!.lowercase()) or tmpOrder.phone.lowercase()
-                            .contains(p0!!.lowercase())
+                    if (
+                        tmpOrder.phone.startsWith(p0.toString())
+                        || tmpOrder.email.lowercase().contains(p0.toString().lowercase())
+                        || tmpOrder.name.lowercase().contains(p0.toString().lowercase())
                     ) {
                         searchOrderList.add(tmpOrder)
                     }
                 }
                 ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
+                ordersList.setOnItemClickListener { parent, view, position, id ->
+                    showOrderFullInfo(searchOrderList[position])
+                }
                 return false
             }
         })
@@ -203,25 +252,6 @@ class CustomerOrderList : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
-    }
-
-
-
-
-
-    /**
-     * Check if the received list is empty,
-     * if empty show appropriate message,
-     * otherwise show the information.
-     */
-    private fun isListEmpty(list: ArrayList<Order>, emptyListMsg: TextView, listView: ListView) {
-        if (list.isEmpty()) {
-            emptyListMsg.visibility = View.VISIBLE
-            emptyListMsg.text = getString(R.string.customer_empty_order_list)
-        } else {
-            listView.visibility = View.VISIBLE
-            listView.adapter = OrdersAdapter(this, list)
-        }
     }
 
     /**
@@ -381,7 +411,6 @@ class CustomerOrderList : AppCompatActivity() {
         builder.show()
     }
 
-
     private fun startQRCodeScanning() {
         val integrator = IntentIntegrator(this)
         integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE)
@@ -404,6 +433,14 @@ class CustomerOrderList : AppCompatActivity() {
                 }
             }
             Toast.makeText(this@CustomerOrderList, "No matching order id", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    fun resetStatusSpinner(view: View) {
+        statusSpinner.setSelection(0)
+        ordersList.adapter = OrdersAdapter(this@CustomerOrderList, orders)
+        ordersList.setOnItemClickListener { parent, view, position, id ->
+            showOrderFullInfo(orders[position])
         }
     }
 

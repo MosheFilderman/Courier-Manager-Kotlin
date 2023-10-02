@@ -110,9 +110,9 @@
             android:onClick="registration"
             android:padding="5dp"
             android:text="Don't have account"
-            android:textColor="#007aff"
+            android:textColor="@color/courier_manager_dark_purple"
             android:textSize="20sp"
-            android:textStyle="italic"
+            android:textStyle="bold"
             />
 
         <TextView

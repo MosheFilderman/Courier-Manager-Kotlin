@@ -1,6 +1,6 @@
 package com.example.couriermanagerkotlin.objects
 
-import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.eNums.eStatus
 import java.io.Serializable
 
 data class Order(

@@ -1,4 +1,4 @@
-package com.example.couriermanagerkotlin
+package com.example.couriermanagerkotlin.eNums
 
 enum class eStatus {
     NEW,

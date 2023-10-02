@@ -33,8 +33,8 @@ import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
-import com.example.couriermanagerkotlin.eStatus
-import com.example.couriermanagerkotlin.eStatus.Companion.setToNext
+import com.example.couriermanagerkotlin.eNums.eStatus
+import com.example.couriermanagerkotlin.eNums.eStatus.Companion.setToNext
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
 import com.example.couriermanagerkotlin.objects.Shipment
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
@@ -177,25 +177,25 @@ class CourierShipmentList : AppCompatActivity() {
         // Set up search view listener
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-
                 return false
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-
                 searchShipmentList.clear()
                 for (tmpShipment in shipments) {
                     if (p0 != null) {
-                        if (tmpShipment.pickupPhone.startsWith(p0) || tmpShipment.deliveryPhone.startsWith(p0)
+                        if (
+                            tmpShipment.pickupPhone.startsWith(p0)
+                            || tmpShipment.deliveryPhone.startsWith(p0)
                             || tmpShipment.deliveryEmail.lowercase().startsWith(p0.lowercase())
                             || tmpShipment.pickupEmail.lowercase().startsWith(p0.lowercase())
                             || tmpShipment.deliveryName.lowercase().startsWith(p0)
                             || tmpShipment.pickupName.lowercase().startsWith(p0)
                             || tmpShipment.deliveryStreet.lowercase().startsWith(p0)
-                            || tmpShipment.pickupStreet.lowercase().startsWith(p0)){
+                            || tmpShipment.pickupStreet.lowercase().startsWith(p0)
+                        ){
                             searchShipmentList.add(tmpShipment)
                         }
-
                     }
                 }
                 shipmentsList.adapter =

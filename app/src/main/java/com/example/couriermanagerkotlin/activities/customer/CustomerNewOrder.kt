@@ -14,7 +14,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.eNums.eStatus
 import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.createOrder
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getMeasures
@@ -126,9 +126,6 @@ class CustomerNewOrder : AppCompatActivity() {
             }
 
             override fun onNothingSelected(parent: AdapterView<*>?) {
-                Toast.makeText(
-                    this@CustomerNewOrder, "Area code must bo chosen", Toast.LENGTH_SHORT
-                ).show()
             }
         }
 

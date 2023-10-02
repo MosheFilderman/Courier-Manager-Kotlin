@@ -34,11 +34,33 @@
                 android:textColor="@color/black"/>
         </LinearLayout>
 
+        <LinearLayout
+            android:id="@+id/spinnerLayout"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_below="@+id/titleSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Spinner
+                android:id="@+id/statusSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/input_view_shape"
+                android:padding="3dp" />
+
+            <ImageButton
+                android:onClick="resetStatusSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/baseline_close_24" />
+        </LinearLayout>
+
         <ListView
             android:id="@+id/orderList"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/titleSection"
+            android:layout_below="@+id/spinnerLayout"
             android:divider="@drawable/custom_divider"
             android:dividerHeight="5dp"
             android:gravity="start"

@@ -5,22 +5,19 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import android.view.View
-import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ListView
-import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
-import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.R
-import com.example.couriermanagerkotlin.activities.manager.Manager
+import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.eRole
-import com.example.couriermanagerkotlin.eStatus
+import com.example.couriermanagerkotlin.eNums.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.CouriersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
@@ -33,7 +30,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.100.102.253"
+        const val ipv4Address: String = "10.0.0.7"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
