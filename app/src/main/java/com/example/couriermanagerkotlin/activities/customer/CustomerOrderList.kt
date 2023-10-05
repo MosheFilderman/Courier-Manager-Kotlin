@@ -140,10 +140,12 @@ class CustomerOrderList : AppCompatActivity() {
 
         statusSpinner = findViewById(R.id.statusSpinner)
         val statusesNames = ArrayList<String>()
-        statusesNames.add("Status sort by")
+        statusesNames.add("SORT BY: STATUS")
+
         eStatus.values().forEach { status ->
             statusesNames.add(status.name)
         }
+
         val statusArrayAdapter = ArrayAdapter(
             this@CustomerOrderList,
             android.R.layout.simple_spinner_item,
@@ -151,26 +153,28 @@ class CustomerOrderList : AppCompatActivity() {
         )
         statusSpinner.adapter = statusArrayAdapter
 
-        statusSpinner.setSelection(0, false)
-
         statusSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>?, view: View?, position: Int, id: Long
             ) {
                 if (parent != null) {
-                    val statusSortBy = parent.getItemAtPosition(position).toString()
+                    if(position != 0) {
+                        val statusSortBy = parent.getItemAtPosition(position).toString()
 
-                    searchOrderList.clear()
-                    for (tmpOrder in orders) {
-                        if (
-                            tmpOrder.status.name.compareTo(statusSortBy) == 0
-                        ) {
-                            searchOrderList.add(tmpOrder)
+                        searchOrderList.clear()
+                        for (tmpOrder in orders) {
+                            if (
+                                tmpOrder.status.name.compareTo(statusSortBy) == 0
+                            ) {
+                                searchOrderList.add(tmpOrder)
+                            }
                         }
-                    }
-                    ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
-                    ordersList.setOnItemClickListener { parent, view, position, id ->
-                        showOrderFullInfo(searchOrderList[position])
+                        ordersList.adapter = OrdersAdapter(this@CustomerOrderList, searchOrderList)
+                        ordersList.setOnItemClickListener { parent, view, position, id ->
+                            showOrderFullInfo(searchOrderList[position])
+                        }
+                    } else {
+                        resetStatusSpinner()
                     }
                 }
             }
@@ -246,9 +250,7 @@ class CustomerOrderList : AppCompatActivity() {
             }
             R.id.qr -> {
                 startQRCodeScanning()
-
             }
-
         }
 
         return super.onOptionsItemSelected(item)
@@ -436,8 +438,7 @@ class CustomerOrderList : AppCompatActivity() {
         }
     }
 
-    fun resetStatusSpinner(view: View) {
-        statusSpinner.setSelection(0)
+    fun resetStatusSpinner() {
         ordersList.adapter = OrdersAdapter(this@CustomerOrderList, orders)
         ordersList.setOnItemClickListener { parent, view, position, id ->
             showOrderFullInfo(orders[position])

@@ -24,7 +24,6 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
 
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.example.couriermanagerkotlin.provider"
@@ -55,7 +54,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".Registration"
             android:exported="true"
@@ -73,31 +71,33 @@
         <activity
             android:name=".activities.courier.CourierShipmentList"
             android:exported="true" />
-
         <activity
-            android:name=".activities.manager.Manager"
+            android:name=".activities.manager.ManagerCouriersView"
             android:exported="true" />
         <activity
             android:name=".activities.manager.ShipmentsByCourier"
             android:exported="true"
-            android:parentActivityName=".activities.manager.Manager" />
+            android:parentActivityName=".activities.manager.ManagerCouriersView" />
+
+        <activity
+            android:name=".activities.manager.ManagerOrdersView"
+            android:exported="true"
+            android:parentActivityName=".activities.manager.ManagerCouriersView" />
         <activity
             android:name=".activities.manager.ManagerAssignOrder"
             android:exported="true" />
         <activity
             android:name=".activities.manager.AddEmployee"
             android:exported="true"
-            android:parentActivityName=".activities.manager.Manager" />
+            android:parentActivityName=".activities.manager.ManagerCouriersView" />
         <activity
             android:name=".activities.manager.ManagerSetMeasures"
             android:exported="true"
-            android:parentActivityName=".activities.manager.Manager" />
+            android:parentActivityName=".activities.manager.ManagerCouriersView" />
         <activity
             android:name=".activities.manager.ManagerReports"
             android:exported="true"
-            android:parentActivityName=".activities.manager.Manager" />
-
-
+            android:parentActivityName=".activities.manager.ManagerCouriersView" />
     </application>
 
 </manifest>

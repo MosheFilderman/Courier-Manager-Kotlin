@@ -17,7 +17,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.couriermanagerkotlin.activities.courier.CourierShipmentList
 import com.example.couriermanagerkotlin.activities.customer.CustomerOrderList
-import com.example.couriermanagerkotlin.activities.manager.Manager
+import com.example.couriermanagerkotlin.activities.manager.ManagerCouriersView
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.login
 import com.example.couriermanagerkotlin.utilities.Validations
 
@@ -58,7 +58,7 @@ class Login : AppCompatActivity() {
                 }
 
                 "MANAGER" -> {
-                    startActivity(Intent(this@Login, Manager::class.java))
+                    startActivity(Intent(this@Login, ManagerCouriersView::class.java))
                     finish()
                 }
             }
@@ -129,7 +129,7 @@ class Login : AppCompatActivity() {
                     }
 
                     "MANAGER" -> {
-                        startActivity(Intent(this@Login, Manager::class.java))
+                        startActivity(Intent(this@Login, ManagerCouriersView::class.java))
                         finish()
                     }
                 }

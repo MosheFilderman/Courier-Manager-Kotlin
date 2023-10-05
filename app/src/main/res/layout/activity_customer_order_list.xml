@@ -48,12 +48,6 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_view_shape"
                 android:padding="3dp" />
-
-            <ImageButton
-                android:onClick="resetStatusSpinner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/baseline_close_24" />
         </LinearLayout>
 
         <ListView

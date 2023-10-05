@@ -468,7 +468,7 @@ class DBUtilities {
                             val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
                             val tmpShipment = Shipment(
                                 jsonInner.get("order_id").toString(),
-                                jsonInner.get("pickupFirstName").toString()+ jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupFirstName").toString() + " " +  jsonInner.get("pickupLastName").toString(),
                                 jsonInner.get("pickupPhone").toString(),
                                 jsonInner.get("pickupEmail").toString(),
                                 jsonInner.get("pickupCity").toString(),
@@ -502,6 +502,55 @@ class DBUtilities {
                         params["email"] = email
                         return params
                     }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
+
+        /**
+         * Return all order's and shipment's in the DB.
+         */
+        fun getAllShipments(
+            context: Context
+        ) {
+            val url: String = "http://$ipv4Address/courier_project/getAllShipments.php"
+            shipments.clear()
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    if (!response.toString().trim().equals("empty")) {
+                        val strRes = response.toString()
+                        val jsonArray = JSONArray(strRes)
+                        val jsonResponse = jsonArray.getJSONObject(0)
+                        val jsonArrayOrders = jsonResponse.getJSONArray("shipments")
+
+                        for (i in 0 until jsonArrayOrders.length()) {
+                            val jsonInner: JSONObject = jsonArrayOrders.getJSONObject(i)
+                            val tmpShipment = Shipment(
+                                jsonInner.get("order_id").toString(),
+                                jsonInner.get("pickupFirstName").toString() + " " + jsonInner.get("pickupLastName").toString(),
+                                jsonInner.get("pickupPhone").toString(),
+                                jsonInner.get("pickupEmail").toString(),
+                                jsonInner.get("pickupCity").toString(),
+                                jsonInner.get("pickupStreet").toString(),
+                                jsonInner.get("pickupBuild").toString(),
+                                jsonInner.get("deliveryName").toString(),
+                                jsonInner.get("deliveryPhone").toString(),
+                                jsonInner.get("deliveryEmail").toString(),
+                                jsonInner.get("deliveryCity").toString(),
+                                jsonInner.get("deliveryStreet").toString(),
+                                jsonInner.get("deliveryBuild").toString(),
+                                eStatus.findStatus(jsonInner.get("orderStatus").toString()),
+                                jsonInner.get("comment").toString()
+                            )
+                            shipments.add(tmpShipment)
+                        }
+                    } else {
+                        Toast.makeText(context, "No order's at all!", Toast.LENGTH_SHORT).show()
+                    }
+                }, Response.ErrorListener { error ->
+                    Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
+                }) {
+
                 }
             val requestQueue = Volley.newRequestQueue(context)
             requestQueue.add(stringRequest)

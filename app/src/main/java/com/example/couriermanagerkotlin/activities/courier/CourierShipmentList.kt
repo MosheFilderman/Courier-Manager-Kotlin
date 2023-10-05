@@ -189,10 +189,10 @@ class CourierShipmentList : AppCompatActivity() {
                             || tmpShipment.deliveryPhone.startsWith(p0)
                             || tmpShipment.deliveryEmail.lowercase().startsWith(p0.lowercase())
                             || tmpShipment.pickupEmail.lowercase().startsWith(p0.lowercase())
-                            || tmpShipment.deliveryName.lowercase().startsWith(p0)
-                            || tmpShipment.pickupName.lowercase().startsWith(p0)
-                            || tmpShipment.deliveryStreet.lowercase().startsWith(p0)
-                            || tmpShipment.pickupStreet.lowercase().startsWith(p0)
+                            || tmpShipment.deliveryName.lowercase().startsWith(p0.lowercase())
+                            || tmpShipment.pickupName.lowercase().startsWith(p0.lowercase())
+                            || tmpShipment.deliveryStreet.lowercase().startsWith(p0.lowercase())
+                            || tmpShipment.pickupStreet.lowercase().startsWith(p0.lowercase())
                         ){
                             searchShipmentList.add(tmpShipment)
                         }

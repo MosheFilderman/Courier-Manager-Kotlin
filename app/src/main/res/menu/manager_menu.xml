@@ -2,6 +2,10 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/searchOrder"
+            android:icon="@drawable/baseline_list_24"
+            android:title="Search all order's"/>
+        <item
             android:id="@+id/addEmployee"
             android:icon="@drawable/baseline_person_add_24"
             android:title="Add Employee" />

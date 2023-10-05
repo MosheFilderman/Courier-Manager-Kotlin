@@ -37,7 +37,7 @@ class ManagerSetMeasures : AppCompatActivity() {
 
         setMeasures(this@ManagerSetMeasures)
 
-        startActivity(Intent(this@ManagerSetMeasures, Manager::class.java))
+        startActivity(Intent(this@ManagerSetMeasures, ManagerCouriersView::class.java))
         finish()
     }
 }

@@ -125,7 +125,7 @@ class ShipmentsByCourier : AppCompatActivity() {
             R.id.suspendUser -> {
                 if(shipments.size == 0){
                     suspendUser(this@ShipmentsByCourier, chosenCourier.email, chosenCourier.phone)
-                    startActivity(Intent(this@ShipmentsByCourier, Manager::class.java))
+                    startActivity(Intent(this@ShipmentsByCourier, ManagerCouriersView::class.java))
                 } else {
                     Toast.makeText(this@ShipmentsByCourier, "Courier still have undelivered shipment's", Toast.LENGTH_SHORT).show()
                 }

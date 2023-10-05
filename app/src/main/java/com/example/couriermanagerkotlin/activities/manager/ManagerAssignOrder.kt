@@ -2,13 +2,11 @@ package com.example.couriermanagerkotlin.activities.manager
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.User
@@ -63,7 +61,7 @@ class ManagerAssignOrder : AppCompatActivity() {
 
     fun assignOrders(view: View) {
         assignOrdersToCourierByPickupCity(this@ManagerAssignOrder, chosenCourier.email, strChosenPickupCity.toString(), strCurrentShipmentLimit.toString())
-        startActivity(Intent(this@ManagerAssignOrder, Manager::class.java))
+        startActivity(Intent(this@ManagerAssignOrder, ManagerCouriersView::class.java))
         this@ManagerAssignOrder.finish()
     }
 }
