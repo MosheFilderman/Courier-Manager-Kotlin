@@ -59,6 +59,9 @@ class ManagerReports : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_manager_reports)
+
+        DBUtilities.getAllShipments(this@ManagerReports)
+
         endingStatus.add("Choose status")
 
         calendar = Calendar.getInstance()

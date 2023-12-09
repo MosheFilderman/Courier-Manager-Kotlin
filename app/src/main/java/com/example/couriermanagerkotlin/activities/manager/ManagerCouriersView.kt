@@ -129,7 +129,6 @@ class ManagerCouriersView : AppCompatActivity() {
         getAllCouriers(this@ManagerCouriersView, courierList, emptyListMsg)
         getAllCustomers(this@ManagerCouriersView)
         getAvailablePickupCities(this@ManagerCouriersView)
-        getAllShipments(this@ManagerCouriersView)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

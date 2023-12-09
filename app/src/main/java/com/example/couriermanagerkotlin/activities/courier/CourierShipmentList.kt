@@ -494,11 +494,11 @@ class CourierShipmentList : AppCompatActivity() {
             when(shipment.status){
 
                 eStatus.COLLECTED -> {
-                    smsManager.sendTextMessage("+972"+shipment.deliveryPhone.substring(1), null, " שלום ${shipment.deliveryName}ההזמנה שלך נאספה ותסופק בימים הקרובים ", null, null)
+                    smsManager.sendTextMessage("+972"+shipment.deliveryPhone.substring(1), null, " שלום ${shipment.deliveryName},ההזמנה מספר ${shipment.orderId.substring(0,8)} שלך נאספה ותסופק בימים הקרובים ", null, null)
                 }
                 eStatus.DELIVERED -> {
-                    smsManager.sendTextMessage("+972"+shipment.deliveryPhone.substring(1), null, " שלום ${shipment.deliveryName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון\n ", null, null)
-                    smsManager.sendTextMessage("+972"+shipment.pickupPhone.substring(1), null, " שלום ${shipment.pickupName}ההזמנה שלך נמסרה נא השב על סקר שביעות רצון ", null, null)
+                    smsManager.sendTextMessage("+972"+shipment.deliveryPhone.substring(1), null, " שלום ${shipment.deliveryName} ,ההזמנה מספר ${shipment.orderId.substring(0,8)} הגיעה ליעד. ", null, null)
+                    smsManager.sendTextMessage("+972"+shipment.pickupPhone.substring(1), null, " שלום ${shipment.pickupName} ,ההזמנה מספר ${shipment.orderId.substring(0,8)} הגיעה ליעד.  ", null, null)
                 }
 
                 else -> {

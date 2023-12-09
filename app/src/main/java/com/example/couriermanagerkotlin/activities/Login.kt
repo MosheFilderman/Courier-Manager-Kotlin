@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
 import android.telephony.SmsManager
 import android.view.View
 import android.widget.EditText
@@ -93,7 +94,7 @@ class Login : AppCompatActivity() {
                 smsManager = SmsManager.getDefault()
             }
             // on below line we are sending text message.
-            smsManager.sendTextMessage("+972"+phone.substring(1), null, code, null, null)
+            smsManager.sendTextMessage("+972"+phone.substring(1), null, "קוד האימות החד פעמי שלך הינו: ${code}, הקוד תקף לחמש דקות.", null, null)
             // on below line we are displaying a toast message for message send,
             // Toast.makeText(applicationContext, phone.substring(1), Toast.LENGTH_LONG).show()
         } catch (e: Exception) {
@@ -107,6 +108,8 @@ class Login : AppCompatActivity() {
      * Confirm that entered code is correct, if correct open the appropriate activity by the user's role
      */
     fun verifySMS(code: String) {
+        var timeoutCode = code
+
         val builder = AlertDialog.Builder(this)
         val inflater = layoutInflater
         val dialogLayout = inflater.inflate(R.layout.sms_verification, null)
@@ -115,8 +118,13 @@ class Login : AppCompatActivity() {
 
         builder.setView(dialogLayout)
 
+        Handler().postDelayed({
+            timeoutCode = "0000"
+            Toast.makeText(this@Login, timeoutCode, Toast.LENGTH_LONG).show()
+        },300000)
+
         builder.setPositiveButton("Verify Code") { dialogInterface, i ->
-            if (userInputCode.text.toString().compareTo(code) == 0) {
+            if (userInputCode.text.toString().compareTo(timeoutCode) == 0) {
                 when (shrd.getString("eRole", "none")) {
                     "CUSTOMER" -> {
                         startActivity(Intent(this@Login, CustomerOrderList::class.java))

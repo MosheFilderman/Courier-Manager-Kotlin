@@ -48,13 +48,7 @@ class ShipmentsByCourier : AppCompatActivity() {
         firstName.text = chosenCourier.firstName
         lastName.text = chosenCourier.lastName
 
-        currentShipmentAmount = if(shipments.isEmpty()) {
-            0
-        } else {
-            shipments.size
-        }
 
-        currentShipmentAmountView.text = currentShipmentAmount.toString()
 
         if(maxShipmentAmount <= currentShipmentAmount || availablePickupCities[0].equals("No NEW order's yet")) {
             floatingAssignButton.visibility = View.GONE
@@ -113,6 +107,14 @@ class ShipmentsByCourier : AppCompatActivity() {
         }
 
         getShipmentsByCourier(this, chosenCourier.email, shipmentList, currentShipmentAmountView, emptyListMsg)
+
+        currentShipmentAmount = if(shipments.isEmpty()) {
+            0
+        } else {
+            shipments.size
+        }
+
+        currentShipmentAmountView.text = currentShipmentAmount.toString()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

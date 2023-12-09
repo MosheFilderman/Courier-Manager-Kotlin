@@ -42,7 +42,7 @@ class ManagerOrdersView : AppCompatActivity() {
         shipmentsListView = findViewById(R.id.shipmentsListView)
         statusSpinner = findViewById(R.id.statusSpinner)
 
-        statusesNames.add("SORT BY: STATUS")
+        statusesNames.add("STATUS")
 
         eStatus.values().forEach { status ->
             statusesNames.add(status.name)
@@ -107,7 +107,6 @@ class ManagerOrdersView : AppCompatActivity() {
             }
 
             override fun onQueryTextChange(p0: String?): Boolean {
-                Toast.makeText(this@ManagerOrdersView, searchShipmentsList.isEmpty().toString(), Toast.LENGTH_SHORT).show()
                 if(searchShipmentsList.isEmpty()) {
                     for (tmpShipment in shipments) {
                         if (p0 != null) {
