@@ -30,7 +30,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "10.100.102.12"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -485,6 +485,7 @@ class DBUtilities {
                             )
                             shipments.add(tmpShipment)
                         }
+
                         currentShipmentAmount.text = shipments.size.toString()
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
@@ -596,6 +597,7 @@ class DBUtilities {
                             )
                             shipments.add(tmpShipment)
                         }
+                        Log.e("from dbUtill", shipments.toString())
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
                         routeAddresses.clear()
@@ -1075,6 +1077,25 @@ class DBUtilities {
         }
 
 
+        fun assignOrders(email:String,  context: Context){
+            val url: String = "http://$ipv4Address/courier_project/assignOrdersTest.php"
+            val stringRequest: StringRequest =
+                object : StringRequest(Method.POST, url, Response.Listener { response ->
+                    Toast.makeText(context,"response:"+response.toString(),Toast.LENGTH_LONG).show()
+                    Log.e("response",response.toString())
+                }, Response.ErrorListener { error ->
+                   Toast.makeText(context,"error: "+error.toString(),Toast.LENGTH_LONG).show()
+                }) {
+                    override fun getParams(): Map<String, String> {
+                        val params: MutableMap<String, String> = HashMap()
+                        params["email"] = email
+                        params["limit"] = (20- shipments.size).toString()
+                        return params
+                    }
+                }
+            val requestQueue = Volley.newRequestQueue(context)
+            requestQueue.add(stringRequest)
+        }
         /* End of companion object */
     }
 }

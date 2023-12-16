@@ -14,6 +14,7 @@ import android.os.Build
 import android.os.Bundle
 import android.telephony.SmsManager
 import android.text.util.Linkify
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
@@ -32,11 +33,13 @@ import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
+import com.example.couriermanagerkotlin.User
 import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eNums.eStatus
 import com.example.couriermanagerkotlin.eNums.eStatus.Companion.setToNext
 import com.example.couriermanagerkotlin.listViewAdapters.ShipmentsAdapter
 import com.example.couriermanagerkotlin.objects.Shipment
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.assignOrders
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getShipmentsByCourier
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.routeAddresses
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.shipments
@@ -295,10 +298,18 @@ class CourierShipmentList : AppCompatActivity() {
                 this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
             ).show()
             Thread.sleep(1000)
+            if(shipments.size<20){
+                Toast.makeText(this,shrd.getString("email", "Not").toString(),Toast.LENGTH_LONG).show()
+                Toast.makeText(this,(shipments.size).toString(),Toast.LENGTH_LONG).show()
+                assignOrders(shrd.getString("email", "Not").toString(),this)
+            }
             sendSMS(shipment)
             getShipmentsByCourier(
                 this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg
             )
+            Log.e("from courier", shipments.toString())
+            Thread.sleep(5000)
+
         }
 
         builder.setNeutralButton("Cancel") { dialogInterface, i ->
