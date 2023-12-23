@@ -72,14 +72,14 @@ class CourierShipmentList : AppCompatActivity() {
     lateinit var switchToggle : Switch
     var searchShipmentList = ArrayList<Shipment>()
 
-
-
-
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_courier_shipment_list)
+
+        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
+        val editor: SharedPreferences.Editor = shrd.edit()
 
         shipmentsList = findViewById(R.id.shipmentListView)
         emptyListMsg = findViewById(R.id.emptyListMsg)
@@ -88,7 +88,24 @@ class CourierShipmentList : AppCompatActivity() {
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
+        val switch = navView.menu.findItem(R.id.vacation).actionView as Switch
 
+        switch.setOnCheckedChangeListener { buttonView, isChecked ->
+            // Handle the switch state change here
+            if (isChecked) {
+                // Switch is ON
+                // Do something when the switch is turned on
+                editor.putBoolean("onVacation", true)
+                editor.apply()
+            } else {
+                // Switch is OFF
+                // Do something when the switch is turned off
+                editor.putBoolean("onVacation", false)
+                editor.apply()
+            }
+        }
+        // Set an initial state if needed
+        switch.isChecked = shrd.getBoolean("onVacation", false)
 
         toggle = ActionBarDrawerToggle(
             this, drawerLayout, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -124,17 +141,6 @@ class CourierShipmentList : AppCompatActivity() {
                     drawerLayout.close()
                     true
                 }
-                R.id.vacation ->{
-                    switchToggle.setOnCheckedChangeListener { _, isChecked ->
-                        // Handle switch state change
-                        if (isChecked) {
-                            Toast.makeText(this,"is checked",Toast.LENGTH_LONG).show()
-                        } else {
-                            // Switch is OFF
-                        }
-                    }
-                 true
-                }
 
                 R.id.logout -> {
                     val builder = AlertDialog.Builder(this)
@@ -163,7 +169,6 @@ class CourierShipmentList : AppCompatActivity() {
         userFullName = headerView.findViewById(R.id.userFullName)
         userEmail = headerView.findViewById(R.id.userEmail)
 
-        shrd = getSharedPreferences("shola", Context.MODE_PRIVATE)
         val strUserFullName =
             "${shrd.getString("firstName", "Not")} ${shrd.getString("lastName", "Signed !")}"
         userFullName.text = strUserFullName
@@ -315,16 +320,18 @@ class CourierShipmentList : AppCompatActivity() {
             Toast.makeText(
                 this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
             ).show()
-            Thread.sleep(1000)
-            if(shipments.size<20)
+//            Thread.sleep(1000)
+            if(!shrd.getBoolean("onVacation", false) && shipments.size<20)
             {
+                Toast.makeText(this, "if is checked", Toast.LENGTH_SHORT).show()
                 assignOrders(shrd.getString("email", "Not").toString(),this)
+            } else {
+                Toast.makeText(this, "on vacation, no order's assigned", Toast.LENGTH_SHORT).show()
             }
             sendSMS(shipment)
             getShipmentsByCourier(
                 this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg
             )
-            
         }
 
         builder.setNeutralButton("Cancel") { dialogInterface, i ->

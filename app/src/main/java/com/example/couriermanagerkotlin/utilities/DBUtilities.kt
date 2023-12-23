@@ -30,7 +30,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.100.102.12"
+        const val ipv4Address: String = "10.0.0.7"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -1057,20 +1057,20 @@ class DBUtilities {
             requestQueue.add(stringRequest)
         }
 
-
         fun assignOrders(email:String,  context: Context){
             val url: String = "http://$ipv4Address/courier_project/assignOrdersTest.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Toast.makeText(context,"response:"+response.toString(),Toast.LENGTH_LONG).show()
-
+                    Toast.makeText(context,"response: $response",Toast.LENGTH_LONG).show()
+                    Log.e("Response: ", response)
                 }, Response.ErrorListener { error ->
-                   Toast.makeText(context,"error: "+error.toString(),Toast.LENGTH_LONG).show()
+                    Toast.makeText(context,"error: $error",Toast.LENGTH_LONG).show()
+                    Log.e("Error: ", error.toString())
                 }) {
                     override fun getParams(): Map<String, String> {
                         val params: MutableMap<String, String> = HashMap()
                         params["email"] = email
-                        params["limit"] = (20- shipments.size).toString()
+                        params["limit"] = (20 - shipments.size).toString()
                         return params
                     }
                 }

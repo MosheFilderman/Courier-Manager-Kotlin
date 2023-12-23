@@ -15,7 +15,7 @@
             android:title="don't assign order"
             android:icon="@drawable/baseline_back_hand_24"
             app:actionViewClass="android.widget.Switch"
-            app:showAsAction="always" />
+            app:showAsAction="always"/>
         <item
             android:id="@+id/logout"
             android:icon="@drawable/baseline_logout_24"
