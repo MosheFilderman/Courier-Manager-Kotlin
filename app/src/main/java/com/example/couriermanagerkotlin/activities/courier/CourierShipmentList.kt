@@ -19,6 +19,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.SearchView
+import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
@@ -67,7 +68,11 @@ class CourierShipmentList : AppCompatActivity() {
     lateinit var shipmentsList: ListView
     lateinit var emptyListMsg: TextView
     lateinit var search: SearchView
+    @SuppressLint("UseSwitchCompatOrMaterialCode")
+    lateinit var switchToggle : Switch
     var searchShipmentList = ArrayList<Shipment>()
+
+
 
 
     private val PERMISSIONS_REQUEST_ACCESS_FINE_LOCATION = 9003
@@ -78,6 +83,7 @@ class CourierShipmentList : AppCompatActivity() {
 
         shipmentsList = findViewById(R.id.shipmentListView)
         emptyListMsg = findViewById(R.id.emptyListMsg)
+        switchToggle = Switch(this)
 
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.nav_view)
@@ -93,6 +99,7 @@ class CourierShipmentList : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         navView.setNavigationItemSelectedListener { menuItem ->
+
             when (menuItem.itemId) {
 
                 R.id.calculateRoute -> {
@@ -116,6 +123,17 @@ class CourierShipmentList : AppCompatActivity() {
                     startActivity(Intent(this@CourierShipmentList, EditUserDetails::class.java))
                     drawerLayout.close()
                     true
+                }
+                R.id.vacation ->{
+                    switchToggle.setOnCheckedChangeListener { _, isChecked ->
+                        // Handle switch state change
+                        if (isChecked) {
+                            Toast.makeText(this,"is checked",Toast.LENGTH_LONG).show()
+                        } else {
+                            // Switch is OFF
+                        }
+                    }
+                 true
                 }
 
                 R.id.logout -> {
@@ -298,18 +316,15 @@ class CourierShipmentList : AppCompatActivity() {
                 this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
             ).show()
             Thread.sleep(1000)
-            if(shipments.size<20){
-                Toast.makeText(this,shrd.getString("email", "Not").toString(),Toast.LENGTH_LONG).show()
-                Toast.makeText(this,(shipments.size).toString(),Toast.LENGTH_LONG).show()
+            if(shipments.size<20)
+            {
                 assignOrders(shrd.getString("email", "Not").toString(),this)
             }
             sendSMS(shipment)
             getShipmentsByCourier(
                 this, shrd.getString("email", "none").toString(), shipmentsList, emptyListMsg
             )
-            Log.e("from courier", shipments.toString())
-            Thread.sleep(5000)
-
+            
         }
 
         builder.setNeutralButton("Cancel") { dialogInterface, i ->

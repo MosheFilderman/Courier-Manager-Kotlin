@@ -3,22 +3,20 @@ package com.example.couriermanagerkotlin.activities.manager
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.MenuItem
 import android.widget.ListView
 import android.widget.TextView
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.drawerlayout.widget.DrawerLayout
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.assignOrdersToCouriers
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.couriers
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCouriers
 import com.example.couriermanagerkotlin.Login
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.couriers
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCouriers
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllCustomers
-import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAllShipments
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getAvailablePickupCities
 import com.google.android.material.navigation.NavigationView
 
@@ -60,11 +58,6 @@ class ManagerCouriersView : AppCompatActivity() {
                 }
                 R.id.addEmployee -> {
                     startActivity(Intent(this@ManagerCouriersView, AddEmployee::class.java))
-                    true
-                }
-
-                R.id.assignOrders -> {
-                    assignOrdersToCouriers(this@ManagerCouriersView)
                     true
                 }
 

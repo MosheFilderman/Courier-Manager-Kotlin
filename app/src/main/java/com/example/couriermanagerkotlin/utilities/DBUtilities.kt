@@ -202,6 +202,7 @@ class DBUtilities {
                         editor.putString("email", jsonInner.get("email").toString())
                         editor.putString("phone", jsonInner.get("phone").toString())
                         editor.putString("eRole", jsonInner.get("eRole").toString())
+                        editor.putString("userStatus", jsonInner.get("userStatus").toString())
                         editor.putBoolean("connected", true)
                         editor.apply()
                     } else {
@@ -212,7 +213,6 @@ class DBUtilities {
                     }
                 },
                 Response.ErrorListener { error ->
-                    Log.e("ERROR", error.toString())
                 }) {
                 override fun getParams(): Map<String, String> {
                     val params: MutableMap<String, String> = HashMap()
@@ -597,7 +597,7 @@ class DBUtilities {
                             )
                             shipments.add(tmpShipment)
                         }
-                        Log.e("from dbUtill", shipments.toString())
+
                         shipmentList.visibility = View.VISIBLE
                         shipmentList.adapter = ShipmentsAdapter(context, shipments)
                         routeAddresses.clear()
@@ -711,24 +711,6 @@ class DBUtilities {
         }
 
         /**
-         * Assign order's to all available courier's.
-         */
-        fun assignOrdersToCouriers(
-            context: Context
-        ) {
-            val url: String = "http://$ipv4Address/courier_project/assignOrderToCourier.php"
-            val stringRequest: StringRequest =
-                object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Toast.makeText(context, "Assigned successfully", Toast.LENGTH_SHORT).show()
-                }, Response.ErrorListener { error ->
-                    Toast.makeText(context, "Assign failed", Toast.LENGTH_SHORT).show()
-                }) {
-                }
-            val requestQueue = Volley.newRequestQueue(context)
-            requestQueue.add(stringRequest)
-        }
-
-        /**
          * Interface to manage the callback's
          */
         interface ReportCallback {
@@ -809,7 +791,6 @@ class DBUtilities {
             errorMessageLayout: LinearLayout,
             errorMessage: TextView
         ) {
-            Log.i("report Ranges", "$startStatus $endStatus $startDate $endDate")
 
             val url: String = "http://$ipv4Address/courier_project/avgHoursToStatusReport.php"
             val stringRequest: StringRequest =
@@ -1082,7 +1063,7 @@ class DBUtilities {
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
                     Toast.makeText(context,"response:"+response.toString(),Toast.LENGTH_LONG).show()
-                    Log.e("response",response.toString())
+
                 }, Response.ErrorListener { error ->
                    Toast.makeText(context,"error: "+error.toString(),Toast.LENGTH_LONG).show()
                 }) {

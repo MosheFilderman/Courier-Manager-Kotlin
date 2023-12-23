@@ -10,10 +10,6 @@
             android:icon="@drawable/baseline_person_add_24"
             android:title="Add Employee" />
         <item
-            android:id="@+id/assignOrders"
-            android:icon="@drawable/baseline_assignment_24"
-            android:title="Assign order's" />
-        <item
             android:id="@+id/reports"
             android:icon="@drawable/baseline_bar_chart_24"
             android:title="Reports" />
