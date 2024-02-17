@@ -7,8 +7,10 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.os.Bundle
 import android.text.util.Linkify
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -20,6 +22,7 @@ import android.widget.SearchView
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -34,6 +37,7 @@ import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.activities.EditUserDetails
 import com.example.couriermanagerkotlin.eNums.eStatus
 import com.example.couriermanagerkotlin.listViewAdapters.OrdersAdapter
+import com.example.couriermanagerkotlin.utilities.DBUtilities
 import com.google.android.material.navigation.NavigationView
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.EncodeHintType
@@ -42,12 +46,14 @@ import com.google.zxing.WriterException
 import com.google.zxing.common.BitMatrix
 import com.google.zxing.integration.android.IntentIntegrator
 import com.google.zxing.integration.android.IntentResult
+import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.EnumMap
+import java.util.UUID
 
 
 class CustomerOrderList : AppCompatActivity() {
@@ -56,6 +62,7 @@ class CustomerOrderList : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var userFullName: TextView
     private lateinit var userEmail: TextView
+    private lateinit var errorMassage: TextView
 
     lateinit var shrd: SharedPreferences
     lateinit var statusSpinner: Spinner
@@ -67,7 +74,7 @@ class CustomerOrderList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_order_list)
-
+        errorMassage = findViewById(R.id.errorMassage)
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
@@ -95,6 +102,11 @@ class CustomerOrderList : AppCompatActivity() {
                 R.id.editInfo -> {
                     startActivity(Intent(this@CustomerOrderList, EditUserDetails::class.java))
                     drawerLayout.close()
+                    true
+                }
+                R.id.uploadFile -> {
+                    Toast.makeText(this,"kkkk",Toast.LENGTH_SHORT).show()
+                    openFilePicker()
                     true
                 }
 
@@ -445,5 +457,72 @@ class CustomerOrderList : AppCompatActivity() {
         }
     }
 
+    private val filePicker =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val data: Intent? = result.data
+                val uri = data?.data
+                uri?.let { readExcelFile(it) }
+            }
+        }
+
+    private fun openFilePicker() {
+        Log.e("openFilePicker", "Opening file picker")
+        val intent = Intent(Intent.ACTION_OPEN_DOCUMENT).apply {
+            addCategory(Intent.CATEGORY_OPENABLE)
+            type = "application/vnd.ms-excel" // You can set MIME type according to your Excel file type
+        }
+        filePicker.launch(intent)
+    }
+
+    private fun readExcelFile(uri: Uri) {
+        try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val workbook = WorkbookFactory.create(inputStream)
+            val sheet = workbook.getSheetAt(0)
+            lateinit var orderFromExcel : Order
+
+
+            for (i in 1..sheet.lastRowNum) {
+                val row = sheet.getRow(i)
+                val contactName = row.getCell(0).stringCellValue
+                val contactPhone = row.getCell(1).stringCellValue
+                val contactEmail = row.getCell(2).stringCellValue
+                val pickupCity = row.getCell(3).stringCellValue
+                val pickupStreet = row.getCell(4).stringCellValue
+                val pickupBuild = row.getCell(5).stringCellValue
+                val deliveryCity = row.getCell(6).stringCellValue
+                val deliveryStreet = row.getCell(7).stringCellValue
+                val deliveryBuild = row.getCell(8).stringCellValue
+                val comment = row.getCell(9).stringCellValue
+
+
+                orderFromExcel = Order(
+                    UUID.randomUUID().toString(),
+                    contactName.trim(),
+                    contactPhone.trim(),
+                    contactEmail.trim(),
+                    eStatus.NEW,
+                    pickupCity.trim(),
+                    pickupStreet.trim(),
+                    pickupBuild.trim(),
+                    deliveryCity.trim(),
+                    deliveryStreet.trim(),
+                    deliveryBuild.trim(),
+                    comment.trim()
+                )
+            }
+
+            DBUtilities.createOrder(
+                this@CustomerOrderList,
+                orderFromExcel,
+                shrd.getString("email", "none").toString(),
+                errorMassage
+            )
+        } catch (e: Exception) {
+            Toast.makeText(this, "Error reading Excel file", Toast.LENGTH_SHORT).show()
+            e.printStackTrace()
+        }
+    }
 
 }

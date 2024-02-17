@@ -3,6 +3,7 @@ package com.example.couriermanagerkotlin.activities.customer
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
@@ -12,6 +13,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import com.example.couriermanagerkotlin.R
 import com.example.couriermanagerkotlin.eNums.eStatus
@@ -19,11 +21,13 @@ import com.example.couriermanagerkotlin.objects.Order
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.createOrder
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getMeasures
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.getStreetByCity
+import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.orders
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.streets
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.checkOrderMeasures
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.isEmpty
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.isPhoneNumberNoAreaCode
 import com.example.couriermanagerkotlin.utilities.Validations.Companion.validateStreetName
+import org.apache.poi.ss.usermodel.WorkbookFactory
 import java.util.UUID
 
 class CustomerNewOrder : AppCompatActivity() {
@@ -301,4 +305,6 @@ class CustomerNewOrder : AppCompatActivity() {
             Toast.makeText(this, "All order fields must be filled!", Toast.LENGTH_SHORT).show()
         }
     }
+
+
 }

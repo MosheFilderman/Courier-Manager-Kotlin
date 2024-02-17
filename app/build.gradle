@@ -45,6 +45,8 @@ android {
 }
 
 dependencies {
+    implementation 'org.apache.poi:poi:5.2.4'
+    implementation 'androidx.activity:activity-ktx:1.4.0'
     implementation 'com.journeyapps:zxing-android-embedded:4.2.0'
     implementation 'org.apache.poi:poi:5.2.0'
     implementation 'org.apache.poi:poi-ooxml:5.2.0'
