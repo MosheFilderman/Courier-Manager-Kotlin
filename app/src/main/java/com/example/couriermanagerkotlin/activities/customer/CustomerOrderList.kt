@@ -62,7 +62,7 @@ class CustomerOrderList : AppCompatActivity() {
     private lateinit var toggle: ActionBarDrawerToggle
     private lateinit var userFullName: TextView
     private lateinit var userEmail: TextView
-    private lateinit var errorMassage: TextView
+    private lateinit var errorMessage: TextView
 
     lateinit var shrd: SharedPreferences
     lateinit var statusSpinner: Spinner
@@ -74,7 +74,8 @@ class CustomerOrderList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_customer_order_list)
-        errorMassage = findViewById(R.id.errorMassage)
+
+        errorMessage = findViewById(R.id.errorMessage)
         drawerLayout = findViewById(R.id.drawerLayout)
         navView = findViewById(R.id.nav_view)
         val headerView = navView.getHeaderView(0)
@@ -105,7 +106,6 @@ class CustomerOrderList : AppCompatActivity() {
                     true
                 }
                 R.id.uploadFile -> {
-                    Toast.makeText(this,"kkkk",Toast.LENGTH_SHORT).show()
                     openFilePicker()
                     true
                 }
@@ -517,7 +517,7 @@ class CustomerOrderList : AppCompatActivity() {
                 this@CustomerOrderList,
                 orderFromExcel,
                 shrd.getString("email", "none").toString(),
-                errorMassage
+                errorMessage
             )
         } catch (e: Exception) {
             Toast.makeText(this, "Error reading Excel file", Toast.LENGTH_SHORT).show()
