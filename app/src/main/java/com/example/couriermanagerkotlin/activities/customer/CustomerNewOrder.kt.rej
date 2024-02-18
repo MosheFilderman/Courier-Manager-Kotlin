@@ -1,0 +1,17 @@
+diff a/app/src/main/java/com/example/couriermanagerkotlin/activities/customer/CustomerNewOrder.kt b/app/src/main/java/com/example/couriermanagerkotlin/activities/customer/CustomerNewOrder.kt	(rejected hunks)
+@@ -3,6 +3,7 @@
+ import android.content.Context
+ import android.content.Intent
+ import android.content.SharedPreferences
++import android.net.Uri
+ import android.os.Bundle
+ import android.view.View
+ import android.widget.AdapterView
+@@ -12,6 +13,7 @@
+ import android.widget.Spinner
+ import android.widget.TextView
+ import android.widget.Toast
++import androidx.activity.result.contract.ActivityResultContracts
+ import androidx.appcompat.app.AppCompatActivity
+ import com.example.couriermanagerkotlin.R
+ import com.example.couriermanagerkotlin.eNums.eStatus

@@ -37,7 +37,7 @@
         <LinearLayout
             android:id="@+id/spinnerLayout"
             android:gravity="center"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:layout_below="@+id/titleSection"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -48,7 +48,14 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/input_view_shape"
                 android:padding="3dp" />
+
+            <TextView
+                android:id="@+id/errorMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:textSize="16sp" />
         </LinearLayout>
+
 
         <ListView
             android:id="@+id/orderList"
@@ -79,10 +86,6 @@
         app:headerLayout="@layout/nav_header"
         app:menu="@menu/customer_menu" />
 
-    <TextView
-        android:id="@+id/errorMassage"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:textSize="16sp" />
+
 
 </androidx.drawerlayout.widget.DrawerLayout>
