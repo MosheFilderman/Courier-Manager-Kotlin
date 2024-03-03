@@ -7,8 +7,13 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
+import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.ClickableSpan
 import android.text.util.Linkify
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -95,6 +100,18 @@ class CustomerOrderList : AppCompatActivity() {
                 R.id.editInfo -> {
                     startActivity(Intent(this@CustomerOrderList, EditUserDetails::class.java))
                     drawerLayout.close()
+                    true
+                }
+                R.id.contactUs -> {
+//                    val builder = AlertDialog.Builder(this)
+//                    builder.setTitle("Contact Us")
+//                    builder.setMessage("customerService@gamil.com\n 0523536772")
+//                    builder.setNegativeButton("Close") { dialogInterface, _ ->
+//                        dialogInterface.dismiss()
+//                    }
+//                    val alertDialog = builder.create()
+//                    alertDialog.show()
+                    showContactDialog()
                     true
                 }
 
@@ -374,7 +391,7 @@ class CustomerOrderList : AppCompatActivity() {
         val comment: TextView = dialogLayout.findViewById(R.id.comment)
 
         val strPickupAddress: String =
-            selectedOrder.pickupCity + "," + selectedOrder.pickupStreet + " " + selectedOrder.deliveryBuild
+            selectedOrder.pickupCity + "," + selectedOrder.pickupStreet + " " + selectedOrder.pickupBuild
         val strDeliveryAddress: String =
             "${selectedOrder.deliveryCity}, ${selectedOrder.deliveryStreet} ${selectedOrder.deliveryBuild}"
 
@@ -398,6 +415,7 @@ class CustomerOrderList : AppCompatActivity() {
                     selectedOrder.orderId,
                     eStatus.CANCELLED
                 )
+                Thread.sleep(700)
                 getCustomerOrders(
                     this@CustomerOrderList,
                     ordersList,
@@ -444,6 +462,28 @@ class CustomerOrderList : AppCompatActivity() {
             showOrderFullInfo(orders[position])
         }
     }
+
+
+
+    private fun showContactDialog() {
+        val email = "your@email.com"
+        val phone = "1234567890"
+
+        val alertDialogBuilder = AlertDialog.Builder(this)
+        alertDialogBuilder.setTitle("Contact Us")
+
+        val message = "Email: $email\n\nPhone: $phone"
+
+        val textView = TextView(this)
+        textView.text = message
+        textView.linksClickable = true
+        Linkify.addLinks(textView, Linkify.EMAIL_ADDRESSES or Linkify.PHONE_NUMBERS)
+
+        alertDialogBuilder.setView(textView)
+        alertDialogBuilder.setPositiveButton("CLOSE", null)
+        alertDialogBuilder.show()
+    }
+
 
 
 }

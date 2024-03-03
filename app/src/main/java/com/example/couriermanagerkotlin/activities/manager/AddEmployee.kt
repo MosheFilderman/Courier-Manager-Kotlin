@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
@@ -31,7 +32,9 @@ class AddEmployee : AppCompatActivity() {
     lateinit var phoneNumber: EditText
     lateinit var errorMassage: TextView
     lateinit var radioGroup: RadioGroup
-    lateinit var radioButton: RadioButton
+    lateinit var radioButton: String
+    lateinit var radioCourier: RadioButton
+    lateinit var radioManager: RadioButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,25 @@ class AddEmployee : AppCompatActivity() {
         phoneNumber = findViewById(R.id.phoneNumber)
         errorMassage = findViewById(R.id.errorMassage)
         radioGroup = findViewById(R.id.radioGroup)
+
+        radioCourier = findViewById(R.id.radioCourier)
+        radioManager = findViewById(R.id.radioManager)
+
+        radioButton = "COURIER"
+
+        radioCourier.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                radioManager.isChecked = false
+                radioButton = radioCourier.text as String
+            }
+        }
+
+        radioManager.setOnCheckedChangeListener { buttonView, isChecked ->
+            if (isChecked) {
+                radioCourier.isChecked = false
+                radioButton = radioManager.text as String
+            }
+        }
 
         /* Area code spinner */
         areaCode = findViewById(R.id.spinnerAreaCode)
@@ -73,25 +95,23 @@ class AddEmployee : AppCompatActivity() {
     }
 
     fun addEmployee(view: View) {
+        Log.e("radio button", radioButton)
         errorMassage.visibility = View.GONE
         if (isEmpty(firstName) && isEmpty(lastName) && isEmpty(email) && isPhoneNumberNoAreaCode(phoneNumber)) {
-            Toast.makeText(this@AddEmployee,"from if",Toast.LENGTH_SHORT).show()
             registerEmployee(
                 this@AddEmployee,
                 firstName.text.toString().trim(),
                 lastName.text.toString().trim(),
                 email.text.toString().trim(),
                  strAreaCode + phoneNumber.text.toString().trim(),
-                radioButton.text.toString()
+                radioButton
             )
+            startActivity(Intent(this, ManagerCouriersView::class.java))
+            finish()
         } else {
             errorMassage.visibility = View.VISIBLE
             errorMassage.text = "All field's must be filled!"
         }
-    }
-
-    fun checkRadioButton(view: View) {
-        radioButton = findViewById(radioGroup.checkedRadioButtonId)
     }
 
 }

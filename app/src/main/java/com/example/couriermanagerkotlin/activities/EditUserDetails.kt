@@ -90,6 +90,12 @@ class EditUserDetails : AppCompatActivity() {
             )
         ) {
             Toast.makeText(this, "All field's filled successfully.", Toast.LENGTH_LONG).show()
+
+            val editor: SharedPreferences.Editor = shrd.edit()
+            editor.putString("firstName", firstName.text.toString())
+            editor.putString("lastName", lastName.text.toString())
+            editor.apply()
+            
             DBUtilities.updateUserDetail(
                 this@EditUserDetails,
                 firstName.text.toString().trim(),

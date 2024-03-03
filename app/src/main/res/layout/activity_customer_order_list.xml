@@ -66,7 +66,7 @@
             android:id="@+id/emptyListMsg"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@+id/titleSection"
+            android:layout_below="@+id/spinnerLayout"
             android:gravity="center"
             android:visibility="gone" />
     </RelativeLayout>

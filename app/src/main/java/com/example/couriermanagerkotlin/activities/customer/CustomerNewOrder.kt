@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
@@ -168,7 +169,7 @@ class CustomerNewOrder : AppCompatActivity() {
             }
         }
 
-        /* Pickup street AutoComplete */
+        /* Delivery street AutoComplete */
         val deliveryStreetArrayAdapter = ArrayAdapter(
             this@CustomerNewOrder,
             android.R.layout.simple_list_item_1,
@@ -201,13 +202,13 @@ class CustomerNewOrder : AppCompatActivity() {
                 if (parent != null) {
                     strPickupCity = parent.getItemAtPosition(position).toString()
                     getStreetByCity(this@CustomerNewOrder, strPickupCity)
-
                     /* Reassign the autocomplete values */
                     val arrayAdapter = ArrayAdapter(
                         this@CustomerNewOrder,
                         android.R.layout.simple_list_item_1,
                         streets
                     )
+
                     pickupStreet.setAdapter(arrayAdapter)
 
                     pickupStreet.threshold = 1

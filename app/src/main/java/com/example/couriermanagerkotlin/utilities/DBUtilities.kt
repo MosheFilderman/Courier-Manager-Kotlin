@@ -30,7 +30,7 @@ import org.json.JSONObject
 class DBUtilities {
 
     companion object {
-        const val ipv4Address: String = "10.0.0.7"
+        const val ipv4Address: String = "192.168.129.141"
         var measures = Measures(-1, -1, -1, -1)
         var orders = ArrayList<Order>()
         var streets = ArrayList<String>()
@@ -56,7 +56,7 @@ class DBUtilities {
             val stringRequest: StringRequest = object : StringRequest(
                 Method.POST, url,
                 Response.Listener { response ->
-                    Toast.makeText(context, response.toString(), Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context, "User created successfully", Toast.LENGTH_SHORT).show()
                 },
                 Response.ErrorListener { error ->
                     Toast.makeText(context, error.toString(), Toast.LENGTH_SHORT).show()
@@ -208,7 +208,7 @@ class DBUtilities {
                     } else {
                         Toast.makeText(
                             context,
-                            "Email/Phone Ara Not Exist  ", Toast.LENGTH_SHORT
+                            "Email/Phone Not Exist  ", Toast.LENGTH_SHORT
                         ).show()
                     }
                 },
@@ -1061,8 +1061,6 @@ class DBUtilities {
             val url: String = "http://$ipv4Address/courier_project/assignOrdersTest.php"
             val stringRequest: StringRequest =
                 object : StringRequest(Method.POST, url, Response.Listener { response ->
-                    Toast.makeText(context,"response: $response",Toast.LENGTH_LONG).show()
-                    Log.e("Response: ", response)
                 }, Response.ErrorListener { error ->
                     Toast.makeText(context,"error: $error",Toast.LENGTH_LONG).show()
                     Log.e("Error: ", error.toString())

@@ -320,10 +320,9 @@ class CourierShipmentList : AppCompatActivity() {
             Toast.makeText(
                 this@CourierShipmentList, "We working on update your order", Toast.LENGTH_SHORT
             ).show()
-//            Thread.sleep(1000)
+
             if(!shrd.getBoolean("onVacation", false) && shipments.size<20)
             {
-                Toast.makeText(this, "if is checked", Toast.LENGTH_SHORT).show()
                 assignOrders(shrd.getString("email", "Not").toString(),this)
             } else {
                 Toast.makeText(this, "on vacation, no order's assigned", Toast.LENGTH_SHORT).show()

@@ -1,5 +1,6 @@
 package com.example.couriermanagerkotlin.utilities
 
+import android.util.Log
 import android.widget.AutoCompleteTextView
 import android.widget.EditText
 import com.example.couriermanagerkotlin.utilities.DBUtilities.Companion.measures
@@ -48,6 +49,7 @@ open class Validations {
          * Validate that the entered street name appear in the city street list
          */
         fun validateStreetName(street: String,view: EditText): Boolean {
+            Log.e("selected street", street)
             if(street !in streets) {
                 view.error = "Choose from the list"
                 return false
